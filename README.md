@@ -1,136 +1,86 @@
-# KubeLab — Kubernetes Practice Lab
+# KubeLab — free, offline Kubernetes practice
 
-> **Live site:** [kubelab.eknathalabs.com](https://kubelab.eknathalabs.com)  
-> Built by [Eknatha Reddy Puli](https://eknathalabs.com) · Platform Engineer  
+> **Live:** [kubelab.eknathalabs.com](https://kubelab.eknathalabs.com) · Free · No ads · No signup · No tracking · Works offline
+> Part of [EknathaLabs](https://eknathalabs.com)
 
-A structured, hands-on Kubernetes learning lab — 12 learning modules, 9 fully offline interactive tools, a 200+ command cheatsheet, a 100-question CKA/CKS quiz, 12 practice labs, and a 60+ error encyclopedia. Built by a Platform Engineer, for Platform Engineers.
+Practise Kubernetes the way the exams test it: break things, read events, fix them with `kubectl`. KubeLab runs a **deterministic kubectl simulator in your browser** with auto-checked labs, a timed exam mode and a spaced-repetition quiz — and every lab is also exported as bash scripts for a **real kind cluster**.
 
----
+## What's inside
 
-## What's Inside
-
-| Section | Count | Description |
-|---|---|---|
-| Learning Modules | 12 | Structured deep-dives from cluster architecture to GKE |
-| Offline Tools | 9 | YAML generator, troubleshooter, RBAC, PromQL, Helm, and more |
-| kubectl Cheatsheet | 200+ | Searchable, click-to-copy commands with CKA shortcuts |
-| CKA/CKS Quiz | 100 | Scenario-based questions, filterable by topic and difficulty |
-| Practice Labs | 12 | Step-by-step walkthroughs from Beginner to CKS-level Advanced |
-| Error Encyclopedia | 60+ | K8s errors — root cause, fix commands, and prevention |
-
----
-
-## Pages
-
-### Modules
-12 structured learning modules covering the full Kubernetes landscape. Each module includes an overview, key concept cards, essential commands, a YAML example, and study resources. Filterable by level (Beginner / Intermediate / Advanced / CKA / CKS).
-
-| # | Module | Level |
-|---|---|---|
-| 01 | Cluster Architecture | Beginner |
-| 02 | Pods & Workloads | Beginner |
-| 03 | Networking | Intermediate |
-| 04 | Storage & Volumes | Intermediate |
-| 05 | RBAC & Security | Intermediate |
-| 06 | Config & Secrets | Beginner |
-| 07 | Scaling & Scheduling | Intermediate |
-| 08 | Observability | Intermediate |
-| 09 | Helm & GitOps | Intermediate |
-| 10 | Troubleshooting | Advanced |
-| 11 | CKS Advanced Security | Advanced |
-| 12 | GKE & Cloud K8s | Advanced |
-
-### Tools — 100% Offline
-All 9 tools run entirely in the browser. No API keys, no network requests, no external dependencies.
-
-| Tool | What it does |
+| | |
 |---|---|
-| ⚡ YAML File Generator | Select resource kind + fill fields → complete, annotated manifest for 14 resource types |
-| 🔍 K8s Troubleshooter | Paste `kubectl` output or logs → pattern-matched root cause, fix commands, prevention |
-| 📄 YAML Validator & Explainer | Paste any manifest → field-by-field explanation, detected issues, improvement suggestions |
-| 🔒 Network Policy Builder | Choose namespaces + policy type → production-ready `NetworkPolicy` YAML |
-| ⛑️ RBAC Generator | Pick resources + verbs + scope → `ServiceAccount` + `Role` + `RoleBinding` YAML |
-| 📊 PromQL Query Builder | Choose metric category + namespace → 3 ready-to-use queries + `PrometheusRule` alert YAML |
-| 🪖 Helm Values Generator | Pick chart + environment → production-grade `values.yaml` (8 charts supported) |
-| 📐 Resource Calculator | App type + RPS + replicas → computed requests/limits YAML + HPA config |
-| 🐳 Dockerfile Linter | Paste Dockerfile → security issues, optimization tips, improved Dockerfile template |
+| **Predict first** | In Learn mode, fault labs ask you to commit to a root cause before you touch the terminal; the debrief tells you whether you were right and tracks your accuracy. |
+| **Daily challenge** | One fault lab per day (by local date), a streak and a 14-day history. Works offline. |
+| **Mock exam bundles** | Fixed CKA/CKAD/CKS sets with weighted tasks, flag-for-review, pass mark 66% and a score-by-domain report. |
+| **Real exam environment** | Optional: no checker, no cluster panel, several kube contexts (each task starts in the wrong one, as on the real exam), submit to score. |
+| **Real-world failure library** | 5 simulator-only labs (S69–S73): stuck finalizers, NotReady node, kubelet vs swap, a dead admission webhook, expired control-plane certificates. They use `ssh <node> '<cmd>'`, which exists only in the simulator, so they have no kind pack. |
+| **Field Guide** | 3 fictional "3 a.m. page" story episodes (chained labs), 3 "Anatomy of an outage" explainers (Reddit 2023, Datadog 2023, OpenAI 2024: paraphrased from the cited post-mortems and linked to them), and 3 step-through concept animations. |
+| **90-second onboarding** | First-run walkthrough with a real mini-terminal; replay from Field Guide. |
+| **Workbench layouts** | Split, focus (press `F`) and stacked layouts, remembered per browser. |
+| **Terminal that teaches** | Live explanation of the verb, flags and short names as you type, plus did-you-mean for mistyped resources and commands. |
+| **Diagram upgrades** | Colour-blind-safe glyphs, per-workload colour stripe, NetworkPolicy shield badge, NotReady node styling. |
+| **Docs peek** | Slide-in drawer with commands related to the lab and kubernetes.io pages (in real-exam mode, only kubernetes.io). |
+| **Clickable diagram** | Click a pod, service or node to run `describe` in the terminal; hover a service to light up its endpoints. |
+| **Learn / Exam modes** | Every lab runs in Learn mode (hints, solution, debrief) or Exam mode (no hints, countdown timer, scored result). |
+| **Live cluster diagram** | Nodes and pods colour-coded by health, services with endpoint counts; animates as you fix things. Switch to the text view any time. |
+| **Debrief card** | After each lab: root cause, the fix, how to spot it in production and the command pattern to remember. |
+| **Interactive labs** | 73 broken-cluster scenarios (beginner → expert) in a split view: instructions · terminal · live cluster state. Hints, solution, **Check** button. |
+| **Walkthrough labs** | 12 step-by-step guides for a real cluster |
+| **kubectl simulator** | Deployments/ReplicaSets, StatefulSets, DaemonSets, Jobs, PVC binding, Services/Endpoints, HPA, PDB, scheduler (taints, affinity, spread), kubelet failures (ImagePullBackOff, CrashLoop, OOMKilled, probes), ResourceQuota/LimitRange, Pod Security Admission, NetworkPolicy, RBAC `can-i`, CRDs, Gateway API objects, Kustomize, bash-like shell with pipes/heredocs/`vi` |
+| **Exam mode** | Timed CKA/CKAD/CKS-style sessions (30/60/120 min), no hints, scored at the end (pass ≥ 66%) |
+| **Learning paths** | Ordered roadmap per track: modules → labs → quiz → exam |
+| **Quiz** | 314 questions: multiple choice, *type the command*, *order the steps*; Leitner spaced repetition ("due for review") |
+| **Modules** | 19 (adds Gateway API, CRDs/Operators, Kustomize, Helm, Pod Security, supply-chain, exam speed) |
+| **Visualize** | Step-through animations: control-plane flow, pod lifecycle (incl. failures), rolling update, NetworkPolicy |
+| **Errors** | 46-entry error encyclopedia with links to the labs that reproduce them |
+| **Tools / cheatsheet** | 9 offline tools, 100+ copy-ready commands, Ctrl+K command palette |
+| **Progress** | Saved in your browser only; export / import JSON; streaks |
 
-**YAML File Generator** supports 14 resource kinds:
-`Deployment`, `StatefulSet`, `DaemonSet`, `Job`, `CronJob`, `Service`, `Ingress`, `ConfigMap`, `Secret`, `PersistentVolumeClaim`, `HorizontalPodAutoscaler`, `NetworkPolicy`, `ServiceAccount`, `Namespace`
+## Offline
 
-**PromQL Builder** covers 8 metric categories:
-CPU, Memory, Pod restarts, Network traffic, Storage/PVC, HTTP latency, HTTP error rate, Node health
+* **PWA** — open the site once; a nav badge shows *Caching n/N → ✓ Works offline*, and an **Install** button appears. After that it works with no network (service worker precaches everything, fonts are self-hosted).
+* **Sessions survive reloads** — every lab's simulator state, files, terminal history and hint/solution usage are saved to IndexedDB after each command; a running exam (and its clock) is restored too. “Reset lab” starts over.
+* **Safe updates** — a new version never swaps in mid-lab: you get a “new version ready — Reload” toast and apply it when you choose.
+* **Storage** — the site requests persistent storage so browsers don't evict it; the *My progress* page shows the status, and nudges you to export a JSON backup every 2 weeks.
+* **Single file** — `node build.cjs` → `dist/kubelab-offline.html` (~1 MB, no server, no network). Works from `file://`.
+* No analytics, no counters, no third-party requests of any kind.
 
-**Helm Values Generator** supports 8 charts:
-`ingress-nginx`, `postgresql`, `redis`, `kafka`, `kube-prometheus-stack`, `cert-manager`, `argo-cd`, generic app
+## Run on a real cluster (kind)
 
-### Cheatsheet
-200+ `kubectl` commands across 10 categories — searchable by keyword, click any command to copy to clipboard. CKA exam shortcuts included.
+```bash
+cd lab-packs
+./kubelab.sh cluster                # needs Docker + kind
+./kubelab.sh setup s02-imagepull    # break it
+kubectl get pods -n shop            # fix it
+./kubelab.sh check s02-imagepull    # same assertions as the browser Check button
+```
 
-Categories: Pods & Workloads · Deployments & Rollouts · Debugging · Networking · Storage · RBAC & Security · Namespaces & Context · Helm · etcd & Control Plane · CKA Exam Shortcuts
+Packs are generated from the same lab specs (`node tools/gen-packs.cjs`). They are syntax-checked but not every one has been run end-to-end on a real cluster — see `lab-packs/README.md`.
 
-### Quiz
-100 scenario-based questions covering CKA and CKS exam domains. Features live score tracking, a progress bar, and per-question explanations.
+## Develop
 
-- Filter by topic: Architecture · Networking · Storage · Security / RBAC · Workloads · Scheduling · Observability · Helm / GitOps · Troubleshooting · CKS Advanced
-- Filter by difficulty: Easy · Medium · Hard
+```bash
+npm i js-yaml                      # only needed to run the tests below
+node tests/smoke.js                # simulator smoke test
+node tests/labs.test.js            # every lab: fails when broken, passes with its solution
+npm i playwright-core              # + a Chrome/Chromium for the browser tests
+node tests/e2e.cjs                 # pages, runner, quiz, exam, palette, theme, mobile
+node tests/offline.cjs             # service worker offline test
+node tests/persist.cjs             # sessions/exam survive reload, offline badge, works offline
+node tests/update.cjs              # update toast + Reload flow
+node tools/gen-sw.cjs              # regenerate sw.js precache list after adding files
+node tools/gen-packs.cjs           # regenerate lab-packs/
+node build.cjs && node tests/single-file.cjs
+```
 
-### Labs
-12 full step-by-step lab walkthroughs modelled on production incidents and CKA/CKS exam tasks. Each lab lists prerequisites, numbered steps with copy-ready commands, and a cleanup section.
+Layout: `index.html` (content data + shell) · `assets/js/sim*.js` (simulator) · `assets/js/labs-engine.js` (assertion DSL → JS checker **and** bash generator) · `assets/js/data/labs-sim-*.js` (lab specs) · `lab-ui.js`, `exam.js`, `quiz.js`, `anim.js`, `extras.js` (UI).
 
-| Difficulty | Labs |
-|---|---|
-| Beginner | Pod Scheduling Debug, ConfigMap & Secret Injection, Rolling Update & Rollback |
-| Intermediate | PVC Binding & Storage Debugging, NetworkPolicy Enforcement, HPA Load Testing, RBAC Least Privilege |
-| Advanced | CKS Runtime Security with Falco, etcd Backup & Restore, Multi-tenancy with Namespaces & Quotas, GitOps with ArgoCD, TLS Certificate Rotation |
+Add a lab: append a spec to `assets/js/data/labs-sim-*.js` (setup YAML, tasks with assertions, solution) → `node tests/labs.test.js` must pass → regenerate packs and `sw.js`.
 
-### Error Encyclopedia
-60+ Kubernetes errors categorised by severity (Critical / Warning / Info) and type. Click any error to expand root cause, diagnosis steps, fix commands (click to copy), and prevention advice.
+## Honest limits
 
-Categories: Pod Status · Scheduling · Networking · Storage · RBAC · Cluster · Helm
-
-Common errors covered: `OOMKilled` · `CrashLoopBackOff` · `ImagePullBackOff` · `Pending` · `Evicted` · `CreateContainerConfigError` · `Terminating` (stuck) · `ErrImageNeverPull` · `FailedMount` · `Forbidden` · `certificate has expired` · Helm install/upgrade failures · and many more.
-
----
-
-## Tech Stack
-
-- **Pure HTML/CSS/JavaScript** — single `index.html`, zero build step, zero dependencies
-- **No backend** — everything runs client-side
-- **No API keys** — all tools are offline-first; removed all external AI API calls
-- **Fonts** — JetBrains Mono · Syne · Inter (Google Fonts)
-- **Hosting** — static file, deployable anywhere (Netlify, GitHub Pages, S3, nginx)
-
----
-
-## Offline Tools — Implementation Notes
-
-All tools were converted from AI API calls to pure client-side logic:
-
-- **Troubleshooter** — regex pattern matching against 10 common K8s error signatures
-- **YAML Explainer** — line-by-line YAML parsing, field lookup table, static issue detection rules
-- **Network Policy Builder** — parameterised YAML templates for 4 policy types
-- **RBAC Generator** — checkbox-driven resource/verb matrix → Role + RoleBinding scaffolding
-- **PromQL Builder** — 8 metric category templates × time window × namespace filter
-- **Helm Values Generator** — per-chart templates tuned for dev / staging / production
-- **Resource Calculator** — empirical per-app-type baseline profiles + RPS/replica math
-- **Dockerfile Linter** — static analysis rules checking for ~12 common issues + template improved Dockerfile
-- **YAML Generator** — 14 resource kind templates with optional probes, securityContext, HPA, PDB
-
----
-
-## Related Projects
-
-- [eknathalabs.com](https://eknathalabs.com) — main blog and engineering notes
-- [linux.eknathalabs.com](https://linux.eknathalabs.com) — Linux practice lab *(coming soon)*
-- [terraform.eknathalabs.com](https://terraform.eknathalabs.com) — Terraform practice lab *(coming soon)*
-
----
+The simulator is a **teaching model** of Kubernetes (v1.34 behaviour, simplified): no real networking/CNI, kernel, etcd or upgrades — use the kind packs and a real cluster for those, and a paid exam simulator (e.g. killer.sh, bundled with CKA/CKAD/CKS purchases) for the last week. Messages and defaults follow upstream closely but not byte-for-byte.
 
 ## License
 
-MIT — free to use, fork, and adapt. Attribution appreciated.
-
----
-
-*Built with ☕ by [EknathaLabs](https://eknathalabs.com)*
+MIT — see [LICENSE](LICENSE). Bundled: js-yaml (MIT), Inter, Syne, JetBrains Mono (SIL OFL) via @fontsource.

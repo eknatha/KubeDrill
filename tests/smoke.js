@@ -1,0 +1,23 @@
+const Sim=require('../assets/js/sim.js');['sim-shell','sim-kubectl','sim-kubectl2','sim-kubectl3','sim-faults'].forEach(f=>require('../assets/js/'+f+'.js'));
+const s=new Sim();
+function run(c){const r=s.exec(c);console.log('$ '+c.split('\n')[0]);process.stdout.write((r.stdout||'')+(r.stderr?'ERR: '+r.stderr:''));return r;}
+run('kubectl create deployment web --image=nginx:1.25 --replicas=3');
+run('kubectl expose deployment web --port=80');
+run('sleep 6');
+run('kubectl get pods,svc -o wide');
+run('kubectl set image deployment/web nginx=nginx:1.99.9');
+run('sleep 8');
+run('kubectl get pods');
+run('kubectl rollout undo deployment/web');
+run('kubectl rollout status deployment/web');
+run('kubectl run bad --image=nginx:typo');
+run('sleep 4');
+run('kubectl describe pod bad | tail -8');
+run('kubectl get ep web');
+run('kubectl run t --image=busybox --restart=Never -- sleep 3600');
+run('sleep 4');
+run('kubectl exec t -- wget -qO- web');
+run('kubectl get deploy web -o jsonpath=\'{.spec.replicas}\'');
+run('kubectl create sa x && kubectl create role r --verb=get,list --resource=pods && kubectl create rolebinding rb --role=r --serviceaccount=default:x');
+run('kubectl auth can-i list pods --as=system:serviceaccount:default:x');
+run('kubectl auth can-i delete pods --as=system:serviceaccount:default:x');

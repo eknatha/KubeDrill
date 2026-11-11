@@ -3,8 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KubeLab — Kubernetes Practice Lab by EknathaLabs</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<title>KubeLab — Free Offline Kubernetes Practice Lab · CKA CKAD CKS</title>
+<meta name="description" content="Free, offline-first Kubernetes practice lab: in-browser kubectl simulator with auto-checked labs, CKA/CKAD/CKS exam mode, 300+ quiz questions, error encyclopedia and 9 offline tools. No signup. No ads.">
+<meta name="theme-color" content="#090E1A">
+<link rel="canonical" href="https://kubelab.eknathalabs.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="KubeLab — Free Offline Kubernetes Practice Lab">
+<meta property="og:description" content="kubectl simulator, auto-checked labs, CKA/CKAD/CKS exam mode. Free forever. No signup. No ads. Works offline.">
+<meta property="og:url" content="https://kubelab.eknathalabs.com/">
+<meta property="og:image" content="https://kubelab.eknathalabs.com/icons/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="stylesheet" href="fonts/fonts.css">
+<script>try{var t=localStorage.getItem("kubelab:theme");if(!t)t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
 :root {
   --bg:#090E1A;--bg2:#0D1525;--bg3:#111d35;--surface:#0f1d35;--surface2:#152240;
@@ -305,43 +318,52 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   .tool-row{flex-direction:column;}
 }
 </style>
+<link rel="stylesheet" href="assets/css/extra.css">
 </head>
 <body>
+<div id="main" tabindex="-1"></div>
 
 <!-- NAV -->
-<nav>
-  <div class="nav-logo" onclick="showPage('home')">
-    <div class="nav-logo-icon">K8</div>
+<a class="skip-link" href="#main">Skip to content</a>
+<nav aria-label="Primary">
+  <a class="nav-logo" href="#home" aria-label="KubeLab home">
+    <div class="nav-logo-icon" aria-hidden="true">K8</div>
     <span class="nav-logo-text">Kube<span>Lab</span></span>
-  </div>
+  </a>
   <ul class="nav-links" id="navLinks">
-    <li><a onclick="showPage('modules')" data-page="modules">Modules</a></li>
-    <li><a onclick="showPage('tools')" data-page="tools">Tools</a></li>
-    <li><a onclick="showPage('cheatsheet')" data-page="cheatsheet">Cheatsheet</a></li>
-    <li><a onclick="showPage('quiz')" data-page="quiz">Quiz</a></li>
-    <li><a onclick="showPage('labs')" data-page="labs">Labs</a></li>
-    <li><a onclick="showPage('errors')" data-page="errors">🔴 Errors</a></li>
+    <li><a href="#modules" data-page="modules">Modules</a></li>
+    <li><a href="#path" data-page="path">Path</a></li>
+    <li><a href="#labs" data-page="labs">Labs</a></li>
+    <li><a href="#exam" data-page="exam">Exam</a></li>
+    <li><a href="#quiz" data-page="quiz">Quiz</a></li>
+    <li><a href="#visualize" data-page="visualize">Visualize</a></li>
+    <li><a href="#field" data-page="field">Field Guide</a></li>
+    <li><a href="#cheatsheet" data-page="cheatsheet">Cheatsheet</a></li>
+    <li><a href="#tools" data-page="tools">Tools</a></li>
+    <li><a href="#errors" data-page="errors">Errors</a></li>
+    <li><a href="#progress" data-page="progress">Progress</a></li>
   </ul>
-  <div style="display:flex;align-items:center;gap:12px;">
-    <a href="https://eknathalabs.com" class="nav-badge" target="_blank">↗ eknathalabs.com</a>
-    <div class="hamburger" onclick="toggleNav()" id="hamburger"><span></span><span></span><span></span></div>
+  <div class="nav-right">
+    <button class="nav-icon-btn" id="paletteBtn" aria-label="Search (Ctrl+K)" title="Search · Ctrl+K">⌕ <kbd>Ctrl K</kbd></button>
+    <button class="nav-icon-btn" id="themeBtn" aria-label="Toggle light/dark theme" title="Toggle theme">◐</button>
+    <button class="hamburger" onclick="toggleNav()" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
   </div>
 </nav>
 
 <!-- ════════════════════════════════════════════
      PAGE: HOME
 ════════════════════════════════════════════ -->
-<div class="page active" id="page-home">
+<div class="page active" id="page-home" role="main">
 <div class="hero">
   <div class="hero-glow"></div>
-  <div class="hero-tag">kubelab.eknathalabs.com · Free · No signup required</div>
+  <div class="hero-tag">kubelab.eknathalabs.com · Free · No ads · No signup · Works offline</div>
   <h1><span class="kube">Kube</span><span class="lab">Lab</span><br>Master Kubernetes.<br>Ship with Confidence.</h1>
-  <p class="hero-sub">A structured, hands-on Kubernetes learning lab — concepts, interactive AI-powered tools, cheatsheets, 100-question CKA/CKS quiz, and full lab walkthroughs. Built by a Platform Engineer, for Platform Engineers.</p>
+  <p class="hero-sub">A structured, hands-on Kubernetes learning lab — concepts, an in-browser kubectl simulator with auto-checked labs, CKA/CKAD/CKS exam mode, 300+ quiz questions and offline tools. Free forever. No signup. No ads. Works offline.</p>
   <div class="hero-ctas">
-    <button class="btn-primary" onclick="showPage('modules')">▶ Start Learning</button>
-    <button class="btn-secondary" onclick="showPage('cheatsheet')">⌘ Cheatsheet</button>
+    <button class="btn-primary" onclick="showPage('labs')">▶ Start a Lab</button>
+    <button class="btn-secondary" onclick="showPage('exam')">⏱ Exam Mode</button>
+    <button class="btn-secondary" onclick="showPage('modules')">📚 Modules</button>
     <button class="btn-secondary" onclick="showPage('quiz')">✦ Take Quiz</button>
-    <button class="btn-secondary" onclick="showPage('labs')">⚗ Practice Labs</button>
   </div>
   <div class="hero-terminal">
     <div class="terminal-bar">
@@ -349,30 +371,30 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
       <span class="terminal-title">kubelab ~ kubectl</span>
     </div>
     <div class="terminal-body">
-      <div><span class="t-prompt">eknatha@kubelab</span> <span class="t-cmd">$ kubectl get pods -n production</span></div>
+      <div><span class="t-prompt">student@kubelab</span> <span class="t-cmd">$ kubectl get pods -n production</span></div>
       <div><span class="t-out">NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; READY&nbsp;&nbsp; STATUS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESTARTS&nbsp; AGE</span></div>
       <div><span class="t-success">api-deployment-7d9f8b-xkv2p&nbsp;&nbsp; 1/1&nbsp;&nbsp;&nbsp;&nbsp; Running&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2d</span></div>
       <div><span class="t-err">worker-5c8b9d-mnp4q&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0/1&nbsp;&nbsp;&nbsp;&nbsp; CrashLoopBackOff&nbsp; 14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1h</span></div>
       <div><span class="t-success">db-statefulset-0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1/1&nbsp;&nbsp;&nbsp;&nbsp; Running&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5d</span></div>
       <div>&nbsp;</div>
-      <div><span class="t-prompt">eknatha@kubelab</span> <span class="t-cmd">$ kubectl describe pod worker-5c8b9d-mnp4q | grep -A5 Events</span></div>
+      <div><span class="t-prompt">student@kubelab</span> <span class="t-cmd">$ kubectl describe pod worker-5c8b9d-mnp4q | grep -A5 Events</span></div>
       <div><span class="t-comment"># OOMKilled · Memory limit: 128Mi · Usage: 512Mi</span></div>
       <div><span class="t-comment"># Fix: increase resources.limits.memory or optimize app</span></div>
       <div>&nbsp;</div>
-      <div><span class="t-prompt">eknatha@kubelab</span> <span class="cursor"></span></div>
+      <div><span class="t-prompt">student@kubelab</span> <span class="cursor"></span></div>
     </div>
   </div>
 </div>
 
 <div class="stats">
-  <div class="stat"><div class="stat-num">12</div><div class="stat-label">Modules</div></div>
-  <div class="stat"><div class="stat-num">9</div><div class="stat-label">Offline Tools</div></div>
-  <div class="stat"><div class="stat-num">200+</div><div class="stat-label">Commands</div></div>
-  <div class="stat"><div class="stat-num">100</div><div class="stat-label">Quiz Q&amp;A</div></div>
-  <div class="stat"><div class="stat-num">12</div><div class="stat-label">Labs</div></div>
-  <div class="stat"><div class="stat-num">CKA</div><div class="stat-label">Exam Ready</div></div>
-  <div class="stat"><div class="stat-num">60+</div><div class="stat-label">Error Codes</div></div>
-  <div class="stat"><div class="stat-num" id="visitor-count" style="font-size:1.1rem;">…</div><div class="stat-label">👥 Visitors</div></div>
+  <div class="stat"><div class="stat-num" data-count="modules">12</div><div class="stat-label">Modules</div></div>
+  <div class="stat"><div class="stat-num" data-count="ilabs">20</div><div class="stat-label">Auto-checked Labs</div></div>
+  <div class="stat"><div class="stat-num" data-count="labs">40</div><div class="stat-label">Total Labs</div></div>
+  <div class="stat"><div class="stat-num" data-count="quiz">300+</div><div class="stat-label">Quiz Q&amp;A</div></div>
+  <div class="stat"><div class="stat-num" data-count="cheat">100+</div><div class="stat-label">Commands</div></div>
+  <div class="stat"><div class="stat-num" data-count="tools">9</div><div class="stat-label">Offline Tools</div></div>
+  <div class="stat"><div class="stat-num" data-count="errors">46</div><div class="stat-label">Error Codes</div></div>
+  <div class="stat"><div class="stat-num">$0</div><div class="stat-label">No ads · No signup</div></div>
 </div>
 
 <!-- Quick nav cards -->
@@ -380,59 +402,73 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
     <div class="tool-card" onclick="showPage('modules')">
       <div class="tool-icon ti-blue">📚</div>
-      <div class="tool-title">12 Learning Modules</div>
+      <div class="tool-title"><span data-count="modules">12</span> Learning Modules</div>
       <div class="tool-desc">From cluster architecture to GKE. Structured, filterable, with deep dives.</div>
     </div>
     <div class="tool-card" onclick="showPage('tools')">
       <div class="tool-icon ti-green">🤖</div>
-      <div class="tool-title">9 Tools — All 100% Offline</div>
-      <div class="tool-desc">Troubleshooter, YAML generator, RBAC, PromQL, Helm values, resource calc, Dockerfile linter — all run in-browser, no API keys needed.</div>
+      <div class="tool-title"><span data-count="tools">9</span> Tools — All 100% Offline</div>
+      <div class="tool-desc">Troubleshooter, YAML generator, RBAC, PromQL, Helm values, resource calc, Dockerfile linter — all run in-browser, no API keys, no network.</div>
     </div>
     <div class="tool-card" onclick="showPage('cheatsheet')">
       <div class="tool-icon ti-yellow">⌘</div>
       <div class="tool-title">kubectl Cheatsheet</div>
-      <div class="tool-desc">200+ commands, searchable, click to copy. CKA exam tips included.</div>
+      <div class="tool-desc">100+ commands, searchable, click to copy. CKA exam tips included.</div>
     </div>
     <div class="tool-card" onclick="showPage('quiz')">
       <div class="tool-icon ti-purple">✦</div>
-      <div class="tool-title">100 Q&amp;A Quiz</div>
-      <div class="tool-desc">CKA + CKS scenario-based questions. Filter by topic, track your score.</div>
+      <div class="tool-title"><span data-count="quiz">300+</span> Q&amp;A Quiz</div>
+      <div class="tool-desc">CKA + CKAD + CKS questions: multiple choice, command completion, ordering. Wrong answers come back via spaced repetition.</div>
     </div>
     <div class="tool-card" onclick="showPage('labs')">
       <div class="tool-icon ti-red">⚗</div>
-      <div class="tool-title">12 Practice Labs</div>
-      <div class="tool-desc">Full step-by-step lab walkthroughs from beginner to CKS-level advanced.</div>
+      <div class="tool-title"><span data-count="labs">40</span> Practice Labs</div>
+      <div class="tool-desc">Break-it-fix-it labs with a built-in kubectl simulator and a Check button. Or run the same labs on a local kind cluster.</div>
     </div>
     <div class="tool-card" onclick="showPage('errors')">
       <div class="tool-icon" style="background:rgba(248,113,113,0.12);">🔴</div>
       <div class="tool-title">Error Encyclopedia</div>
-      <div class="tool-desc">60+ K8s error codes — cause, fix, and debug commands. Searchable.</div>
+      <div class="tool-desc">46 K8s error codes — cause, fix, and debug commands. Searchable.</div>
+    </div>
+    <div class="tool-card" onclick="showPage('exam')">
+      <div class="tool-icon ti-yellow">⏱</div>
+      <div class="tool-title">CKA / CKAD / CKS Exam Mode</div>
+      <div class="tool-desc">Timed 2-hour hands-on exam on a simulated cluster with a score report by domain. Unlimited attempts.</div>
+    </div>
+    <div class="tool-card" onclick="showPage('visualize')">
+      <div class="tool-icon ti-purple">🎞</div>
+      <div class="tool-title">Animated Explainers</div>
+      <div class="tool-desc">Pod lifecycle, service traffic &amp; NetworkPolicy, rolling updates, and the kubectl-apply control-plane flow.</div>
+    </div>
+    <div class="tool-card" onclick="showPage('path')">
+      <div class="tool-icon ti-green">🧭</div>
+      <div class="tool-title">Learning Paths</div>
+      <div class="tool-desc">CKA, CKAD and CKS roadmaps with progress saved privately in your browser.</div>
     </div>
   </div>
 </div>
 <footer>
   <div class="footer-logo"><span style="color:var(--accent2)">Kube</span><span style="background:linear-gradient(135deg,var(--green),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Lab</span></div>
-  <div class="footer-sub">kubelab.eknathalabs.com · Built by Eknatha Reddy · Platform Engineer</div>
+  <div class="footer-sub">kubelab.eknathalabs.com</div>
   <div class="footer-links">
-    <a href="https://eknathalabs.com" target="_blank">eknathalabs.com</a>
-    <a href="https://github.com/eknatha" target="_blank">GitHub</a>
-    <a href="#">linux.eknathalabs.com</a>
-    <a href="#">terraform.eknathalabs.com</a>
+    <a href="https://eknathalabs.com" target="_blank" rel="noopener">eknathalabs.com</a>
+    <a href="#compare">Compare</a>
+    <a href="#progress">Progress</a>
   </div>
-  <div class="footer-copy">© 2026 <a href="https://eknathalabs.com">EknathaLabs</a> · Free forever · No ads · No signup</div>
-  <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px;">👥 Total visitors: <span id="visitor-count-footer" style="color:var(--accent2);">…</span></div>
+  <div class="footer-copy">© 2026 <a href="https://eknathalabs.com">EknathaLabs</a> · Free forever · No ads · No signup · Content reviewed against Kubernetes v1.34 (Nov 2026) · <a href="#compare">How KubeLab compares</a> · MIT licensed</div>
+  <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px;">🔒 No tracking · No cookies · No third-party requests · MIT licensed</div>
 </footer>
 </div>
 
 <!-- ════════════════════════════════════════════
      PAGE: MODULES
 ════════════════════════════════════════════ -->
-<div class="page" id="page-modules">
+<div class="page" id="page-modules" role="main">
 <div class="section-wrap">
   <div class="section-header">
     <div class="section-tag">Learning Path</div>
     <h2 class="section-title">Structured Modules</h2>
-    <p class="section-desc">12 modules from cluster architecture to advanced security. Click any module to deep dive.</p>
+    <p class="section-desc"><span data-count="modules">12</span> modules from cluster architecture to advanced security, Gateway API, CRDs, Kustomize and more. Click any module to deep dive.</p>
   </div>
   <div class="modules-filter">
     <button class="filter-btn active" onclick="filterModules('all',this)">All</button>
@@ -448,16 +484,16 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 
 <!-- MODULE MODAL -->
 <div class="modal-overlay" id="moduleModal" onclick="closeModal(event)">
-  <div class="modal" id="modalContent"></div>
+  <div class="modal" id="modalContent" role="dialog" aria-modal="true" aria-label="Module details"></div>
 </div>
 
 <!-- ════════════════════════════════════════════
      PAGE: TOOLS
 ════════════════════════════════════════════ -->
-<div class="page" id="page-tools">
+<div class="page" id="page-tools" role="main">
 <div class="section-wrap">
   <div class="section-header">
-    <div class="section-tag">Interactive AI Tools</div>
+    <div class="section-tag">Interactive Tools</div>
     <h2 class="section-title">Built-in K8s Tools <span class="ai-badge" style="background:rgba(34,211,165,0.12);border-color:rgba(34,211,165,0.3);color:var(--green);">⚡ 100% Offline</span></h2>
     <p class="section-desc">All 9 tools run entirely in your browser — no API keys, no internet required. Troubleshoot, generate YAML, build RBAC, PromQL, Helm values, and more.</p>
   </div>
@@ -469,12 +505,12 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <!-- ════════════════════════════════════════════
      PAGE: CHEATSHEET
 ════════════════════════════════════════════ -->
-<div class="page" id="page-cheatsheet">
+<div class="page" id="page-cheatsheet" role="main">
 <div class="section-wrap">
   <div class="section-header">
     <div class="section-tag">Quick Reference</div>
     <h2 class="section-title">kubectl Cheatsheet</h2>
-    <p class="section-desc">200+ commands — searchable, click any command to copy. CKA exam shortcuts included.</p>
+    <p class="section-desc">100+ commands — searchable, click any command to copy. CKA exam shortcuts included.</p>
   </div>
   <input class="cheat-search" id="cheatSearch" placeholder="Search commands, e.g. 'logs', 'exec', 'pvc'..." oninput="filterCheatsheet(this.value)">
   <div class="cheatsheet-grid" id="cheatGrid"></div>
@@ -484,41 +520,32 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <!-- ════════════════════════════════════════════
      PAGE: QUIZ
 ════════════════════════════════════════════ -->
-<div class="page" id="page-quiz">
+<div class="page" id="page-quiz" role="main">
 <div class="section-wrap">
   <div class="section-header">
     <div class="section-tag">Practice Questions</div>
-    <h2 class="section-title">CKA / CKS Quiz — 100 Questions</h2>
-    <p class="section-desc">Scenario-based questions with detailed explanations. Filter by topic or difficulty.</p>
+    <h2 class="section-title">CKA / CKAD / CKS Quiz — <span data-count="quiz">300+</span> Questions</h2>
+    <p class="section-desc">Scenario-based questions with explanations: multiple choice, command completion and ordering. Missed questions return via spaced repetition.</p>
   </div>
   <div class="quiz-topbar">
-    <select class="quiz-filter" id="quizCatFilter" onchange="startQuiz()">
-      <option value="all">All Topics</option>
-      <option value="Architecture">Architecture</option>
-      <option value="Networking">Networking</option>
-      <option value="Storage">Storage</option>
-      <option value="Security">Security / RBAC</option>
-      <option value="Workloads">Workloads</option>
-      <option value="Scheduling">Scheduling</option>
-      <option value="Observability">Observability</option>
-      <option value="Helm">Helm / GitOps</option>
-      <option value="Troubleshooting">Troubleshooting</option>
-      <option value="CKS">CKS Advanced</option>
+    <select class="quiz-filter" id="quizTrackFilter" onchange="startQuiz()" aria-label="Track">
+      <option value="all">All Tracks</option><option value="CKA">CKA</option><option value="CKAD">CKAD</option><option value="CKS">CKS</option>
     </select>
-    <select class="quiz-filter" id="quizDiffFilter" onchange="startQuiz()">
-      <option value="all">All Levels</option>
-      <option value="Easy">Easy</option>
-      <option value="Medium">Medium</option>
-      <option value="Hard">Hard</option>
+    <select class="quiz-filter" id="quizCatFilter" onchange="startQuiz()" aria-label="Topic"><option value="all">All Topics</option></select>
+    <select class="quiz-filter" id="quizDiffFilter" onchange="startQuiz()" aria-label="Difficulty">
+      <option value="all">All Levels</option><option value="Easy">Easy</option><option value="Medium">Medium</option><option value="Hard">Hard</option>
     </select>
-    <div class="quiz-score-display">Score: <span id="scoreDisplay">0</span> / <span id="totalDisplay">0</span></div>
+    <select class="quiz-filter" id="quizModeFilter" onchange="startQuiz()" aria-label="Mode">
+      <option value="all">All questions</option><option value="due">Due for review</option><option value="missed">Missed before</option><option value="new">Unseen only</option>
+    </select>
+    <div class="quiz-score-display" aria-live="polite">Score: <span id="scoreDisplay">0</span> / <span id="totalDisplay">0</span></div>
     <button class="btn-secondary" onclick="startQuiz()" style="margin-left:auto;">↺ Restart</button>
   </div>
   <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizProgress" style="width:0%"></div></div>
   <div class="quiz-card" id="quizCard"></div>
   <div class="quiz-results" id="quizResults">
     <div class="result-score" id="resultScore">0</div>
-    <div class="result-label">out of <span id="resultTotal">100</span> questions</div>
+    <div class="result-label">out of <span id="resultTotal">0</span> questions</div>
     <div class="result-grade" id="resultGrade"></div>
     <p style="color:var(--text2);font-size:0.9rem;margin:1rem 0 1.5rem;"></p>
     <button class="btn-primary" onclick="startQuiz()">↺ Take Again</button>
@@ -529,33 +556,57 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <!-- ════════════════════════════════════════════
      PAGE: LABS
 ════════════════════════════════════════════ -->
-<div class="page" id="page-labs">
+<div class="page" id="page-labs" role="main">
 <div class="section-wrap">
   <div class="section-header">
     <div class="section-tag">Hands-on Scenarios</div>
     <h2 class="section-title">Practice Labs</h2>
-    <p class="section-desc">12 full step-by-step labs modelled on production incidents and CKA/CKS exam tasks.</p>
+    <p class="section-desc"><b>Interactive labs</b> run on the built-in kubectl simulator with a Check button — fully offline. Every lab is also exported as a <b>kind lab pack</b> (<code>lab-packs/</code>) so you can run it on a real local cluster. <b>Walkthroughs</b> are step-by-step guides for real clusters.</p>
   </div>
-  <div class="labs-filter">
-    <button class="filter-btn active" onclick="filterLabs('all',this)">All</button>
-    <button class="filter-btn" onclick="filterLabs('Beginner',this)">Beginner</button>
-    <button class="filter-btn" onclick="filterLabs('Intermediate',this)">Intermediate</button>
-    <button class="filter-btn" onclick="filterLabs('Advanced',this)">Advanced</button>
+  <div class="labs-toolbar">
+    <input class="cheat-search" id="labSearch" placeholder="Search labs…" aria-label="Search labs" oninput="KL.filterLabs()">
+    <div class="labs-filter" id="labDiffFilter" role="group" aria-label="Difficulty">
+      <button class="filter-btn active" data-v="all">All</button><button class="filter-btn" data-v="Beginner">Beginner</button><button class="filter-btn" data-v="Intermediate">Intermediate</button><button class="filter-btn" data-v="Advanced">Advanced</button>
+    </div>
+    <div class="labs-filter" id="labTrackFilter" role="group" aria-label="Track">
+      <button class="filter-btn active" data-v="all">All tracks</button><button class="filter-btn" data-v="CKA">CKA</button><button class="filter-btn" data-v="CKAD">CKAD</button><button class="filter-btn" data-v="CKS">CKS</button>
+    </div>
+    <div class="labs-filter" id="labModeFilter" role="group" aria-label="Type">
+      <button class="filter-btn active" data-v="all">All types</button><button class="filter-btn" data-v="sim">Interactive</button><button class="filter-btn" data-v="walk">Walkthrough</button>
+    </div>
   </div>
+  <div id="dailyCard"></div>
+  <div class="labs-summary" id="labsSummary"></div>
+  <h3 class="labs-subhead" id="ilabsHead">⚡ Interactive labs <span class="ai-badge" style="background:rgba(34,211,165,0.12);border-color:rgba(34,211,165,0.3);color:var(--green);">simulator + auto-check</span></h3>
+  <div class="ilabs-grid" id="ilabsList"></div>
+  <h3 class="labs-subhead" id="walkHead">📖 Walkthrough labs <span class="ai-badge">real cluster</span></h3>
   <div class="labs-list" id="labsList"></div>
+  <div class="enc-no-results" id="labsNone" style="display:none;">No labs match your filters.</div>
 </div>
 </div>
 
+<div class="page" id="page-lab" role="main"><div id="labRunner"></div></div>
+<div class="page" id="page-path" role="main"><div class="section-wrap" id="pathRoot"></div></div>
+<div class="page" id="page-exam" role="main"><div class="section-wrap" id="examRoot"></div></div>
+<div class="page" id="page-visualize" role="main"><div class="section-wrap" id="vizRoot"></div></div>
+<div class="page" id="page-field" role="main"><div class="section-wrap" id="fieldRoot"></div></div>
+<div class="page" id="page-progress" role="main"><div class="section-wrap" id="progressRoot"></div></div>
+<div class="page" id="page-compare" role="main"><div class="section-wrap" id="compareRoot"></div></div>
+<div class="palette-overlay" id="palette" role="dialog" aria-modal="true" aria-label="Search KubeLab" hidden>
+  <div class="palette-box"><input id="paletteInput" placeholder="Search modules, labs, errors, commands, pages…  (Esc to close)" autocomplete="off" aria-label="Search"><div id="paletteList" role="listbox"></div></div>
+</div>
+<div id="toastHost" aria-live="polite"></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
 
 <!-- ════════════════════════════════════════════
      PAGE: ERROR ENCYCLOPEDIA
 ════════════════════════════════════════════ -->
-<div class="page" id="page-errors">
+<div class="page" id="page-errors" role="main">
 <div class="section-wrap">
   <div class="section-header">
     <div class="section-tag">Error Encyclopedia</div>
     <h2 class="section-title">K8s Error Code Encyclopedia</h2>
-    <p class="section-desc">60+ Kubernetes errors — root cause, fix commands, and prevention. Searchable and filterable. Click any error to expand.</p>
+    <p class="section-desc">46 Kubernetes errors — root cause, fix commands, and prevention. Searchable and filterable. Click any error to expand.</p>
   </div>
   <div class="enc-search-wrap">
     <span class="enc-search-icon">🔍</span>
@@ -581,21 +632,37 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   <div class="enc-no-results" id="encNoResults" style="display:none;">No errors match your search. Try a different term.</div>
 </div>
 </div>
-\n<script>
+<script>
 // ════════════════════════════════════════════
 // NAV & PAGE SYSTEM
 // ════════════════════════════════════════════
-function showPage(name) {
+function showPage(name, fromRoute) {
+  if(!document.getElementById('page-' + name)) name = 'home';
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.getElementById('page-' + name).classList.add('active');
   document.querySelectorAll('.nav-links a').forEach(a => {
-    a.classList.toggle('active', a.dataset.page === name);
+    const on = a.dataset.page === name || (name==='lab' && a.dataset.page==='labs') || (name==='compare' && false);
+    a.classList.toggle('active', on);
+    if(on) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current');
   });
   window.scrollTo(0,0);
   document.getElementById('navLinks').classList.remove('open');
+  const hb=document.getElementById('hamburger'); if(hb) hb.setAttribute('aria-expanded','false');
+  if(!fromRoute && location.hash.slice(1).split('/')[0] !== name) { try{ history.pushState(null,'','#'+name); }catch(e){ location.hash = name; } }
+  window.dispatchEvent(new CustomEvent('kl:page',{detail:{name:name}}));
 }
+function routeFromHash() {
+  const parts = location.hash.replace(/^#\/?/,'').split('/');
+  const name = parts[0] || 'home';
+  showPage(name, true);
+  if(window.KL && KL.onRoute) KL.onRoute(name, parts.slice(1).join('/'));
+}
+window.addEventListener('hashchange', routeFromHash);
+window.addEventListener('popstate', routeFromHash);
 function toggleNav() {
-  document.getElementById('navLinks').classList.toggle('open');
+  const n = document.getElementById('navLinks');
+  const open = n.classList.toggle('open');
+  document.getElementById('hamburger').setAttribute('aria-expanded', String(open));
 }
 
 // ════════════════════════════════════════════
@@ -1012,7 +1079,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/eknatha/myapp
+    repoURL: https://git.example.com/myapp.git
     targetRevision: main
     path: helm/myapp
   destination:
@@ -1139,7 +1206,7 @@ function openModule(idx) {
   document.getElementById('modalContent').innerHTML = `
     <div class="modal-header">
       <div class="modal-title">${m.icon} ${m.title}</div>
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">✕</button>
     </div>
     <div class="modal-body">
       <div class="modal-section">
@@ -3237,93 +3304,6 @@ const QUIZ_BANK = [
 {q:'What is a Kubernetes audit log event at "Request" level?',cat:'CKS',diff:'Hard',opts:['Logs only who made the request and when','Logs the requestor metadata plus the request body (the object being created/modified)','Logs the full request and response bodies','Logs only failed requests'],ans:1,exp:'Kubernetes audit log levels: None (no logging), Metadata (user, resource, timestamp, response code only), Request (metadata + request body), RequestResponse (metadata + request + response body). Request level captures what was submitted to the API — useful for auditing secret accesses and modifications.'},
 ];
 
-let quizQueue = [], quizIdx = 0, quizScore = 0, quizAnswered = false;
-
-function startQuiz() {
-  const cat = document.getElementById('quizCatFilter').value;
-  const diff = document.getElementById('quizDiffFilter').value;
-  quizQueue = QUIZ_BANK.filter(q =>
-    (cat === 'all' || q.cat === cat) &&
-    (diff === 'all' || q.diff === diff)
-  );
-  // Shuffle
-  for(let i=quizQueue.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [quizQueue[i],quizQueue[j]]=[quizQueue[j],quizQueue[i]];
-  }
-  quizIdx = 0; quizScore = 0; quizAnswered = false;
-  document.getElementById('scoreDisplay').textContent = '0';
-  document.getElementById('totalDisplay').textContent = quizQueue.length;
-  document.getElementById('quizProgress').style.width = '0%';
-  document.getElementById('quizResults').classList.remove('show');
-  document.getElementById('quizCard').style.display = '';
-  renderQuizQuestion();
-}
-
-function renderQuizQuestion() {
-  if(quizIdx >= quizQueue.length) { showQuizResults(); return; }
-  const q = quizQueue[quizIdx];
-  const diffCls = q.diff==='Easy'?'quiz-diff-easy':q.diff==='Medium'?'quiz-diff-medium':'quiz-diff-hard';
-  const keys = ['A','B','C','D'];
-  document.getElementById('quizCard').innerHTML = `
-    <div class="quiz-meta">
-      <span class="quiz-num">QUESTION ${quizIdx+1} OF ${quizQueue.length}</span>
-      <span class="quiz-cat ${diffCls}">${q.cat}</span>
-      <span class="quiz-cat ${diffCls}">${q.diff}</span>
-    </div>
-    <div class="quiz-q">${q.q}</div>
-    <div class="quiz-options" id="quiz-opts">
-      ${q.opts.map((o,i)=>`
-        <button class="quiz-opt" onclick="answerQuiz(${i})" id="qopt-${i}">
-          <span class="opt-key">${keys[i]}</span>${o}
-        </button>
-      `).join('')}
-    </div>
-    <div class="quiz-explain" id="quiz-exp">${q.exp}</div>
-    <div class="quiz-btns">
-      <button class="btn-primary" id="quiz-next-btn" onclick="nextQuizQ()" style="display:none;">Next Question →</button>
-      <button class="btn-secondary" onclick="startQuiz()">↺ Restart</button>
-    </div>
-  `;
-  document.getElementById('quizProgress').style.width = (quizIdx/quizQueue.length*100)+'%';
-  quizAnswered = false;
-}
-
-function answerQuiz(idx) {
-  if(quizAnswered) return;
-  quizAnswered = true;
-  const q = quizQueue[quizIdx];
-  const opts = document.querySelectorAll('.quiz-opt');
-  opts.forEach(o=>o.disabled=true);
-  if(idx===q.ans) {
-    opts[idx].classList.add('correct');
-    quizScore++;
-    document.getElementById('scoreDisplay').textContent = quizScore;
-  } else {
-    opts[idx].classList.add('wrong');
-    opts[q.ans].classList.add('correct');
-  }
-  document.getElementById('quiz-exp').classList.add('show');
-  document.getElementById('quiz-next-btn').style.display='inline-flex';
-}
-
-function nextQuizQ() {
-  quizIdx++;
-  renderQuizQuestion();
-}
-
-function showQuizResults() {
-  document.getElementById('quizCard').style.display = 'none';
-  const pct = Math.round(quizScore/quizQueue.length*100);
-  const grade = pct>=85?'🏆 Excellent — CKA Ready!':pct>=70?'✅ Good — Keep Practising':pct>=50?'📚 Needs More Study':'🔁 Review Modules First';
-  document.getElementById('resultScore').textContent = quizScore;
-  document.getElementById('resultTotal').textContent = quizQueue.length;
-  document.getElementById('resultGrade').textContent = grade;
-  document.getElementById('resultGrade').style.color = pct>=85?'var(--green)':pct>=70?'var(--yellow)':'var(--red)';
-  document.getElementById('quizProgress').style.width = '100%';
-  document.getElementById('quizResults').classList.add('show');
-}
-
 // ════════════════════════════════════════════
 // LABS DATA
 // ════════════════════════════════════════════
@@ -3554,14 +3534,6 @@ function toggleLab(idx) {
   toggle.textContent = isOpen ? '▼' : '▲';
 }
 
-function filterLabs(diff, btn) {
-  document.querySelectorAll('.labs-filter .filter-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.querySelectorAll('.lab-item').forEach(item => {
-    item.classList.toggle('hidden', diff!=='all' && item.dataset.diff!==diff);
-  });
-}
-
 // ════════════════════════════════════════════
 // INIT
 // ════════════════════════════════════════════
@@ -3569,7 +3541,6 @@ renderModules();
 renderTools();
 renderCheatsheet();
 renderLabs();
-startQuiz();
 
 // ════════════════════════════════════════════
 // ERROR ENCYCLOPEDIA DATA
@@ -3709,76 +3680,38 @@ function applyEncFilters() {
 }
 renderEnc();
 
-// ════════════════════════════════════════════
-// VISITOR COUNTER
-// Uses counterapi.dev v1 — free, no signup, no auth required.
-// Docs: https://docs.counterapi.dev/api/endpoints/v1/
-// Namespace: kubelab-eknathalabs  Name: visitors
-// First hit auto-creates the counter.
-// ════════════════════════════════════════════
-(function initVisitorCounter() {
-  const NS      = 'kubelab-eknathalabs';
-  const NAME    = 'visitors';
-  const BASE    = 'https://api.counterapi.dev/v1';
-  const HIT_URL = `${BASE}/${NS}/${NAME}/up`;
-  const GET_URL = `${BASE}/${NS}/${NAME}`;
 
-  function formatCount(n) {
-    if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
-    if (n >= 1000)    return (n / 1000).toFixed(1) + 'K';
-    return n.toLocaleString();
-  }
-
-  function setCount(n) {
-    const el1 = document.getElementById('visitor-count');
-    const el2 = document.getElementById('visitor-count-footer');
-    if (el1) el1.textContent = formatCount(n);
-    if (el2) el2.textContent = n.toLocaleString() + ' total visits';
-  }
-
-  function showError() {
-    const el1 = document.getElementById('visitor-count');
-    const el2 = document.getElementById('visitor-count-footer');
-    if (el1) el1.textContent = '—';
-    if (el2) el2.textContent = 'unavailable';
-  }
-
-  // counterapi.dev v1 response shape: { count: 42 }
-  function extractCount(data) {
-    if (data && typeof data.count === 'number') return data.count;
-    // fallback in case shape differs
-    if (data && typeof data.value === 'number') return data.value;
-    return null;
-  }
-
-  const SESSION_KEY = 'kubelab_counted_v2';
-  const alreadyCounted = sessionStorage.getItem(SESSION_KEY);
-
-  if (!alreadyCounted) {
-    // New session → increment then display
-    fetch(HIT_URL)
-      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
-      .then(data => {
-        const n = extractCount(data);
-        if (n !== null) { setCount(n); sessionStorage.setItem(SESSION_KEY, '1'); }
-        else showError();
-      })
-      .catch(() => {
-        // HIT failed — try read-only GET as fallback
-        fetch(GET_URL)
-          .then(r => r.json())
-          .then(data => { const n = extractCount(data); if (n !== null) setCount(n); else showError(); })
-          .catch(showError);
-      });
-  } else {
-    // Same session revisit → read-only, no increment
-    fetch(GET_URL)
-      .then(r => r.json())
-      .then(data => { const n = extractCount(data); if (n !== null) setCount(n); else showError(); })
-      .catch(showError);
-  }
-})();
 
 </script>
+<script src="assets/js/vendor/js-yaml.min.js"></script>
+<script src="assets/js/store.js"></script>
+<script src="assets/js/sim.js"></script>
+<script src="assets/js/sim-shell.js"></script>
+<script src="assets/js/sim-kubectl.js"></script>
+<script src="assets/js/sim-kubectl2.js"></script>
+<script src="assets/js/sim-kubectl3.js"></script>
+<script src="assets/js/sim-faults.js"></script>
+<script src="assets/js/labs-engine.js"></script>
+<script src="assets/js/data/labs-sim-a.js"></script>
+<script src="assets/js/data/labs-sim-b.js"></script>
+<script src="assets/js/data/labs-sim-c.js"></script>
+<script src="assets/js/data/labs-sim-d.js"></script>
+<script src="assets/js/data/labs-sim-e.js"></script>
+<script src="assets/js/data/labs-sim-f.js"></script>
+<script src="assets/js/data/debrief.js"></script>
+<script src="assets/js/data/docs-peek.js"></script>
+<script src="assets/js/data/modules-extra.js"></script>
+<script src="assets/js/data/quiz-extra.js"></script>
+<script src="assets/js/data/quiz-cmd.js"></script>
+<script src="assets/js/quiz.js"></script>
+<script src="assets/js/persist.js"></script>
+<script src="assets/js/anim.js"></script>
+<script src="assets/js/lab-ui.js"></script>
+<script src="assets/js/daily.js"></script>
+<script src="assets/js/exam.js"></script>
+<script src="assets/js/extras.js"></script>
+<script src="assets/js/data/field.js"></script>
+<script src="assets/js/ux.js"></script>
+<script>routeFromHash();</script>
 </body>
 </html>
