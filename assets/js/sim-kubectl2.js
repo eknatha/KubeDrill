@@ -73,7 +73,7 @@
     if ((n.status.conditions || []).length) s += 'Conditions:\n  Type             Status   Reason                Message\n' + n.status.conditions.map(function (c) { return '  ' + c.type.padEnd(17) + c.status.padEnd(9) + (c.reason || '').padEnd(22) + (c.message || ''); }).join('\n') + '\n';
     s += 'Addresses:\n  InternalIP:  ' + n.status.addresses[0].address + '\n  Hostname:    ' + n.metadata.name + '\n';
     s += 'Capacity:\n  cpu:     ' + n.status.capacity.cpu + '\n  memory:  ' + n.status.capacity.memory + '\n  pods:    110\nAllocatable:\n  cpu:     ' + al.cpu + '\n  memory:  ' + al.memory + '\n  pods:    110\n';
-    s += 'System Info:\n  Kubelet Version:   ' + Sim.VERSION + '\n  OS Image:          ' + n.status.nodeInfo.osImage + '\n';
+    s += 'System Info:\n  Kubelet Version:   ' + (n.status.nodeInfo.kubeletVersion || Sim.VERSION) + '\n  OS Image:          ' + n.status.nodeInfo.osImage + '\n';
     var pods = this.list('Pod').filter(function (p) { return p.spec.nodeName === n.metadata.name; });
     s += 'Non-terminated Pods:          (' + pods.length + ' in total)\n' + this.table(['  Namespace', 'Name', 'CPU Requests', 'Memory Requests'], pods.map(function (p) { var c = 0, mm = 0; p.spec.containers.forEach(function (x) { var r = x.resources && x.resources.requests; if (r) { c += U.parseCpu(r.cpu); mm += U.parseMem(r.memory); } }); return ['  ' + p.metadata.namespace, p.metadata.name, U.fmtCpu(c) + ' (' + Math.round(c / U.parseCpu(al.cpu) * 100) + '%)', Math.round(mm) + 'Mi (' + Math.round(mm / U.parseMem(al.memory) * 100) + '%)']; }));
     s += 'Allocated resources:\n  cpu                ' + U.fmtCpu(used.cpu) + '\n  memory             ' + Math.round(used.mem) + 'Mi\n'; void self;

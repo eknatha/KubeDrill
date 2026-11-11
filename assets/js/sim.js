@@ -27,6 +27,7 @@
     ['PersistentVolume', 'persistentvolumes', 'persistentvolume', ['pv'], '', 'v1', 0],
     ['PersistentVolumeClaim', 'persistentvolumeclaims', 'persistentvolumeclaim', ['pvc'], '', 'v1', 1],
     ['StorageClass', 'storageclasses', 'storageclass', ['sc'], 'storage.k8s.io', 'storage.k8s.io/v1', 0],
+    ['PriorityClass', 'priorityclasses', 'priorityclass', ['pc'], 'scheduling.k8s.io', 'scheduling.k8s.io/v1', 0],
     ['ValidatingWebhookConfiguration', 'validatingwebhookconfigurations', 'validatingwebhookconfiguration', [], 'admissionregistration.k8s.io', 'admissionregistration.k8s.io/v1', 0],
     ['NetworkPolicy', 'networkpolicies', 'networkpolicy', ['netpol'], 'networking.k8s.io', 'networking.k8s.io/v1', 1],
     ['Ingress', 'ingresses', 'ingress', ['ing'], 'networking.k8s.io', 'networking.k8s.io/v1', 1],
@@ -481,7 +482,7 @@
     d.status._complete = (upd === d.spec.replicas && repl === d.spec.replicas && ready === d.spec.replicas);
   };
   P.recReplicaSet = function (r) {
-    var self = this, ns = r.metadata.namespace, ps = this.podsOf(r).filter(function (p) { return !p.metadata.deletionTimestamp; }), want = r.spec.replicas;
+    var self = this, ns = r.metadata.namespace, ps = this.podsOf(r).filter(function (p) { return !p.metadata.deletionTimestamp && p.status.phase !== 'Failed' && p.status.phase !== 'Succeeded'; }), want = r.spec.replicas;
     var n = 0;
     while (ps.length < want && n++ < 20) {
       var tpl = clone(r.spec.template), md = tpl.metadata || {}, name = r.metadata.name + '-' + alnum(5, this.rnd());

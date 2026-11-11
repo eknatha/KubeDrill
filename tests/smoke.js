@@ -1,4 +1,4 @@
-const Sim=require('../assets/js/sim.js');['sim-shell','sim-kubectl','sim-kubectl2','sim-kubectl3','sim-faults'].forEach(f=>require('../assets/js/'+f+'.js'));
+const Sim=require('../assets/js/sim.js');['sim-shell','sim-kubectl','sim-kubectl2','sim-kubectl3','sim-faults','sim-faults2'].forEach(f=>require('../assets/js/'+f+'.js'));
 const s=new Sim();
 function run(c){const r=s.exec(c);console.log('$ '+c.split('\n')[0]);process.stdout.write((r.stdout||'')+(r.stderr?'ERR: '+r.stderr:''));return r;}
 run('kubectl create deployment web --image=nginx:1.25 --replicas=3');

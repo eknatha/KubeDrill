@@ -309,3 +309,19 @@ button,.btn-primary,.btn-secondary,.ilab-card,.fail-card,.fg-lab{transition:bord
 .btn-primary:active,.btn-secondary:active{transform:translateY(1px)}
 .ilab-card:hover,.module-card:hover{transform:translateY(-2px)}
 @media (max-width:640px){.fg-chap li{flex-direction:column;gap:4px}.story-bar{font-size:12px}.ob-card{padding:18px}.lr-layout{display:none}}
+
+/* ── cautions, skins, flowcharts, diagram helpers ── */
+.lr-caution{margin:6px 0;border:1px solid #b45309;background:rgba(245,158,11,.10);border-radius:10px;padding:8px 12px;font-size:13px}
+.lr-caution summary{cursor:pointer;font-weight:600;color:#fbbf24}.lr-caution p{margin:6px 0 0}.lr-caution-data{opacity:.85;font-size:12.5px}
+.lr-warn{margin:6px 0;padding:6px 10px;border-left:3px solid #f59e0b;background:rgba(245,158,11,.12);border-radius:6px;font-size:13px}
+.lr-skinbox{display:inline-flex;gap:4px;align-items:center}.lr-skinbox select{max-width:140px}.lr-skinbox .btn-secondary{padding:2px 8px;min-width:0}
+.lr-term[data-skin]{background:var(--t-bg);color:var(--t-fg)}.lr-term[data-skin] #lrIn,.lr-term[data-skin] .lr-prompt,.lr-term[data-skin] .lr-o{color:var(--t-fg)}.lr-term[data-skin] #lrIn{background:transparent}
+.lr-term[data-skin=matrix]{--t-bg:#020b02;--t-fg:#39ff14}.lr-term[data-skin=amber]{--t-bg:#1a1000;--t-fg:#ffb000}.lr-term[data-skin=solar]{--t-bg:#002b36;--t-fg:#93a1a1}
+.lr-term[data-skin=paper]{--t-bg:#fbf7ee;--t-fg:#1f2937}.lr-term[data-skin=contrast]{--t-bg:#000;--t-fg:#fff}
+#lrDia{position:relative}.dia-lines{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.dia-lines path{fill:none;stroke:#38bdf8;stroke-width:2;stroke-dasharray:6 6;animation:diaflow 1s linear infinite}@keyframes diaflow{to{stroke-dashoffset:-12}}
+@media (prefers-reduced-motion:reduce){.dia-lines path{animation:none}}
+.dia-trace{margin:0 0 6px;padding:5px 9px;border-radius:8px;background:rgba(56,189,248,.12);font-size:12.5px}
+.dia-why{position:relative;margin:0 0 8px;padding:8px 28px 8px 10px;border:1px solid #f59e0b;border-radius:8px;background:rgba(245,158,11,.12);font-size:12.5px}.dia-why button{position:absolute;right:4px;top:2px;background:none;border:0;color:inherit;font-size:16px;cursor:pointer}
+.fl-card{border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:12px}.fl-cmd{display:flex;gap:8px;align-items:center;margin:8px 0}.fl-opts,.fl-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.fl-crumb{font-size:12px;opacity:.7}.fl-leaf{color:#4ade80}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}

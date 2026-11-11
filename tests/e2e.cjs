@@ -15,7 +15,7 @@ const srv = http.createServer((q, r) => { let p = decodeURIComponent(q.url.split
   for (const p of ['modules', 'path', 'labs', 'exam', 'quiz', 'visualize', 'cheatsheet', 'tools', 'errors', 'progress', 'compare']) { await pg.goto(base + '#' + p); await pg.waitForTimeout(250); ok(await pg.evaluate(n => document.getElementById('page-' + n).classList.contains('active') && document.getElementById('page-' + n).innerText.length > 80, p), 'page #' + p + ' renders'); }
   // labs
   await pg.goto(base + '#labs'); await pg.waitForTimeout(200);
-  ok(await pg.evaluate(() => document.querySelectorAll('.ilab-card').length) === 73, '73 lab cards');
+  ok(await pg.evaluate(() => document.querySelectorAll('.ilab-card').length) === 96, '96 lab cards');
   // runner
   await pg.goto(base + '#lab/s02-imagepull'); await pg.waitForTimeout(300);
   const run = async c => { await pg.fill('#lrIn', c); await pg.press('#lrIn', 'Enter'); await pg.waitForTimeout(80); };

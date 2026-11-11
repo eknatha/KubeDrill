@@ -112,7 +112,7 @@
     }).join('');
   }
   function renderOutages() {
-    return '<p class="fg-sub">Three real, public post-mortems, summarised in our own words from the cited sources, with the labs that train the same failure class. Click through to read the originals.</p>' + KL.outages.map(function (o) {
+    return '<p class="fg-sub">Real, public post-mortems, summarised in our own words from the cited sources, with the labs that train the same failure class. Click through to read the originals.</p>' + KL.outages.map(function (o) {
       return '<article class="fg-out"><header><h3>' + esc(o.title) + '</h3><span class="fg-meta">' + esc(o.org) + ' · ' + esc(o.when) + ' · ' + esc(o.dur) + '</span></header><ol class="fg-chain">' + o.chain.map(function (c) { return '<li>' + esc(c).replace(/`([^`]+)`/g, '<code>$1</code>') + '</li>'; }).join('') + '</ol>' +
         '<div class="fg-cols"><div><h4>Root cause</h4><p>' + esc(o.cause) + '</p></div><div><h4>How to spot it earlier</h4><ul>' + o.spot.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul></div></div>' +
         '<h4>Practise this failure class</h4><div class="fg-labs">' + o.labs.map(function (x) { return labLink(x[0], x[1]); }).join('') + '</div><div class="fg-src">Sources: ' + o.src.map(function (s) { return '<a href="' + s.u + '" target="_blank" rel="noopener noreferrer">' + esc(s.t) + '</a>'; }).join(' · ') + '</div></article>';
@@ -134,11 +134,11 @@
   }
   function renderField() {
     var r = $('fieldRoot'); if (!r) return; if (anim.timer) { clearInterval(anim.timer); anim.timer = 0; }
-    var tabs = [['stories', '🚨 3 a.m. page'], ['outages', '🔍 Anatomy of an outage'], ['concepts', '🎞 Concepts in motion']];
+    var tabs = [['stories', '🚨 3 a.m. page'], ['outages', '🔍 Anatomy of an outage'], ['flows', '🧭 Flowcharts'], ['concepts', '🎞 Concepts in motion']];
     r.innerHTML = '<div class="section-header"><h2>Field Guide</h2><p>Stories, real post-mortems and animated explainers that put the labs in context. <button class="btn-secondary" id="fgTour">▶ 90-second tour</button></p></div><div class="fg-tabs" role="tablist">' + tabs.map(function (t) { return '<button role="tab" aria-selected="' + (t[0] === tab) + '" data-t="' + t[0] + '">' + t[1] + '</button>'; }).join('') + '</div><div id="fgBody"></div>';
     r.querySelectorAll('[data-t]').forEach(function (b) { b.onclick = function () { tab = b.dataset.t; renderField(); }; });
     $('fgTour').onclick = function () { OB.open(true); };
-    var body = $('fgBody'); if (tab === 'stories') body.innerHTML = renderStories(); else if (tab === 'outages') body.innerHTML = renderOutages(); else bindAnim(body);
+    var body = $('fgBody'); if (tab === 'stories') body.innerHTML = renderStories(); else if (tab === 'outages') body.innerHTML = renderOutages(); else if (tab === 'flows') KL.renderFlows(body); else bindAnim(body);
   }
   KL.route('field', renderField); window.addEventListener('kl:store', function () { if (/^#field/.test(location.hash)) renderField(); });
   KL.fieldTab = function (t) { tab = t; };

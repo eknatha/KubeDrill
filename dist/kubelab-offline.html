@@ -636,6 +636,22 @@ button,.btn-primary,.btn-secondary,.ilab-card,.fail-card,.fg-lab{transition:bord
 .btn-primary:active,.btn-secondary:active{transform:translateY(1px)}
 .ilab-card:hover,.module-card:hover{transform:translateY(-2px)}
 @media (max-width:640px){.fg-chap li{flex-direction:column;gap:4px}.story-bar{font-size:12px}.ob-card{padding:18px}.lr-layout{display:none}}
+
+/* ── cautions, skins, flowcharts, diagram helpers ── */
+.lr-caution{margin:6px 0;border:1px solid #b45309;background:rgba(245,158,11,.10);border-radius:10px;padding:8px 12px;font-size:13px}
+.lr-caution summary{cursor:pointer;font-weight:600;color:#fbbf24}.lr-caution p{margin:6px 0 0}.lr-caution-data{opacity:.85;font-size:12.5px}
+.lr-warn{margin:6px 0;padding:6px 10px;border-left:3px solid #f59e0b;background:rgba(245,158,11,.12);border-radius:6px;font-size:13px}
+.lr-skinbox{display:inline-flex;gap:4px;align-items:center}.lr-skinbox select{max-width:140px}.lr-skinbox .btn-secondary{padding:2px 8px;min-width:0}
+.lr-term[data-skin]{background:var(--t-bg);color:var(--t-fg)}.lr-term[data-skin] #lrIn,.lr-term[data-skin] .lr-prompt,.lr-term[data-skin] .lr-o{color:var(--t-fg)}.lr-term[data-skin] #lrIn{background:transparent}
+.lr-term[data-skin=matrix]{--t-bg:#020b02;--t-fg:#39ff14}.lr-term[data-skin=amber]{--t-bg:#1a1000;--t-fg:#ffb000}.lr-term[data-skin=solar]{--t-bg:#002b36;--t-fg:#93a1a1}
+.lr-term[data-skin=paper]{--t-bg:#fbf7ee;--t-fg:#1f2937}.lr-term[data-skin=contrast]{--t-bg:#000;--t-fg:#fff}
+#lrDia{position:relative}.dia-lines{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.dia-lines path{fill:none;stroke:#38bdf8;stroke-width:2;stroke-dasharray:6 6;animation:diaflow 1s linear infinite}@keyframes diaflow{to{stroke-dashoffset:-12}}
+@media (prefers-reduced-motion:reduce){.dia-lines path{animation:none}}
+.dia-trace{margin:0 0 6px;padding:5px 9px;border-radius:8px;background:rgba(56,189,248,.12);font-size:12.5px}
+.dia-why{position:relative;margin:0 0 8px;padding:8px 28px 8px 10px;border:1px solid #f59e0b;border-radius:8px;background:rgba(245,158,11,.12);font-size:12.5px}.dia-why button{position:absolute;right:4px;top:2px;background:none;border:0;color:inherit;font-size:16px;cursor:pointer}
+.fl-card{border:1px solid var(--border);border-radius:14px;padding:16px;margin-top:12px}.fl-cmd{display:flex;gap:8px;align-items:center;margin:8px 0}.fl-opts,.fl-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}.fl-crumb{font-size:12px;opacity:.7}.fl-leaf{color:#4ade80}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 </head>
 <body data-build="offline-single-file">
@@ -4167,6 +4183,7 @@ js-yaml/dist/js-yaml.mjs:
     ['PersistentVolume', 'persistentvolumes', 'persistentvolume', ['pv'], '', 'v1', 0],
     ['PersistentVolumeClaim', 'persistentvolumeclaims', 'persistentvolumeclaim', ['pvc'], '', 'v1', 1],
     ['StorageClass', 'storageclasses', 'storageclass', ['sc'], 'storage.k8s.io', 'storage.k8s.io/v1', 0],
+    ['PriorityClass', 'priorityclasses', 'priorityclass', ['pc'], 'scheduling.k8s.io', 'scheduling.k8s.io/v1', 0],
     ['ValidatingWebhookConfiguration', 'validatingwebhookconfigurations', 'validatingwebhookconfiguration', [], 'admissionregistration.k8s.io', 'admissionregistration.k8s.io/v1', 0],
     ['NetworkPolicy', 'networkpolicies', 'networkpolicy', ['netpol'], 'networking.k8s.io', 'networking.k8s.io/v1', 1],
     ['Ingress', 'ingresses', 'ingress', ['ing'], 'networking.k8s.io', 'networking.k8s.io/v1', 1],
@@ -4621,7 +4638,7 @@ js-yaml/dist/js-yaml.mjs:
     d.status._complete = (upd === d.spec.replicas && repl === d.spec.replicas && ready === d.spec.replicas);
   };
   P.recReplicaSet = function (r) {
-    var self = this, ns = r.metadata.namespace, ps = this.podsOf(r).filter(function (p) { return !p.metadata.deletionTimestamp; }), want = r.spec.replicas;
+    var self = this, ns = r.metadata.namespace, ps = this.podsOf(r).filter(function (p) { return !p.metadata.deletionTimestamp && p.status.phase !== 'Failed' && p.status.phase !== 'Succeeded'; }), want = r.spec.replicas;
     var n = 0;
     while (ps.length < want && n++ < 20) {
       var tpl = clone(r.spec.template), md = tpl.metadata || {}, name = r.metadata.name + '-' + alnum(5, this.rnd());
@@ -5416,7 +5433,7 @@ js-yaml/dist/js-yaml.mjs:
     if (a.flags.n === true) throw new KErr('error: flag needs an argument: \'n\' in -n');
     switch (verb) {
       case undefined: case 'help': return 'kubectl controls the Kubernetes cluster manager.\n\n Basic Commands: create, expose, run, set\n Deploy Commands: rollout, scale, autoscale\n Cluster Management: cordon, uncordon, drain, taint\n Troubleshooting: describe, logs, exec, top, events\n Advanced: apply, patch, replace, wait, auth, kustomize\n Settings: label, annotate\n Other: api-resources, explain, version, config\n\nUse "kubectl <command> --help" for more information.\n';
-      case 'version': return 'Client Version: ' + Sim.VERSION + '\nKustomize Version: v5.4.2\nServer Version: ' + Sim.VERSION + '\n';
+      case 'version': return 'Client Version: ' + Sim.VERSION + '\nKustomize Version: v5.4.2\nServer Version: ' + ((this.flags && this.flags.ver && this.flags.ver.api) || Sim.VERSION) + '\n';
       case 'cluster-info': return 'Kubernetes control plane is running at https://192.168.49.2:6443\nCoreDNS is running at https://192.168.49.2:6443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy\n\nTo further debug and diagnose cluster problems, use \'kubectl cluster-info dump\'.\n';
       case 'get': return this.kGet(a);
       case 'describe': return this.kDescribe(a);
@@ -5477,7 +5494,7 @@ js-yaml/dist/js-yaml.mjs:
       ConfigMap: [['NAME', 'DATA', 'AGE'], function (x) { return [x.metadata.name, Object.keys(x.data || {}).length, age(x)]; }],
       Secret: [['NAME', 'TYPE', 'DATA', 'AGE'], function (x) { return [x.metadata.name, x.type, Object.keys(x.data || {}).length, age(x)]; }],
       Namespace: [['NAME', 'STATUS', 'AGE'], function (x) { return [x.metadata.name, x.metadata.deletionTimestamp ? 'Terminating' : 'Active', age(x)]; }],
-      Node: [['NAME', 'STATUS', 'ROLES', 'AGE', 'VERSION'].concat(wide ? ['INTERNAL-IP', 'EXTERNAL-IP', 'OS-IMAGE'] : []), function (x) { var cp = (x.metadata.labels || {})['node-role.kubernetes.io/control-plane'] !== undefined; return [x.metadata.name, (Sim.nodeReady(x) ? 'Ready' : 'NotReady') + (x.spec.unschedulable ? ',SchedulingDisabled' : ''), cp ? 'control-plane' : '<none>', age(x), Sim.VERSION].concat(wide ? [x.status.addresses[0].address, '<none>', x.status.nodeInfo.osImage] : []); }],
+      Node: [['NAME', 'STATUS', 'ROLES', 'AGE', 'VERSION'].concat(wide ? ['INTERNAL-IP', 'EXTERNAL-IP', 'OS-IMAGE'] : []), function (x) { var cp = (x.metadata.labels || {})['node-role.kubernetes.io/control-plane'] !== undefined; return [x.metadata.name, (Sim.nodeReady(x) ? 'Ready' : 'NotReady') + (x.spec.unschedulable ? ',SchedulingDisabled' : ''), cp ? 'control-plane' : '<none>', age(x), (x.status.nodeInfo && x.status.nodeInfo.kubeletVersion) || Sim.VERSION].concat(wide ? [x.status.addresses[0].address, '<none>', x.status.nodeInfo.osImage] : []); }],
       PersistentVolume: [['NAME', 'CAPACITY', 'ACCESS MODES', 'RECLAIM POLICY', 'STATUS', 'CLAIM', 'STORAGECLASS', 'REASON', 'AGE'], function (x) { var cr = x.spec.claimRef; return [x.metadata.name, x.spec.capacity.storage, (x.spec.accessModes || []).map(function (m) { return { ReadWriteOnce: 'RWO', ReadOnlyMany: 'ROX', ReadWriteMany: 'RWX' }[m] || m; }).join(','), x.spec.persistentVolumeReclaimPolicy, x.status.phase, cr ? cr.namespace + '/' + cr.name : '', x.spec.storageClassName || '', '', age(x)]; }],
       PersistentVolumeClaim: [['NAME', 'STATUS', 'VOLUME', 'CAPACITY', 'ACCESS MODES', 'STORAGECLASS', 'AGE'], function (x) { return [x.metadata.name, x.status.phase, x.spec.volumeName || '', (x.status.capacity || {}).storage || '', (x.spec.accessModes || []).map(function (m) { return { ReadWriteOnce: 'RWO', ReadOnlyMany: 'ROX', ReadWriteMany: 'RWX' }[m] || m; }).join(','), x.spec.storageClassName === undefined ? 'standard' : x.spec.storageClassName, age(x)]; }],
       StorageClass: [['NAME', 'PROVISIONER', 'RECLAIMPOLICY', 'VOLUMEBINDINGMODE', 'AGE'], function (x) { var def = (x.metadata.annotations || {})['storageclass.kubernetes.io/is-default-class'] === 'true'; return [x.metadata.name + (def ? ' (default)' : ''), x.provisioner, x.reclaimPolicy || 'Delete', x.volumeBindingMode || 'Immediate', age(x)]; }],
@@ -5707,7 +5724,7 @@ js-yaml/dist/js-yaml.mjs:
     if ((n.status.conditions || []).length) s += 'Conditions:\n  Type             Status   Reason                Message\n' + n.status.conditions.map(function (c) { return '  ' + c.type.padEnd(17) + c.status.padEnd(9) + (c.reason || '').padEnd(22) + (c.message || ''); }).join('\n') + '\n';
     s += 'Addresses:\n  InternalIP:  ' + n.status.addresses[0].address + '\n  Hostname:    ' + n.metadata.name + '\n';
     s += 'Capacity:\n  cpu:     ' + n.status.capacity.cpu + '\n  memory:  ' + n.status.capacity.memory + '\n  pods:    110\nAllocatable:\n  cpu:     ' + al.cpu + '\n  memory:  ' + al.memory + '\n  pods:    110\n';
-    s += 'System Info:\n  Kubelet Version:   ' + Sim.VERSION + '\n  OS Image:          ' + n.status.nodeInfo.osImage + '\n';
+    s += 'System Info:\n  Kubelet Version:   ' + (n.status.nodeInfo.kubeletVersion || Sim.VERSION) + '\n  OS Image:          ' + n.status.nodeInfo.osImage + '\n';
     var pods = this.list('Pod').filter(function (p) { return p.spec.nodeName === n.metadata.name; });
     s += 'Non-terminated Pods:          (' + pods.length + ' in total)\n' + this.table(['  Namespace', 'Name', 'CPU Requests', 'Memory Requests'], pods.map(function (p) { var c = 0, mm = 0; p.spec.containers.forEach(function (x) { var r = x.resources && x.resources.requests; if (r) { c += U.parseCpu(r.cpu); mm += U.parseMem(r.memory); } }); return ['  ' + p.metadata.namespace, p.metadata.name, U.fmtCpu(c) + ' (' + Math.round(c / U.parseCpu(al.cpu) * 100) + '%)', Math.round(mm) + 'Mi (' + Math.round(mm / U.parseMem(al.memory) * 100) + '%)']; }));
     s += 'Allocated resources:\n  cpu                ' + U.fmtCpu(used.cpu) + '\n  memory             ' + Math.round(used.mem) + 'Mi\n'; void self;
@@ -6390,6 +6407,145 @@ js-yaml/dist/js-yaml.mjs:
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
+<script>/* assets/js/sim-faults2.js */
+/* Failure model, part 2: PriorityClass + preemption, kubeconfig contexts, kubeadm upgrade/join/reset over ssh, disk & memory pressure. */
+(function (root) {
+  'use strict';
+  var Sim = root.KL && root.KL.Sim || require('./sim.js'), P = Sim.prototype, KErr = Sim.KErr;
+  function F(s) { return s.flags || (s.flags = {}); }
+  function out(s, c) { return { stdout: s, stderr: '', code: c || 0 }; } function err(s, c) { return { stdout: '', stderr: s, code: c || 1 }; }
+  function minor(v) { return parseInt(String(v).replace(/^v/, '').split('.')[1], 10); }
+  function vnorm(v) { return 'v' + String(v).replace(/^v/, '').split('-')[0]; }
+
+  // ── PriorityClass + preemption ──
+  var admit0 = P.admitPod;
+  P.admitPod = function (o) {
+    var r = admit0.apply(this, arguments), s = o.spec, name = s.priorityClassName;
+    if (name) { var pc = this.get('PriorityClass', '', name); if (!pc && !/^system-/.test(name)) throw new KErr('Error from server (Forbidden): pods "' + o.metadata.name + '" is forbidden: no PriorityClass with name ' + name + ' was found'); s.priority = pc ? (pc.value || 0) : (name === 'system-cluster-critical' ? 2000000000 : 2000001000); }
+    else if (s.priority === undefined) { var d = this.list('PriorityClass').filter(function (x) { return x.globalDefault; })[0]; s.priority = d ? (d.value || 0) : 0; }
+    return r;
+  };
+  var sched0 = P.schedule;
+  P.schedule = function (pod) {
+    var r = sched0.apply(this, arguments), self = this, pr = (pod.spec && pod.spec.priority) || 0;
+    if (!r.fail || !/Insufficient/.test(r.fail) || pr <= 0) return r;
+    var victims = this.list('Pod').filter(function (p) { return p !== pod && p.spec.nodeName && (p.spec.priority || 0) < pr && p.status.phase !== 'Failed' && p.status.phase !== 'Succeeded' && !/^kube-/.test(p.metadata.namespace); }).sort(function (a, b) { return (a.spec.priority || 0) - (b.spec.priority || 0); });
+    var nodes = this.list('Node').map(function (n) { return n.metadata.name; });
+    for (var i = 0; i < nodes.length; i++) {
+      var nm = nodes[i], on = victims.filter(function (v) { return v.spec.nodeName === nm; }), taken = [], saved = [];
+      for (var j = 0; j < on.length; j++) {
+        taken.push(on[j]); saved.push(on[j].status.phase); on[j].status.phase = 'Failed';
+        var t = sched0.call(this, pod);
+        if (t.node === nm) { taken.forEach(function (v) { v.status.phase = 'Running'; self.ev(v, 'Normal', 'Preempted', 'Preempted by pod ' + pod.metadata.namespace + '/' + pod.metadata.name + ' on node ' + nm); self.remove(v); }); return { node: nm }; }
+      }
+      taken.forEach(function (v, k) { v.status.phase = saved[k]; });
+    }
+    return r;
+  };
+
+  // ── kubeconfig contexts ──
+  function ctxInit(s) { var f = F(s); if (!f.contexts) { f.contexts = [{ name: 'kubernetes-admin@kubelab', cluster: 'kubelab', user: 'kubernetes-admin', ns: s.ctxNs || 'default' }]; f.current = f.contexts[0].name; } return f; }
+  var cfg0 = P.kConfig;
+  P.kConfig = function (a) {
+    var s = this, f = ctxInit(this), sub = a.pos[0], nm = a.pos[1], fl = a.flags || {}, cur = f.contexts.filter(function (c) { return c.name === f.current; })[0];
+    function find(n) { return f.contexts.filter(function (c) { return c.name === n; })[0]; }
+    if (sub === 'get-contexts') { var rows = [['CURRENT', 'NAME', 'CLUSTER', 'AUTHINFO', 'NAMESPACE']].concat(f.contexts.map(function (c) { return [c.name === f.current ? '*' : '', c.name, c.cluster, c.user, c.name === f.current ? s.ctxNs : c.ns]; })); var w = [0, 1, 2, 3, 4].map(function (i) { return Math.max.apply(null, rows.map(function (r) { return String(r[i]).length; })) + 3; }); return rows.map(function (r) { return r.map(function (x, i) { return String(x).padEnd(w[i]); }).join('').replace(/\s+$/, ''); }).join('\n') + '\n'; }
+    if (sub === 'current-context') return f.current + '\n';
+    if (sub === 'use-context') { var c = find(nm); if (!c) throw new KErr('error: no context exists with the name: "' + nm + '"'); if (cur) cur.ns = s.ctxNs; f.current = c.name; s.ctxNs = c.ns; return 'Switched to context "' + c.name + '".\n'; }
+    if (sub === 'set-context') {
+      var t = fl.current ? cur : find(nm), made = false; if (!t) { t = { name: nm, cluster: fl.cluster || 'kubelab', user: fl.user || 'kubernetes-admin', ns: 'default' }; f.contexts.push(t); made = true; }
+      if (fl.n || fl.namespace) { t.ns = fl.n || fl.namespace; if (t === cur) s.ctxNs = t.ns; } if (fl.cluster) t.cluster = fl.cluster; if (fl.user) t.user = fl.user;
+      return 'Context "' + t.name + '" ' + (made ? 'created' : 'modified') + '.\n';
+    }
+    if (sub === 'rename-context') { var o = find(nm), n2 = a.pos[2]; if (!o) throw new KErr('error: cannot rename the context "' + nm + '", it\'s not in the kubeconfig'); if (find(n2)) throw new KErr('error: cannot rename the context "' + nm + '", the context "' + n2 + '" already exists'); if (f.current === o.name) f.current = n2; o.name = n2; return 'Context "' + nm + '" renamed to "' + n2 + '".\n'; }
+    if (sub === 'delete-context') { var d = find(nm); if (!d) throw new KErr('error: cannot delete context ' + nm + ', not in /home/student/.kube/config'); f.contexts = f.contexts.filter(function (c) { return c !== d; }); var extra = d.name === f.current ? ' WARNING: this removed your active context, use "kubectl config use-context" to select a different one\n' : ''; if (d.name === f.current) f.current = ''; return 'deleted context ' + nm + ' from /home/student/.kube/config\n' + extra; }
+    if (sub === 'view') { var list = fl.minify ? [cur].filter(Boolean) : f.contexts, clusters = {}, users = {}; list.forEach(function (c) { clusters[c.cluster] = 1; users[c.user] = 1; });
+      return 'apiVersion: v1\nclusters:\n' + Object.keys(clusters).map(function (c) { return '- cluster:\n    server: https://192.168.49.2:6443\n  name: ' + c + '\n'; }).join('') + 'contexts:\n' + list.map(function (c) { return '- context:\n    cluster: ' + c.cluster + '\n    namespace: ' + (c === cur ? s.ctxNs : c.ns) + '\n    user: ' + c.user + '\n  name: ' + c.name + '\n'; }).join('') + 'current-context: ' + f.current + '\nkind: Config\npreferences: {}\nusers:\n' + Object.keys(users).map(function (u) { return '- name: ' + u + '\n  user:\n    client-certificate-data: DATA+OMITTED\n    client-key-data: DATA+OMITTED\n'; }).join(''); }
+    return cfg0.apply(this, arguments);
+  };
+  var run0 = P.runCmd;
+  P.runCmd = function (w) {
+    if (w && (w[0] === 'kubectl' || w[0] === 'k') && F(this).contexts) {
+      var i, ctx = null, rest = w.slice(); for (i = 1; i < rest.length; i++) { if (rest[i] === '--context' && rest[i + 1] !== undefined) { ctx = rest[i + 1]; rest.splice(i, 2); break; } if (/^--context=/.test(rest[i])) { ctx = rest[i].slice(10); rest.splice(i, 1); break; } }
+      if (ctx !== null) { var c = F(this).contexts.filter(function (x) { return x.name === ctx; })[0]; if (!c) return err('error: context "' + ctx + '" does not exist\n'); var keep = this.ctxNs; this.ctxNs = c.name === F(this).current ? keep : c.ns; try { return run0.call(this, rest); } finally { this.ctxNs = keep; } }
+    }
+    return run0.apply(this, arguments);
+  };
+
+  // ── nodes: stash on delete, so `kubeadm join` can bring it back ──
+  var rm0 = P.remove;
+  P.remove = function (o) { if (o && o.kind === 'Node' && !this._real) { var f = F(this); f.nodeStash = f.nodeStash || {}; f.nodeStash[o.metadata.name] = JSON.parse(JSON.stringify(o)); } return rm0.apply(this, arguments); };
+
+  // ── pressure + version sync ──
+  var fp0 = P.faultPass;
+  P.faultPass = function () {
+    var r = fp0.apply(this, arguments), self = this, f = F(this);
+    this.list('Node').forEach(function (n) {
+      var nm = n.metadata.name, vn = f.ver && f.ver.nodes && f.ver.nodes[nm];
+      if (vn && n.status.nodeInfo && n.status.nodeInfo.kubeletVersion !== vn.kubelet) { n.status.nodeInfo.kubeletVersion = vn.kubelet; self.changed(); }
+      [['diskPressure', 'DiskPressure', 'disk-pressure', 'KubeletHasDiskPressure', 'kubelet has disk pressure'], ['memPressure', 'MemoryPressure', 'memory-pressure', 'KubeletHasInsufficientMemory', 'kubelet has insufficient memory available']].forEach(function (k) {
+        var on = !!(f[k[0]] && f[k[0]][nm]);
+        if (k[0] === 'memPressure' && on) { var app = f.memPressure[nm]; on = self.list('Pod').some(function (p) { return p.spec.nodeName === nm && (p.metadata.labels || {}).app === app && p.status.phase === 'Running' && !p.metadata.deletionTimestamp && p.spec.containers.some(function (c) { return !(c.resources && c.resources.limits && c.resources.limits.memory); }); }); }
+        var cs = n.status.conditions || [], c = cs.filter(function (x) { return x.type === k[1]; })[0];
+        if (c && (c.status === 'True') !== on) { c.status = on ? 'True' : 'False'; c.reason = on ? k[3] : k[3].replace('HasDisk', 'HasNoDisk').replace('HasInsufficientMemory', 'HasSufficientMemory'); c.message = on ? k[4] : k[4].replace('has disk', 'has no disk').replace('insufficient', 'sufficient'); self.changed(); }
+        var tk = 'node.kubernetes.io/' + k[2], ts = n.spec.taints || [], has = ts.some(function (t) { return t.key === tk; });
+        if (on && !has) { n.spec.taints = ts.concat([{ key: tk, effect: 'NoSchedule' }]); self.changed(); } if (!on && has) { n.spec.taints = ts.filter(function (t) { return t.key !== tk; }); self.changed(); }
+        if (on) {
+          var pods = self.list('Pod').filter(function (p) { return p.spec.nodeName === nm && !/^kube-/.test(p.metadata.namespace) && p.status.phase === 'Running' && !(p.metadata.ownerReferences || []).some(function (o) { return o.kind === 'DaemonSet'; }); });
+          var rank = { BestEffort: 0, Burstable: 1, Guaranteed: 2 }; var lo = Math.min.apply(null, pods.map(function (p) { return rank[p.status.qosClass || 'BestEffort']; }));
+          pods.filter(function (p) { return k[0] === 'diskPressure' || rank[p.status.qosClass || 'BestEffort'] === lo; }).filter(function (p) { return k[0] === 'diskPressure' || lo < 2; }).forEach(function (p) { p.status.phase = 'Failed'; p.status.reason = 'Evicted'; p.status.message = 'The node was low on resource: ' + (k[0] === 'diskPressure' ? 'ephemeral-storage' : 'memory') + '.'; (p.status.conditions || []).forEach(function (q) { if (q.type === 'Ready') q.status = 'False'; }); self.ev(p, 'Warning', 'Evicted', 'The node was low on resource: ' + (k[0] === 'diskPressure' ? 'ephemeral-storage' : 'memory') + '.'); self.changed(); });
+        }
+      });
+    });
+    return r;
+  };
+
+  // ── ssh: package versions, kubeadm upgrade/token/reset/join, disk ──
+  var ssh0 = P.ssh;
+  P.ssh = function (a) { var r = ssh1.call(this, a); if (r && r.code === 0) this.settle(4); return r; };
+  function ssh1(a) {
+    var node = String(a[0] || '').replace(/^.*@/, ''), cmd = a.slice(1).join(' ').replace(/^(['"])(.*)\1$/, '$2').trim(), c = cmd.replace(/^sudo\s+/, ''), f = F(this), nobj = this.get('Node', '', node), m, cp = /^cp/.test(node);
+    var stash = f.nodeStash && f.nodeStash[node]; if (!nobj && !stash) return ssh0.apply(this, arguments);
+    if (!nobj && !/^kubeadm\s+(reset|join)/.test(c) && !/^(hostname|uptime)/.test(c)) return ssh0.apply(this, arguments);
+    var ver = f.ver, vn = ver && ver.nodes && ver.nodes[node];
+    if (/^apt(-get)?\s+update$/.test(c)) return out('Hit:1 https://pkgs.k8s.io/core:/stable:/v1.34/deb  InRelease\nReading package lists... Done\n');
+    if (/^apt-mark\s+(hold|unhold)/.test(c)) return out(c.split(/\s+/)[1] === 'hold' ? 'kubeadm set on hold.\n' : 'Canceled hold on kubeadm.\n');
+    if (vn && (m = c.match(/^apt(?:-get)?\s+install\s+(.+)$/))) {
+      var log = '';
+      for (var t of m[1].split(/\s+/).filter(function (x) { return x && x[0] !== '-'; })) { var kv = t.split('='), pk = kv[0]; if (['kubeadm', 'kubelet', 'kubectl'].indexOf(pk) < 0) return err('E: Unable to locate package ' + pk + '\n', 100); if (!kv[1]) return err('E: refusing to guess the version of ' + pk + ': pin one (e.g. ' + pk + '=1.34.0-1.1)\n', 100); var nv = vnorm(kv[1]), mi = minor(nv); if (!(mi >= 32 && mi <= 34) || !/^\d+\.\d+\.\d+-\d+\.\d+$/.test(kv[1].replace(/^v/, ''))) return err("E: Version '" + kv[1] + "' for '" + pk + "' was not found\n", 100); vn.pkg = vn.pkg || {}; vn.pkg[pk] = nv; log += 'Setting up ' + pk + ' (' + kv[1] + ') ...\n'; }
+      return out('Reading package lists... Done\n' + log);
+    }
+    if (vn && (m = c.match(/^kubeadm\s+version/))) return out('kubeadm version: &version.Info{Major:"1", Minor:"' + minor((vn.pkg || {}).kubeadm || vn.kubelet) + '", GitVersion:"' + ((vn.pkg || {}).kubeadm || vn.kubelet) + '"}\n');
+    if (vn && /^kubeadm\s+upgrade\s+plan/.test(c)) { if (!cp) return err('error: unable to read /etc/kubernetes/admin.conf: this command only works on a control-plane node\n'); var kv0 = (vn.pkg || {}).kubeadm || vn.kubelet; return out('[upgrade/config] Reading configuration from the "kubeadm-config" ConfigMap in namespace "kube-system"...\n[upgrade] Fetching available versions to upgrade to\n[upgrade/versions] Cluster version: ' + ver.api + '\n[upgrade/versions] kubeadm version: ' + kv0 + '\n' + (minor(ver.api) < 34 ? '\nComponents that must be upgraded manually after you have upgraded the control plane with \'kubeadm upgrade apply\':\nCOMPONENT   NODE      CURRENT   TARGET\nkubelet     <all>     ' + ver.api + '   v' + '1.' + (minor(ver.api) + 1) + '.0\n\nUpgrade to the latest stable version:\n\nCOMPONENT                 NODE   CURRENT   TARGET\nkube-apiserver            cp1    ' + ver.api + '   v1.' + (minor(ver.api) + 1) + '.0\n\nNote: upgrade ONE minor version at a time. Upgrade kubeadm first, then run: kubeadm upgrade apply v1.' + (minor(ver.api) + 1) + '.0\n' : '\nYour cluster is up to date.\n')); }
+    if (vn && (m = c.match(/^kubeadm\s+upgrade\s+apply\s+(v?\d+\.\d+\.\d+)/))) {
+      if (!cp) return err('error: unable to read /etc/kubernetes/admin.conf: run "upgrade apply" on a control-plane node\n'); var tv = vnorm(m[1]), kb = (vn.pkg || {}).kubeadm || vn.kubelet;
+      if (minor(tv) > minor(kb)) return err('[upgrade/version] FATAL: the target version ' + tv + ' is newer than kubeadm ' + kb + '. Upgrade the kubeadm package first.\n');
+      if (minor(tv) - minor(ver.api) > 1) return err('[upgrade/version] FATAL: skipping minor versions is not supported (cluster ' + ver.api + ' → ' + tv + '). Upgrade one minor at a time.\n');
+      if (minor(tv) < minor(ver.api)) return err('[upgrade/version] FATAL: downgrades are not supported.\n');
+      ver.api = tv; return out('[upgrade/apply] Upgrading your Static Pod-hosted control plane to version "' + tv + '"...\n[upgrade/staticpods] Component "kube-apiserver" upgraded successfully!\n[upgrade/staticpods] Component "kube-controller-manager" upgraded successfully!\n[upgrade/staticpods] Component "kube-scheduler" upgraded successfully!\n\n[upgrade] SUCCESS! A control plane node of your cluster was upgraded to "' + tv + '".\n\n[upgrade] Now please proceed with upgrading the rest of the nodes by following the right order.\n');
+    }
+    if (vn && /^kubeadm\s+upgrade\s+node/.test(c)) { var kb2 = (vn.pkg || {}).kubeadm || vn.kubelet; if (minor(kb2) > minor(ver.api)) return err('[upgrade] FATAL: this kubeadm (' + kb2 + ') is newer than the control plane (' + ver.api + '). Upgrade the control plane first.\n'); vn.cfg = kb2; return out('[upgrade] Reading configuration from the "kubelet-config" ConfigMap...\n[upgrade] The configuration for this node was successfully updated!\n[upgrade] Now you should go ahead and upgrade the kubelet package using your package manager.\n'); }
+    if (vn && /^systemctl\s+restart\s+kubelet$/.test(c)) { var pk2 = (vn.pkg || {}).kubelet; var r0 = ssh0.apply(this, arguments); if (pk2 && !(f.swapOn && f.swapOn[node])) vn.kubelet = pk2; return r0; }
+    if ((m = c.match(/^kubeadm\s+token\s+create(.*)$/))) { if (!cp) return err('bash: kubeadm: command not found\n', 127); f.tokenMade = true; return out('kubeadm join 192.168.49.2:6443 --token abcdef.0123456789abcdef --discovery-token-ca-cert-hash sha256:7f1c0a5f9e1c3b9d2a4e6f8081726354a9b8c7d6e5f4031221b0a99887766554\n'); }
+    if (/^kubeadm\s+reset(\s|$)/.test(c)) { if (!/(^|\s)(-f|--force)(\s|$)/.test(c)) return out('[reset] WARNING: Changes made to this host by \'kubeadm init\' or \'kubeadm join\' will be reverted.\n[reset] Are you sure you want to proceed? [y/N]: N\n[reset] Aborted reset operation\n', 1); f.reset = f.reset || {}; f.reset[node] = true; f.wasReset = f.wasReset || {}; f.wasReset[node] = true; f.kubeletDown = f.kubeletDown || {}; f.kubeletDown[node] = true; return out('[reset] Stopping the kubelet service\n[reset] Unmounting mounted directories in "/var/lib/kubelet"\n[reset] Deleting contents of directories: [/etc/kubernetes/manifests /var/lib/kubelet /etc/kubernetes/pki]\n\nThe reset process does not clean CNI configuration, iptables rules or kubeconfig files. Clean those manually if needed.\n'); }
+    if (/^kubeadm\s+join\s/.test(c)) {
+      if (!(f.reset && f.reset[node])) return err('[preflight] Some fatal errors occurred:\n\t[ERROR FileAvailable--etc-kubernetes-kubelet.conf]: /etc/kubernetes/kubelet.conf already exists\n\t[ERROR Port-10250]: Port 10250 is in use\nrun `kubeadm reset` on this node first\n');
+      if (!/--token\s+abcdef\.0123456789abcdef/.test(c) || !/--discovery-token-ca-cert-hash\s+sha256:[0-9a-f]{64}/.test(c)) return err('error execution phase preflight: couldn\'t validate the identity of the API Server: invalid or expired token / hash. Create a fresh one on the control plane: kubeadm token create --print-join-command\n');
+      if (nobj) return err('error execution phase kubelet-start: a Node with name "' + node + '" and status "' + (Sim.nodeReady(nobj) ? 'Ready' : 'NotReady') + '" already exists in the cluster. You must delete the existing Node or change the name of this new joining Node\n');
+      var fresh = JSON.parse(JSON.stringify(stash)); delete fresh.metadata.deletionTimestamp; fresh.spec.unschedulable = false; fresh.spec.taints = []; fresh.metadata.uid = undefined; delete fresh.metadata.uid; this.create ? 0 : 0;
+      this.objs[this.key('Node', '', node)] = fresh; if (this.assignUid) this.assignUid(fresh); delete f.reset[node]; if (f.kubeletDown) delete f.kubeletDown[node]; this.changed();
+      return out('[preflight] Running pre-flight checks\n[kubelet-start] Starting the kubelet\n[kubelet-start] Waiting for the kubelet to perform the TLS Bootstrap...\n\nThis node has joined the cluster:\n* Certificate signing request was sent to apiserver and a response was received.\n* The Kubelet was informed of the new secure connection details.\n');
+    }
+    if (/^df(\s+-h)?$/.test(c) && f.diskPressure && f.diskPressure[node]) return out('Filesystem      Size  Used Avail Use% Mounted on\n/dev/sda1        58G   56G  1.2G  98% /\n');
+    if (/^du\s+-sh\s+\/var\/log\/\*?/.test(c) && f.diskPressure && f.diskPressure[node]) return out('1.1G\t/var/log/containers\n44G\t/var/log/journal\n220M\t/var/log/pods\n');
+    if ((m = c.match(/^journalctl\s+--vacuum-size=(\d+)([MG])/))) { if (f.diskPressure && f.diskPressure[node]) { delete f.diskPressure[node]; } return out('Vacuuming done, freed 43.8G of archived journals from /var/log/journal.\n'); }
+    if (/^rm\s+-rf?\s+\/(var\/lib\/(containerd|kubelet|etcd)|etc\/kubernetes)/.test(c) || /^rm\s+-rf?\s+\/\s*$/.test(c)) return err('simulator: refused. That would delete container state / kubelet or etcd data and break the node. Free space with log vacuuming or image pruning instead.\n', 1);
+    if (/^crictl\s+rmi\s+--prune/.test(c)) { if (f.diskPressure && f.diskPressure[node]) f.diskPressure[node] = f.diskPressure[node]; return out('Deleted: 12 unused images\n'); }
+    return ssh0.apply(this, arguments);
+  }
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
 <script>/* assets/js/labs-engine.js */
 /* KubeLab labs engine — declarative lab specs, auto-check against the simulator,
    and generation of equivalent bash (setup.sh / check.sh / reset.sh) for real kind clusters.
@@ -6436,6 +6592,9 @@ js-yaml/dist/js-yaml.mjs:
       case 'endpoints': o = sim.get('Service', a.ns, a.svc); if (!o) return { ok: false, msg: 'service ' + a.svc + ' not found' }; n = sim.endpointsFor(o).length; return { ok: n >= (a.min || 1), msg: 'service ' + a.svc + ' should have ≥' + (a.min || 1) + ' endpoints (has ' + n + ')' };
       case 'canI': { var yes = sim.canI(a.as, a.verb, a.res, a.ns); return { ok: yes === (a.expect !== false), msg: a.as.split(':').pop() + ' ' + (a.expect === false ? 'must NOT be able to ' : 'should be able to ') + a.verb + ' ' + a.res }; }
       case 'curl': { var from = sim.get('Pod', a.ns, a.from); if (!from || from.status.phase !== 'Running') return { ok: false, msg: 'client pod ' + a.from + ' is not running' }; var hp = String(a.to).split(':'), r = sim.connect(from, hp[0], parseInt(hp[1] || '80', 10)); return { ok: (r.code === 0) === (a.ok !== false), msg: a.from + ' → ' + a.to + (a.ok === false ? ' should be BLOCKED' : ' should succeed') }; }
+      case 'qty': { o = ref(sim, a); if (!o) return { ok: false, msg: a.ref + ' not found in ' + a.ns }; v = pathVal(sim, o, a.path); var q0 = String(v), nq; if (a.kind === 'cpu') nq = /m$/.test(q0) ? parseFloat(q0) : parseFloat(q0) * 1000; else if (a.kind === 'mem') { var mm = q0.match(/^([\d.]+)(Ki|Mi|Gi|K|M|G)?$/); nq = mm ? parseFloat(mm[1]) * ({ Ki: 1 / 1024, Mi: 1, Gi: 1024, K: 1000 / 1048576, M: 1000000 / 1048576, G: 1e9 / 1048576 }[mm[2]] || 1 / 1048576) : NaN; } else nq = parseFloat(q0); var okq = !isNaN(nq) && (a.min === undefined || nq >= a.min) && (a.max === undefined || nq <= a.max); return { ok: okq, msg: a.msg || (a.ref + ' ' + a.path + ' should be ' + (a.min !== undefined ? '≥ ' + a.min : '') + (a.max !== undefined ? ' ≤ ' + a.max : '') + (a.kind === 'cpu' ? ' millicores' : a.kind === 'mem' ? ' MiB' : '') + ' (is "' + v + '")') }; }
+      case 'ctx': { var cx = (sim.flags && sim.flags.contexts) || [], hit = a.name ? cx.filter(function (c) { return c.name === a.name; })[0] : null; if (a.current !== undefined) return { ok: !!sim.flags && sim.flags.current === a.current, msg: 'current context should be ' + a.current + ' (is ' + ((sim.flags && sim.flags.current) || 'none') + ')' }; var cn = hit && hit.name === sim.flags.current ? sim.ctxNs : hit && hit.ns; return { ok: !!hit && (a.ns === undefined || cn === a.ns), msg: 'context ' + a.name + (hit ? ' should use namespace ' + a.ns + ' (is ' + cn + ')' : ' does not exist') }; }
+      case 'fval': { var fv2 = sim.flags, ps = String(a.path).split('.'), qi; for (qi = 0; qi < ps.length && fv2 != null; qi++) fv2 = fv2[ps[qi]]; return { ok: String(fv2) === String(a.eq), msg: a.msg || (a.path + ' should be ' + a.eq + ' (now ' + fv2 + ')') }; }
       case 'flag': { var fv = sim.flags && sim.flags[a.k]; if (a.sub) fv = fv && fv[a.sub]; return { ok: !!fv === (a.v !== false), msg: a.msg || (a.k + (a.v === false ? ' should be cleared' : ' should be set')) }; }
       case 'nodeCordoned': o = sim.get('Node', '', a.node); return { ok: !!o && !!o.spec.unschedulable === (a.v !== false), msg: 'node ' + a.node + (a.v === false ? ' should be schedulable' : ' should be cordoned') };
       case 'podsOffNode': n = sim.list('Pod', a.ns).filter(function (p) { return p.spec.nodeName === a.node && !p.metadata.deletionTimestamp && (p.metadata.ownerReferences || []).length; }).length; return { ok: n === 0, msg: 'no ' + a.ns + ' pods should run on ' + a.node + ' (' + n + ' left)' };
@@ -6468,6 +6627,8 @@ js-yaml/dist/js-yaml.mjs:
       case 'endpoints': return '[ "$(kubectl get endpoints ' + a.svc + ns + ' -o jsonpath=' + q('{.subsets[*].addresses[*].ip}') + ' 2>/dev/null | wc -w)" -ge ' + (a.min || 1) + ' ]';
       case 'canI': return '[ "$(kubectl auth can-i ' + a.verb + ' ' + a.res + ' --as=' + a.as + ns + ' 2>/dev/null)" = ' + (a.expect === false ? 'no' : 'yes') + ' ]';
       case 'curl': return (a.ok === false ? '! ' : '') + 'kubectl exec' + ns + ' ' + a.from + ' -- wget -qO- -T 3 ' + a.to + ' >/dev/null 2>&1';
+      case 'qty': case 'ctx': return 'true # (simulator-only check)'
+      case 'fval': return 'true # (simulator-only check)'
       case 'flag': return 'true # (simulator-only check)'
       case 'nodeCordoned': return '[ "$(kubectl get node ' + a.node + ' -o jsonpath=' + q('{.spec.unschedulable}') + ' 2>/dev/null)" ' + (a.v === false ? '!=' : '=') + ' "true" ]';
       case 'podsOffNode': return '[ "$(kubectl get pods' + ns + ' --field-selector spec.nodeName=' + a.node + ' --no-headers 2>/dev/null | wc -l)" -eq 0 ]';
@@ -7184,6 +7345,298 @@ js-yaml/dist/js-yaml.mjs:
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
+<script>/* assets/js/data/labs-sim-g.js */
+/* Labs S74–S86: CKS depth, day-2 operations, networking, scheduler. Some are simulator-only (ssh/kubeadm/node behaviour).
+   `caution` is shown as a warning banner in the runner: what is risky on a REAL cluster. */
+(function (root) {
+  'use strict';
+  var KL = root.KL = root.KL || {}, Labs = KL.Labs || require('../labs-engine.js');
+  function T(title, hints, assert, desc) { return { id: '', title: title, desc: desc || '', hints: hints, assert: assert }; }
+  function L(o) { o.tasks.forEach(function (t, i) { t.id = String(i + 1); }); return o; }
+  function Y() { return Array.prototype.slice.call(arguments).join('\n') + '\n'; }
+  var NS = function (n, labels) { return 'apiVersion: v1\nkind: Namespace\nmetadata:\n  name: ' + n + (labels ? '\n  labels:\n' + Object.keys(labels).map(function (k) { return '    ' + k + ': ' + labels[k]; }).join('\n') : '') + '\n'; };
+  // Deployment with a raw pod spec (lines indented 6)
+  function D(name, ns, rep, spec, lbl) { lbl = lbl || name; return Y('apiVersion: apps/v1', 'kind: Deployment', 'metadata:', '  name: ' + name, '  namespace: ' + ns, 'spec:', '  replicas: ' + rep, '  selector:', '    matchLabels:', '      app: ' + lbl, '  template:', '    metadata:', '      labels:', '        app: ' + lbl, '    spec:', spec); }
+  function C(name, img, extra) { return Y('      containers:', '      - name: ' + name, '        image: ' + img) + (extra || ''); }
+  var sim = function (o) { o.simOnly = true; return o; };
+  var jp = function (ref, ns, path, eq) { return { t: 'jp', ref: ref, ns: ns, path: path, eq: eq }; };
+
+  Labs.register([
+    // ───────── CKS depth ─────────
+    L({ id: 's74-privileged-hunt', num: 'S74', title: 'Hunt the privileged workloads', diff: 'Advanced', track: ['CKS'], domain: 'System hardening', time: '12 min', ns: 'payments',
+      story: 'An audit found workloads in `payments` that can escape their container: one runs **privileged**, one shares the host **PID** namespace, one mounts the container runtime socket via **hostPath**. Remove each risk without taking the apps down.',
+      caution: 'On a real cluster: patching a Deployment restarts its pods. Check traffic first, and never "fix" by making the namespace privileged. A hostPath to the runtime socket gives root on the node.',
+      setup: [NS('payments'),
+        D('ledger', 'payments', 1, C('app', 'nginx:1.25', Y('        securityContext:', '          privileged: true'))),
+        D('reports', 'payments', 1, Y('      hostPID: true') + C('app', 'nginx:1.25')),
+        D('cache', 'payments', 1, C('app', 'nginx:1.25', Y('        volumeMounts:', '        - name: sock', '          mountPath: /var/run/docker.sock')) + Y('      volumes:', '      - name: sock', '        hostPath:', '          path: /var/run/docker.sock'))],
+      tasks: [T('Stop ledger running privileged', ['`kubectl get deploy -n payments -o yaml | grep -n privileged`', 'JSON patch: `replace` the field with `false`.', '`kubectl patch deploy ledger -n payments --type=json -p \'[{"op":"replace","path":"/spec/template/spec/containers/0/securityContext/privileged","value":false}]\'`'], [jp('deployment/ledger', 'payments', '.spec.template.spec.containers[0].securityContext.privileged', 'false')]),
+        T('Remove hostPID from reports', ['`kubectl get deploy reports -n payments -o jsonpath={.spec.template.spec.hostPID}`', 'JSON patch `remove` on `/spec/template/spec/hostPID`.'], [jp('deployment/reports', 'payments', '.spec.template.spec.hostPID', '')]),
+        T('Remove the docker.sock hostPath from cache', ['Remove both the volume and its mount.', '`--type=json` with two `remove` ops (mount first, then volume).', 'Paths: `/spec/template/spec/containers/0/volumeMounts` and `/spec/template/spec/volumes`.'], [jp('deployment/cache', 'payments', '.spec.template.spec.volumes', ''), jp('deployment/cache', 'payments', '.spec.template.spec.containers[0].volumeMounts', '')]),
+        T('Everything still running', ['`kubectl get pods -n payments`'], [{ t: 'podsReady', ns: 'payments', min: 3 }])],
+      solution: ['kubectl patch deploy ledger -n payments --type=json -p \'[{"op":"replace","path":"/spec/template/spec/containers/0/securityContext/privileged","value":false}]\'', 'kubectl patch deploy reports -n payments --type=json -p \'[{"op":"remove","path":"/spec/template/spec/hostPID"}]\'', 'kubectl patch deploy cache -n payments --type=json -p \'[{"op":"remove","path":"/spec/template/spec/containers/0/volumeMounts"},{"op":"remove","path":"/spec/template/spec/volumes"}]\'', 'kubectl get pods -n payments'] }),
+
+    L({ id: 's75-rbac-least-privilege', num: 'S75', title: 'Cut a wildcard Role down to least privilege', diff: 'Advanced', track: ['CKS', 'CKA'], domain: 'Cluster hardening', time: '10 min', ns: 'ci',
+      story: 'The CI ServiceAccount `deployer` in `ci` was given a Role with `*` on `*`. It only needs to manage Deployments. Replace the Role with the minimum rules — do not delete the RoleBinding.',
+      caution: 'On a real cluster, removing permissions can break pipelines instantly. Test with `kubectl auth can-i --as=...` before and after. Never grant `escalate`, `bind` or `impersonate` to automation accounts.',
+      setup: [NS('ci'), 'apiVersion: v1\nkind: ServiceAccount\nmetadata:\n  name: deployer\n  namespace: ci\n', Y('apiVersion: rbac.authorization.k8s.io/v1', 'kind: Role', 'metadata:', '  name: deployer', '  namespace: ci', 'rules:', '- apiGroups: ["*"]', '  resources: ["*"]', '  verbs: ["*"]'), Y('apiVersion: rbac.authorization.k8s.io/v1', 'kind: RoleBinding', 'metadata:', '  name: deployer', '  namespace: ci', 'subjects:', '- kind: ServiceAccount', '  name: deployer', '  namespace: ci', 'roleRef:', '  kind: Role', '  name: deployer', '  apiGroup: rbac.authorization.k8s.io')],
+      tasks: [T('Deployer can still manage Deployments', ['`kubectl auth can-i create deployments --as=system:serviceaccount:ci:deployer -n ci`', 'Recreate the Role with verbs get,list,watch,create,update,patch on deployments.apps.', '`kubectl delete role deployer -n ci` then `kubectl create role deployer --verb=get,list,watch,create,update,patch --resource=deployments.apps -n ci`'], [{ t: 'canI', as: 'system:serviceaccount:ci:deployer', verb: 'create', res: 'deployments', ns: 'ci' }, { t: 'canI', as: 'system:serviceaccount:ci:deployer', verb: 'update', res: 'deployments', ns: 'ci' }]),
+        T('…but cannot read Secrets', ['`kubectl auth can-i get secrets --as=system:serviceaccount:ci:deployer -n ci`'], [{ t: 'canI', as: 'system:serviceaccount:ci:deployer', verb: 'get', res: 'secrets', ns: 'ci', expect: false }]),
+        T('…and cannot delete Deployments', ['The pipeline only deploys; removal is a human action.'], [{ t: 'canI', as: 'system:serviceaccount:ci:deployer', verb: 'delete', res: 'deployments', ns: 'ci', expect: false }, { t: 'exists', ref: 'rolebinding/deployer', ns: 'ci' }])],
+      solution: ['kubectl auth can-i get secrets --as=system:serviceaccount:ci:deployer -n ci', 'kubectl delete role deployer -n ci', 'kubectl create role deployer --verb=get,list,watch,create,update,patch --resource=deployments.apps -n ci', 'kubectl auth can-i delete deployments --as=system:serviceaccount:ci:deployer -n ci'] }),
+
+    L({ id: 's76-image-hygiene', num: 'S76', title: 'Pin and vet container images', diff: 'Intermediate', track: ['CKS'], domain: 'Supply chain', time: '10 min', ns: 'prod',
+      story: 'The security review flagged three Deployments in `prod`: one uses `:latest`, one has **no tag** at all, and one pulls from an untrusted registry (`evil.example.com`). Policy: only `nginx:1.25.5` from Docker Hub is approved for these services.',
+      caution: 'Pinning a tag is good; pinning a **digest** (`image@sha256:...`) is better because tags can be moved. Always scan an image and verify its signature before approving it, and never run an image just because the name looks familiar.',
+      setup: [NS('prod'), D('web', 'prod', 1, C('app', 'nginx:latest')), D('api', 'prod', 1, C('app', 'nginx')), D('worker', 'prod', 1, C('app', 'evil.example.com/nginx:1.25.5'))],
+      tasks: [T('No :latest or untagged images', ['`kubectl get deploy -n prod -o jsonpath=\'{range .items[*]}{.metadata.name}{" "}{..image}{"\\n"}{end}\'`', '`kubectl set image deploy/web app=nginx:1.25.5 -n prod`'], [jp('deployment/web', 'prod', '.spec.template.spec.containers[0].image', 'nginx:1.25.5'), jp('deployment/api', 'prod', '.spec.template.spec.containers[0].image', 'nginx:1.25.5')]),
+        T('Nothing from the untrusted registry', ['Replace the image on `worker` too.'], [jp('deployment/worker', 'prod', '.spec.template.spec.containers[0].image', 'nginx:1.25.5')]),
+        T('All pods healthy', ['`kubectl rollout status deploy/web -n prod`'], [{ t: 'podsReady', ns: 'prod', min: 3 }])],
+      solution: ['kubectl set image deploy/web app=nginx:1.25.5 -n prod', 'kubectl set image deploy/api app=nginx:1.25.5 -n prod', 'kubectl set image deploy/worker app=nginx:1.25.5 -n prod', 'kubectl get pods -n prod'] }),
+
+    L({ id: 's77-hardened-pod', num: 'S77', title: 'Harden a pod\'s securityContext', diff: 'Advanced', track: ['CKS', 'CKAD'], domain: 'Minimize vulnerabilities', time: '12 min', ns: 'secure',
+      story: 'Deployment `web` in `secure` runs as root with a writable filesystem and every Linux capability. Bring it up to the restricted profile: non-root user, read-only root filesystem, no privilege escalation, all capabilities dropped, RuntimeDefault seccomp.',
+      caution: 'A read-only root filesystem breaks apps that write to disk (nginx needs writable `/var/cache/nginx` and `/var/run`). On a real cluster mount `emptyDir` volumes for those paths and test in staging first.',
+      setup: [NS('secure'), D('web', 'secure', 1, C('app', 'nginx:1.25'))],
+      tasks: [T('Run as non-root', ['`kubectl edit deploy web -n secure` or apply a full manifest.', 'Container securityContext: `runAsNonRoot: true`, `runAsUser: 10001`.'], [jp('deployment/web', 'secure', '.spec.template.spec.containers[0].securityContext.runAsNonRoot', 'true')]),
+        T('Read-only root filesystem, no escalation', ['`readOnlyRootFilesystem: true`', '`allowPrivilegeEscalation: false`'], [jp('deployment/web', 'secure', '.spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem', 'true'), jp('deployment/web', 'secure', '.spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation', 'false')]),
+        T('Drop all capabilities + RuntimeDefault seccomp', ['`capabilities: {drop: ["ALL"]}`', 'Pod-level `securityContext.seccompProfile.type: RuntimeDefault`.'], [jp('deployment/web', 'secure', '.spec.template.spec.containers[0].securityContext.capabilities.drop[0]', 'ALL'), jp('deployment/web', 'secure', '.spec.template.spec.securityContext.seccompProfile.type', 'RuntimeDefault')]),
+        T('Pod still Ready', [], [{ t: 'podsReady', ns: 'secure', sel: 'app=web', min: 1 }])],
+      solution: ['kubectl apply -f - <<EOF\n' + D('web', 'secure', 1, Y('      securityContext:', '        seccompProfile:', '          type: RuntimeDefault') + C('app', 'nginx:1.25', Y('        securityContext:', '          runAsNonRoot: true', '          runAsUser: 10001', '          readOnlyRootFilesystem: true', '          allowPrivilegeEscalation: false', '          capabilities:', '            drop: ["ALL"]'))) + 'EOF', 'kubectl get pods -n secure'] }),
+
+    L({ id: 's78-default-sa-admin', num: 'S78', title: 'The default ServiceAccount is cluster-admin', diff: 'Advanced', track: ['CKS', 'CKA'], domain: 'Cluster hardening', time: '10 min', ns: 'apps',
+      story: 'Someone bound `cluster-admin` to the **default** ServiceAccount in `apps` "to make the dashboard work". Every pod in the namespace can now do anything. Remove the binding and give the dashboard its own ServiceAccount that can only read pods in `apps`.',
+      caution: 'On a real cluster, deleting a binding takes effect immediately and can break whatever relied on it. Check `kubectl get clusterrolebindings -o wide` for other broad bindings, and never use `system:masters` for apps.',
+      setup: [NS('apps'), D('dash', 'apps', 1, C('app', 'nginx:1.25')), 'apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRoleBinding\nmetadata:\n  name: default-sa-admin\nsubjects:\n- kind: ServiceAccount\n  name: default\n  namespace: apps\nroleRef:\n  kind: ClusterRole\n  name: cluster-admin\n  apiGroup: rbac.authorization.k8s.io\n'],
+      tasks: [T('Default SA is no longer privileged', ['`kubectl auth can-i list secrets --as=system:serviceaccount:apps:default -A`', '`kubectl delete clusterrolebinding default-sa-admin`'], [{ t: 'canI', as: 'system:serviceaccount:apps:default', verb: 'list', res: 'secrets', ns: 'apps', expect: false }]),
+        T('Dedicated SA `dash-reader` can read pods in apps', ['`kubectl create sa dash-reader -n apps`', '`kubectl create role pod-reader --verb=get,list,watch --resource=pods -n apps`', '`kubectl create rolebinding dash-reader --role=pod-reader --serviceaccount=apps:dash-reader -n apps`'], [{ t: 'canI', as: 'system:serviceaccount:apps:dash-reader', verb: 'list', res: 'pods', ns: 'apps' }, { t: 'canI', as: 'system:serviceaccount:apps:dash-reader', verb: 'delete', res: 'pods', ns: 'apps', expect: false }]),
+        T('Dashboard uses its own SA', ['JSON patch `add` at `/spec/template/spec/serviceAccountName`.'], [jp('deployment/dash', 'apps', '.spec.template.spec.serviceAccountName', 'dash-reader'), { t: 'podsReady', ns: 'apps', sel: 'app=dash', min: 1 }])],
+      solution: ['kubectl delete clusterrolebinding default-sa-admin', 'kubectl create sa dash-reader -n apps', 'kubectl create role pod-reader --verb=get,list,watch --resource=pods -n apps', 'kubectl create rolebinding dash-reader --role=pod-reader --serviceaccount=apps:dash-reader -n apps', 'kubectl patch deploy dash -n apps --type=json -p \'[{"op":"add","path":"/spec/template/spec/serviceAccountName","value":"dash-reader"}]\'', 'kubectl get pods -n apps'] }),
+
+    // ───────── Day-2 operations ─────────
+    sim(L({ id: 's79-kubeadm-upgrade', num: 'S79', title: 'Upgrade the cluster one minor version (kubeadm)', diff: 'Advanced', track: ['CKA'], domain: 'Cluster', time: '18 min', ns: 'shop',
+      story: 'The cluster runs **v1.33.0** and must move to **v1.34.0** with no downtime for `web`. Order matters: control plane first, then each worker (drain → upgrade → restart kubelet → uncordon). Skipping a minor version is not allowed.',
+      caution: 'REAL clusters: back up etcd first; read the release notes; upgrade ONE minor version at a time; drain only one node at a time and check PodDisruptionBudgets; never upgrade kubelet to a version newer than the API server. Package commands here are simulated.',
+      setup: [NS('shop'), D('web', 'shop', 3, C('app', 'nginx:1.25'))], setupCmds: [],
+      flags: { ver: { api: 'v1.33.0', nodes: { cp1: { kubelet: 'v1.33.0', pkg: {} }, worker1: { kubelet: 'v1.33.0', pkg: {} }, worker2: { kubelet: 'v1.33.0', pkg: {} } } } },
+      tasks: [T('Plan the control-plane upgrade', ['`ssh cp1 \'sudo kubeadm upgrade plan\'`', 'It names the next version and tells you to upgrade kubeadm first.'], [{ t: 'exists', ref: 'node/cp1', ns: '' }], 'Read the plan; this check only confirms the cluster is intact.'),
+        T('Upgrade the control plane to v1.34.0', ['`ssh cp1 \'sudo apt-get install -y kubeadm=1.34.0-1.1\'`', '`ssh cp1 \'sudo kubeadm upgrade apply v1.34.0 -y\'`', 'Then kubelet: `apt-get install -y kubelet=1.34.0-1.1 kubectl=1.34.0-1.1` and `systemctl restart kubelet`.'], [{ t: 'fval', path: 'ver.api', eq: 'v1.34.0' }, { t: 'fval', path: 'ver.nodes.cp1.kubelet', eq: 'v1.34.0' }]),
+        T('Upgrade worker1 (drain first)', ['`kubectl drain worker1 --ignore-daemonsets --delete-emptydir-data`', 'On the node: install kubeadm, `kubeadm upgrade node`, install kubelet, restart it.', '`kubectl uncordon worker1`'], [{ t: 'fval', path: 'ver.nodes.worker1.kubelet', eq: 'v1.34.0' }, { t: 'nodeCordoned', node: 'worker1', v: false }]),
+        T('Upgrade worker2 and keep web running', ['Repeat the worker steps for worker2.', 'Do not drain both workers at once.'], [{ t: 'fval', path: 'ver.nodes.worker2.kubelet', eq: 'v1.34.0' }, { t: 'nodeCordoned', node: 'worker2', v: false }, { t: 'podsReady', ns: 'shop', sel: 'app=web', min: 3 }])],
+      solution: ['ssh cp1 \'sudo kubeadm upgrade plan\'', 'ssh cp1 \'sudo apt-get install -y kubeadm=1.34.0-1.1\'', 'ssh cp1 \'sudo kubeadm upgrade apply v1.34.0 -y\'', 'ssh cp1 \'sudo apt-get install -y kubelet=1.34.0-1.1 kubectl=1.34.0-1.1\'', 'ssh cp1 \'sudo systemctl restart kubelet\'',
+        'kubectl drain worker1 --ignore-daemonsets --delete-emptydir-data', 'ssh worker1 \'sudo apt-get install -y kubeadm=1.34.0-1.1\'', 'ssh worker1 \'sudo kubeadm upgrade node\'', 'ssh worker1 \'sudo apt-get install -y kubelet=1.34.0-1.1\'', 'ssh worker1 \'sudo systemctl restart kubelet\'', 'kubectl uncordon worker1',
+        'kubectl drain worker2 --ignore-daemonsets --delete-emptydir-data', 'ssh worker2 \'sudo apt-get install -y kubeadm=1.34.0-1.1\'', 'ssh worker2 \'sudo kubeadm upgrade node\'', 'ssh worker2 \'sudo apt-get install -y kubelet=1.34.0-1.1\'', 'ssh worker2 \'sudo systemctl restart kubelet\'', 'kubectl uncordon worker2', 'kubectl get nodes'] })),
+
+    sim(L({ id: 's80-node-replace', num: 'S80', title: 'Replace a dead node (drain, delete, reset, rejoin)', diff: 'Advanced', track: ['CKA'], domain: 'Cluster', time: '15 min', ns: 'shop',
+      story: '`worker2` has a corrupt disk and is NotReady. Rebuild it: remove it from the cluster cleanly, wipe its kubeadm state, then join it again with a fresh token.',
+      caution: '`kubeadm reset` WIPES the node\'s Kubernetes state (manifests, kubelet data, certificates). Only run it on the node you mean to rebuild, and double-check the hostname. Join tokens expire (24h by default) — create a fresh one instead of reusing old ones from chat logs.',
+      setup: [NS('shop'), D('web', 'shop', 3, C('app', 'nginx:1.25'))], setupCmds: [], flags: { kubeletDown: { worker2: true } },
+      tasks: [T('Drain and remove the node object', ['`kubectl drain worker2 --ignore-daemonsets --delete-emptydir-data --force`', '`kubectl delete node worker2`'], [{ t: 'fval', path: 'nodeStash.worker2.kind', eq: 'Node', msg: 'worker2 should have been deleted from the cluster (kubectl delete node)' }]),
+        T('Reset the node and get a join command', ['`ssh worker2 \'sudo kubeadm reset -f\'`', '`ssh cp1 \'sudo kubeadm token create --print-join-command\'`'], [{ t: 'fval', path: 'tokenMade', eq: 'true' }, { t: 'fval', path: 'wasReset.worker2', eq: 'true', msg: 'run kubeadm reset -f on worker2' }]),
+        T('Rejoin worker2; web fully Ready', ['Run the printed join command on worker2 with sudo.', '`kubectl get nodes`'], [{ t: 'exists', ref: 'node/worker2', ns: '' }, { t: 'flag', k: 'kubeletDown', sub: 'worker2', v: false }, { t: 'podsReady', ns: 'shop', sel: 'app=web', min: 3 }])],
+      solution: ['kubectl drain worker2 --ignore-daemonsets --delete-emptydir-data --force', 'kubectl delete node worker2', 'ssh worker2 \'sudo kubeadm reset -f\'', 'ssh cp1 \'sudo kubeadm token create --print-join-command\'', 'ssh worker2 \'sudo kubeadm join 192.168.49.2:6443 --token abcdef.0123456789abcdef --discovery-token-ca-cert-hash sha256:7f1c0a5f9e1c3b9d2a4e6f8081726354a9b8c7d6e5f4031221b0a99887766554\'', 'kubectl get nodes'] })),
+
+    sim(L({ id: 's81-disk-pressure', num: 'S81', title: 'Node under disk pressure: pods being evicted', diff: 'Intermediate', track: ['CKA'], domain: 'Troubleshooting', time: '10 min', ns: 'shop',
+      story: 'Pods on `worker1` keep getting **Evicted** and the node carries a `disk-pressure` taint. Find what is eating the disk and free space safely — without deleting container or kubelet data.',
+      caution: 'Never `rm -rf` /var/lib/containerd, /var/lib/kubelet or /var/lib/etcd to "free space": that destroys running containers and cluster state. Vacuum logs, prune unused images, and fix the log source. The simulator refuses the dangerous commands.',
+      setup: [NS('shop'), D('web', 'shop', 3, C('app', 'nginx:1.25'))], setupCmds: [], flags: { diskPressure: { worker1: true } },
+      tasks: [T('Confirm the cause on the node', ['`kubectl describe node worker1` — Conditions.', '`ssh worker1 \'df -h\'` and `ssh worker1 \'du -sh /var/log/*\'`.'], [{ t: 'exists', ref: 'node/worker1', ns: '' }]),
+        T('Free the space the safe way', ['The journal is the big one.', '`ssh worker1 \'sudo journalctl --vacuum-size=200M\'`'], [{ t: 'flag', k: 'diskPressure', sub: 'worker1', v: false, msg: 'worker1 should no longer be under disk pressure' }]),
+        T('Pods running again', ['`kubectl get pods -n shop -o wide`', 'Evicted pods stay listed; the Deployment has replaced them.'], [{ t: 'podsReady', ns: 'shop', sel: 'app=web', min: 3 }])],
+      solution: ['kubectl describe node worker1', 'ssh worker1 \'df -h\'', 'ssh worker1 \'du -sh /var/log/*\'', 'ssh worker1 \'sudo journalctl --vacuum-size=200M\'', 'kubectl get pods -n shop'] })),
+
+    // ───────── Networking ─────────
+    L({ id: 's82-coredns-down', num: 'S82', title: 'Nothing resolves: CoreDNS scaled to zero', diff: 'Intermediate', track: ['CKA'], domain: 'Networking', time: '8 min', ns: 'shop',
+      story: 'After a "cost-saving" change, `client` can no longer reach `server` by name (`bad address`). IP traffic works. Find the DNS component and restore it.',
+      caution: 'On a real cluster CoreDNS is cluster-critical: scaling it to 0 or editing its ConfigMap incorrectly breaks name resolution for every namespace within seconds. Keep at least 2 replicas and change the Corefile only after copying a backup of the ConfigMap.',
+      setup: [NS('shop'), D('server', 'shop', 1, C('app', 'nginx:1.25')), 'apiVersion: v1\nkind: Service\nmetadata:\n  name: server\n  namespace: shop\nspec:\n  selector:\n    app: server\n  ports:\n  - port: 80\n', 'apiVersion: v1\nkind: Pod\nmetadata:\n  name: client\n  namespace: shop\n  labels:\n    run: client\nspec:\n  containers:\n  - name: client\n    image: busybox:1.36\n    command: ["sleep", "3600"]\n'],
+      setupCmds: ['kubectl scale deploy coredns -n kube-system --replicas=0'],
+      tasks: [T('Find why names do not resolve', ['`kubectl get pods -n kube-system`', '`kubectl get endpoints kube-dns -n kube-system`', 'The kube-dns Service has no endpoints.'], [{ t: 'exists', ref: 'service/kube-dns', ns: 'kube-system' }]),
+        T('Restore CoreDNS to 2 replicas', ['`kubectl scale deploy coredns -n kube-system --replicas=2`'], [{ t: 'podsReady', ns: 'kube-system', sel: 'k8s-app=kube-dns', min: 2 }]),
+        T('client reaches server by name', ['`kubectl exec client -n shop -- wget -qO- server`'], [{ t: 'curl', ns: 'shop', from: 'client', to: 'server:80' }])],
+      solution: ['kubectl get endpoints kube-dns -n kube-system', 'kubectl scale deploy coredns -n kube-system --replicas=2', 'kubectl exec client -n shop -- wget -qO- server'] }),
+
+    L({ id: 's83-lb-pending', num: 'S83', title: 'LoadBalancer stuck on <pending>', diff: 'Intermediate', track: ['CKA', 'CKAD'], domain: 'Networking', time: '8 min', ns: 'shop',
+      story: 'Service `web` is `type: LoadBalancer` but `EXTERNAL-IP` says `<pending>` forever — this cluster has no cloud load-balancer controller. Make the app reachable from outside the cluster another way.',
+      caution: 'NodePort opens a port on EVERY node (30000–32767) to anyone who can reach the nodes. On a real cluster restrict it with firewall rules or use an Ingress/Gateway behind a real load balancer. Do not expose databases this way.',
+      setup: [NS('shop'), D('web', 'shop', 2, C('app', 'nginx:1.25')), 'apiVersion: v1\nkind: Service\nmetadata:\n  name: web\n  namespace: shop\nspec:\n  type: LoadBalancer\n  selector:\n    app: web\n  ports:\n  - port: 80\n    targetPort: 80\n'],
+      tasks: [T('Understand why it is pending', ['`kubectl get svc web -n shop`', 'No cloud-controller-manager / MetalLB here.'], [{ t: 'exists', ref: 'service/web', ns: 'shop' }]),
+        T('Expose it with a NodePort Service', ['`kubectl patch svc web -n shop -p \'{"spec":{"type":"NodePort"}}\'`'], [jp('service/web', 'shop', '.spec.type', 'NodePort')]),
+        T('Endpoints still healthy', ['`kubectl get endpoints web -n shop`'], [{ t: 'endpoints', svc: 'web', ns: 'shop', min: 2 }])],
+      solution: ['kubectl get svc web -n shop', 'kubectl patch svc web -n shop -p \'{"spec":{"type":"NodePort"}}\'', 'kubectl get endpoints web -n shop'] }),
+
+    L({ id: 's84-service-ladder', num: 'S84', title: 'Service unreachable: climb the ladder', diff: 'Advanced', track: ['CKA', 'CKAD'], domain: 'Networking', time: '15 min', ns: 'store',
+      story: '`tester` cannot reach Service `web` in `store`. There are **three** independent faults. Work up the ladder: pod → endpoints → Service → NetworkPolicy.',
+      caution: 'When debugging on a real cluster, do not disable NetworkPolicies to "see if it works" in production — add the specific allow rule instead. Do not use `kubectl port-forward` as proof the Service works; it bypasses the Service.',
+      setup: [NS('store'), D('web', 'store', 2, C('app', 'nginx:1.25', Y('        ports:', '        - containerPort: 80'))), 'apiVersion: v1\nkind: Service\nmetadata:\n  name: web\n  namespace: store\nspec:\n  selector:\n    app: webapp\n  ports:\n  - port: 80\n    targetPort: 8080\n', 'apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: default-deny\n  namespace: store\nspec:\n  podSelector: {}\n  policyTypes: ["Ingress"]\n', 'apiVersion: v1\nkind: Pod\nmetadata:\n  name: tester\n  namespace: store\n  labels:\n    run: tester\nspec:\n  containers:\n  - name: tester\n    image: busybox:1.36\n    command: ["sleep", "3600"]\n'],
+      tasks: [T('Service selects the pods', ['`kubectl get endpoints web -n store` is empty.', 'Compare `kubectl get svc web -o yaml` selector with `kubectl get pods --show-labels`.'], [{ t: 'endpoints', svc: 'web', ns: 'store', min: 2 }]),
+        T('Service targets the real container port', ['The container listens on 80.', '`kubectl patch svc web -n store --type=json -p \'[{"op":"replace","path":"/spec/ports/0/targetPort","value":80}]\'`'], [jp('service/web', 'store', '.spec.ports[0].targetPort', '80')]),
+        T('Allow the traffic, keep default-deny', ['Add an ingress policy for `app=web` from pods labelled `run=tester`.', 'Do NOT delete `default-deny`.'], [{ t: 'curl', ns: 'store', from: 'tester', to: 'web:80' }, { t: 'exists', ref: 'networkpolicy/default-deny', ns: 'store' }])],
+      solution: ['kubectl patch svc web -n store --type=json -p \'[{"op":"replace","path":"/spec/selector/app","value":"web"},{"op":"replace","path":"/spec/ports/0/targetPort","value":80}]\'', 'kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-tester\n  namespace: store\nspec:\n  podSelector:\n    matchLabels:\n      app: web\n  policyTypes: ["Ingress"]\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          run: tester\nEOF', 'kubectl exec tester -n store -- wget -qO- web'] }),
+
+    // ───────── Scheduler & resources ─────────
+    L({ id: 's85-priority-preemption', num: 'S85', title: 'Critical pods Pending: priority and preemption', diff: 'Advanced', track: ['CKA'], domain: 'Scheduling', time: '12 min', ns: 'batch',
+      story: 'The workers are full of low-value `filler` pods. The important `payments` Deployment cannot schedule (`Insufficient cpu`). Give it a high **PriorityClass** so the scheduler preempts filler pods.',
+      caution: 'Preemption kills other teams\' pods to make room. On a real cluster restrict who may use high PriorityClasses (ResourceQuota scopes) and check PodDisruptionBudgets; never set `system-cluster-critical` on application workloads.',
+      setup: [NS('batch'), 'apiVersion: scheduling.k8s.io/v1\nkind: PriorityClass\nmetadata:\n  name: low\nvalue: 100\nglobalDefault: true\n', 'apiVersion: scheduling.k8s.io/v1\nkind: PriorityClass\nmetadata:\n  name: critical\nvalue: 100000\n',
+        D('filler', 'batch', 7, C('app', 'nginx:1.25', Y('        resources:', '          requests:', '            cpu: "1"', '            memory: 64Mi'))),
+        D('payments', 'batch', 2, C('app', 'nginx:1.25', Y('        resources:', '          requests:', '            cpu: "1"', '            memory: 64Mi')))],
+      tasks: [T('See why payments is Pending', ['`kubectl get pods -n batch`', '`kubectl describe pod -n batch -l app=payments`'], [{ t: 'exists', ref: 'priorityclass/critical', ns: '' }]),
+        T('Use the critical PriorityClass', ['`kubectl patch deploy payments -n batch --type=json -p \'[{"op":"add","path":"/spec/template/spec/priorityClassName","value":"critical"}]\'`'], [jp('deployment/payments', 'batch', '.spec.template.spec.priorityClassName', 'critical')]),
+        T('payments Ready, filler survives partially', ['Preemption evicts low-priority pods; their Deployment recreates them.'], [{ t: 'podsReady', ns: 'batch', sel: 'app=payments', min: 2 }, { t: 'podsReady', ns: 'batch', sel: 'app=filler', min: 4 }])],
+      solution: ['kubectl get pods -n batch', 'kubectl patch deploy payments -n batch --type=json -p \'[{"op":"add","path":"/spec/template/spec/priorityClassName","value":"critical"}]\'', 'kubectl get pods -n batch'] }),
+
+    sim(L({ id: 's86-qos-eviction', num: 'S86', title: 'Memory pressure: who gets evicted first?', diff: 'Advanced', track: ['CKA'], domain: 'Scheduling', time: '12 min', ns: 'shop',
+      story: '`worker1` reports **MemoryPressure** because `batchjob` pods run with no memory limit. The kubelet evicts pods by QoS class — your important `api` has no requests/limits, so it is evicted first. Stop the hog, then make `api` Guaranteed.',
+      caution: 'Setting limits too low causes OOMKills; too high wastes capacity. Measure real usage (`kubectl top`, metrics history) before choosing numbers, and roll changes out gradually on real clusters.',
+      setup: [NS('shop'), D('api', 'shop', 2, Y('      nodeName: worker1') + C('app', 'nginx:1.25')), D('batchjob', 'shop', 1, Y('      nodeName: worker1') + C('app', 'nginx:1.25'))], setupCmds: [], flags: { memPressure: { worker1: 'batchjob' } },
+      tasks: [T('Cap the memory hog', ['`kubectl describe node worker1` shows MemoryPressure.', '`kubectl set resources deploy/batchjob -n shop --limits=cpu=200m,memory=256Mi --requests=cpu=100m,memory=128Mi`'], [jp('deployment/batchjob', 'shop', '.spec.template.spec.containers[0].resources.limits.memory', '256Mi'), { t: 'flag', k: 'memPressure', sub: 'worker1', v: true, msg: '(pressure is cleared by the fix)' }]),
+        T('Make api Guaranteed (requests = limits)', ['Guaranteed pods are evicted last.', '`kubectl set resources deploy/api -n shop --limits=cpu=200m,memory=128Mi --requests=cpu=200m,memory=128Mi`'], [jp('deployment/api', 'shop', '.spec.template.spec.containers[0].resources.limits.memory', '128Mi'), jp('deployment/api', 'shop', '.spec.template.spec.containers[0].resources.requests.memory', '128Mi')]),
+        T('Both workloads healthy again', [], [{ t: 'podsReady', ns: 'shop', sel: 'app=api', min: 2 }, { t: 'podsReady', ns: 'shop', sel: 'app=batchjob', min: 1 }])],
+      solution: ['kubectl describe node worker1', 'kubectl set resources deploy/batchjob -n shop --limits=cpu=200m,memory=256Mi --requests=cpu=100m,memory=128Mi', 'kubectl set resources deploy/api -n shop --limits=cpu=200m,memory=128Mi --requests=cpu=200m,memory=128Mi', 'kubectl get pods -n shop -o wide'] }))
+  ]);
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>/* assets/js/data/labs-sim-h.js */
+/* Labs S87–S90: right-sizing (VPA-style), HPA vs quota, kubeconfig contexts. Simulator-only (use the `qty` / `ctx` checks). */
+(function (root) {
+  'use strict';
+  var KL = root.KL = root.KL || {}, Labs = KL.Labs || require('../labs-engine.js');
+  function T(title, hints, assert, desc) { return { id: '', title: title, desc: desc || '', hints: hints, assert: assert }; }
+  function L(o) { o.tasks.forEach(function (t, i) { t.id = String(i + 1); }); o.simOnly = true; return o; }
+  function Y() { return Array.prototype.slice.call(arguments).join('\n') + '\n'; }
+  var NS = function (n) { return 'apiVersion: v1\nkind: Namespace\nmetadata:\n  name: ' + n + '\n'; };
+  function D(name, ns, rep, spec, lbl) { lbl = lbl || name; return Y('apiVersion: apps/v1', 'kind: Deployment', 'metadata:', '  name: ' + name, '  namespace: ' + ns, 'spec:', '  replicas: ' + rep, '  selector:', '    matchLabels:', '      app: ' + lbl, '  template:', '    metadata:', '      labels:', '        app: ' + lbl, '    spec:', spec); }
+  function C(name, img, extra) { return Y('      containers:', '      - name: ' + name, '        image: ' + img) + (extra || ''); }
+  var P = 'deployment/api';
+
+  Labs.register([
+    L({ id: 's87-rightsizing', num: 'S87', title: 'Right-size requests from VPA-style recommendations', diff: 'Intermediate', track: ['CKA', 'CKAD'], domain: 'Scheduling', time: '10 min', ns: 'cost',
+      story: 'Deployment `api` in `cost` requests **2 CPU and 4 Gi** per pod but real usage is tiny, so pods barely fit and the bill is huge. A Vertical Pod Autoscaler recommender (recommendation recorded in ConfigMap `vpa-recommendation`) says: target **cpu 85m / memory 140Mi**, upper bound **cpu 200m / memory 300Mi**. Set requests between the target and the upper bound, and avoid a CPU limit.',
+      caution: 'Under-requesting causes noisy-neighbour throttling and evictions; over-limiting memory causes OOMKills. VPA in `Auto` mode RESTARTS pods to apply changes — use `Off`/`Initial` for critical services and never run VPA and HPA on the same CPU/memory metric. Treat recommendations as input, not truth: check peak traffic.',
+      setup: [NS('cost'), 'apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: vpa-recommendation\n  namespace: cost\ndata:\n  target.cpu: 85m\n  target.memory: 140Mi\n  upperBound.cpu: 200m\n  upperBound.memory: 300Mi\n', D('api', 'cost', 3, C('app', 'nginx:1.25', Y('        resources:', '          requests:', '            cpu: "2"', '            memory: 4Gi', '          limits:', '            cpu: "2"', '            memory: 4Gi')))],
+      tasks: [T('Read the recommendation', ['`kubectl get cm vpa-recommendation -n cost -o yaml`', '`kubectl top pods -n cost`'], [{ t: 'exists', ref: 'configmap/vpa-recommendation', ns: 'cost' }]),
+        T('CPU request between 85m and 200m', ['`kubectl set resources deploy/api -n cost --requests=cpu=100m,memory=192Mi`'], [{ t: 'qty', ref: P, ns: 'cost', path: '.spec.template.spec.containers[0].resources.requests.cpu', kind: 'cpu', min: 85, max: 200 }]),
+        T('Memory request between 140Mi and 300Mi, limit ≥ request', ['Memory limit protects neighbours: set it to about 2× the request.', '`kubectl set resources deploy/api -n cost --limits=memory=384Mi`'], [{ t: 'qty', ref: P, ns: 'cost', path: '.spec.template.spec.containers[0].resources.requests.memory', kind: 'mem', min: 140, max: 300 }, { t: 'qty', ref: P, ns: 'cost', path: '.spec.template.spec.containers[0].resources.limits.memory', kind: 'mem', min: 192 }]),
+        T('No CPU limit, pods Ready', ['CPU limits cause throttling even when the node is idle.', 'Remove it: JSON patch `remove` on `.../resources/limits/cpu`.'], [{ t: 'jp', ref: P, ns: 'cost', path: '.spec.template.spec.containers[0].resources.limits.cpu', eq: '' }, { t: 'podsReady', ns: 'cost', sel: 'app=api', min: 3 }])],
+      solution: ['kubectl get cm vpa-recommendation -n cost -o yaml', 'kubectl set resources deploy/api -n cost --requests=cpu=100m,memory=192Mi --limits=memory=384Mi', 'kubectl patch deploy api -n cost --type=json -p \'[{"op":"remove","path":"/spec/template/spec/containers/0/resources/limits/cpu"}]\'', 'kubectl get pods -n cost'] }),
+
+    L({ id: 's88-hpa-vs-quota', num: 'S88', title: 'HPA wants 6 replicas, the quota allows 4', diff: 'Advanced', track: ['CKA', 'CKAD'], domain: 'Workloads', time: '10 min', ns: 'team',
+      story: 'The HPA for `web` asks for at least 6 replicas, but only 4 pods exist and the ReplicaSet reports `exceeded quota`. Autoscaling cannot beat a ResourceQuota. Raise the **quota** — do not weaken the HPA.',
+      caution: 'Quota is a budget someone approved. On a real cluster get that approval before raising it, and check cluster capacity (and the Cluster Autoscaler) so the extra pods can actually schedule. A scaling ceiling set by quota fails silently — alert on `FailedCreate` events.',
+      setup: [NS('team'), 'apiVersion: v1\nkind: ResourceQuota\nmetadata:\n  name: team-budget\n  namespace: team\nspec:\n  hard:\n    pods: "4"\n', D('web', 'team', 2, C('app', 'nginx:1.25', Y('        resources:', '          requests:', '            cpu: 50m'))), 'apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: web\n  namespace: team\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: web\n  minReplicas: 6\n  maxReplicas: 10\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 50\n'],
+      tasks: [T('Find the blocker', ['`kubectl get events -n team --sort-by=.lastTimestamp`', '`kubectl describe rs -n team`', '`kubectl describe quota -n team`'], [{ t: 'exists', ref: 'resourcequota/team-budget', ns: 'team' }]),
+        T('Raise the pod quota to at least 10', ['`kubectl patch resourcequota team-budget -n team -p \'{"spec":{"hard":{"pods":"12"}}}\'`'], [{ t: 'qty', ref: 'resourcequota/team-budget', ns: 'team', path: '.spec.hard.pods', kind: 'num', min: 10 }]),
+        T('HPA untouched, 6 pods Ready, no quota errors', ['Do not lower `minReplicas` or `maxReplicas`.'], [{ t: 'jp', ref: 'hpa/web', ns: 'team', path: '.spec.minReplicas', eq: '6' }, { t: 'podsReady', ns: 'team', sel: 'app=web', min: 6 }, { t: 'noQuotaErr', ns: 'team' }])],
+      solution: ['kubectl describe quota -n team', 'kubectl patch resourcequota team-budget -n team -p \'{"spec":{"hard":{"pods":"12"}}}\'', 'kubectl get pods -n team'] }),
+
+    L({ id: 's89-context-namespace', num: 'S89', title: 'Set up kubeconfig contexts for two environments', diff: 'Beginner', track: ['CKA', 'CKAD'], domain: 'Cluster', time: '8 min', ns: 'default',
+      story: 'You work on `staging-app` and `prod-app`. Create two contexts, `staging` and `prod`, each pinned to its namespace, so you never have to type `-n` (and never hit the wrong one). Then scale `api` in staging to 3 using the staging context.',
+      caution: 'A context bundles cluster + user + namespace. Never leave your shell on a production context by default; check `kubectl config current-context` before any `delete`, `apply` or `scale`. Do not paste real kubeconfig contents (client keys, tokens) into chats, tickets or this simulator.',
+      setup: [NS('staging-app'), NS('prod-app'), D('api', 'staging-app', 1, C('app', 'nginx:1.25')), D('api', 'prod-app', 2, C('app', 'nginx:1.25'))], flags: { contexts: [{ name: 'dev', cluster: 'kubelab', user: 'dev', ns: 'default' }], current: 'dev' },
+      tasks: [T('Context `staging` → namespace staging-app', ['`kubectl config get-contexts`', '`kubectl config set-context staging --cluster=kubelab --user=dev --namespace=staging-app`'], [{ t: 'ctx', name: 'staging', ns: 'staging-app' }]),
+        T('Context `prod` → namespace prod-app', ['Same command with `prod` and `prod-app`.'], [{ t: 'ctx', name: 'prod', ns: 'prod-app' }]),
+        T('Scale staging api to 3 (no -n), prod untouched', ['`kubectl config use-context staging`', '`kubectl scale deploy api --replicas=3`', 'Confirm: `kubectl config current-context`'], [{ t: 'ctx', current: 'staging' }, { t: 'jp', ref: 'deployment/api', ns: 'staging-app', path: '.spec.replicas', eq: '3' }, { t: 'jp', ref: 'deployment/api', ns: 'prod-app', path: '.spec.replicas', eq: '2' }])],
+      solution: ['kubectl config get-contexts', 'kubectl config set-context staging --cluster=kubelab --user=dev --namespace=staging-app', 'kubectl config set-context prod --cluster=kubelab --user=dev --namespace=prod-app', 'kubectl config use-context staging', 'kubectl config current-context', 'kubectl scale deploy api --replicas=3', 'kubectl get pods'] }),
+
+    L({ id: 's90-wrong-context', num: 'S90', title: 'Delete the staging job — not the production one', diff: 'Intermediate', track: ['CKA', 'CKAD'], domain: 'Cluster', time: '8 min', ns: 'default',
+      story: 'Both environments have a deployment called `batch-import`. Your shell is currently on the **prod** context. Remove `batch-import` from **staging** only. (If you delete prod\'s, use **Reset lab** and try again — this is exactly how real outages start.)',
+      caution: 'Same names across environments are the classic wrong-context accident. Safer habits: put the context in your shell prompt, use `--context` explicitly on destructive commands, use separate kubeconfig files per environment, and require a confirmation for prod.',
+      setup: [NS('staging-app'), NS('prod-app'), D('batch-import', 'staging-app', 1, C('app', 'nginx:1.25')), D('batch-import', 'prod-app', 2, C('app', 'nginx:1.25')), D('api', 'prod-app', 2, C('app', 'nginx:1.25'))], setupCmds: [],
+      flags: { contexts: [{ name: 'staging', cluster: 'kubelab', user: 'dev', ns: 'staging-app' }, { name: 'prod', cluster: 'kubelab', user: 'dev', ns: 'prod-app' }], current: 'prod' },
+      tasks: [T('Check where you are', ['`kubectl config current-context`', '`kubectl config get-contexts`'], [{ t: 'exists', ref: 'deployment/api', ns: 'prod-app' }]),
+        T('Delete batch-import in staging', ['`kubectl --context staging delete deploy batch-import`', 'or `kubectl config use-context staging` first.'], [{ t: 'absent', ref: 'deployment/batch-import', ns: 'staging-app' }]),
+        T('Production untouched', ['prod `batch-import` and `api` must still be running.'], [{ t: 'podsReady', ns: 'prod-app', sel: 'app=batch-import', min: 2 }, { t: 'podsReady', ns: 'prod-app', sel: 'app=api', min: 2 }])],
+      solution: ['kubectl config current-context', 'kubectl --context staging delete deploy batch-import', 'kubectl get deploy -n prod-app'] })
+  ]);
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>/* assets/js/data/labs-sim-i.js */
+/* Labs S91–S96: multi-step incidents. Several independent faults; fixing one reveals the next. */
+(function (root) {
+  'use strict';
+  var KL = root.KL = root.KL || {}, Labs = KL.Labs || require('../labs-engine.js');
+  function T(title, hints, assert, desc) { return { id: '', title: title, desc: desc || '', hints: hints, assert: assert }; }
+  function L(o) { o.tasks.forEach(function (t, i) { t.id = String(i + 1); }); o.incident = true; return o; }
+  function Y() { return Array.prototype.slice.call(arguments).join('\n') + '\n'; }
+  var NS = function (n) { return 'apiVersion: v1\nkind: Namespace\nmetadata:\n  name: ' + n + '\n'; };
+  function D(name, ns, rep, spec, lbl) { lbl = lbl || name; return Y('apiVersion: apps/v1', 'kind: Deployment', 'metadata:', '  name: ' + name, '  namespace: ' + ns, 'spec:', '  replicas: ' + rep, '  selector:', '    matchLabels:', '      app: ' + lbl, '  template:', '    metadata:', '      labels:', '        app: ' + lbl, '    spec:', spec); }
+  function C(name, img, extra) { return Y('      containers:', '      - name: ' + name, '        image: ' + img) + (extra || ''); }
+  var TESTER = function (ns) { return 'apiVersion: v1\nkind: Pod\nmetadata:\n  name: tester\n  namespace: ' + ns + '\n  labels:\n    run: tester\nspec:\n  containers:\n  - name: tester\n    image: busybox:1.36\n    command: ["sleep", "3600"]\n'; };
+  var SVC = function (n, ns, sel, port, tp) { return 'apiVersion: v1\nkind: Service\nmetadata:\n  name: ' + n + '\n  namespace: ' + ns + '\nspec:\n  selector:\n    app: ' + sel + '\n  ports:\n  - port: ' + port + '\n    targetPort: ' + (tp || port) + '\n'; };
+  var INC = 'Incident rules: stabilise first, then fix root causes, change one thing at a time, and write down what you changed. ';
+
+  Labs.register([
+    L({ id: 's91-black-friday', num: 'S91', title: 'Incident: Black Friday checkout', diff: 'Advanced', track: ['CKA', 'CKAD'], domain: 'Troubleshooting', time: '20 min', ns: 'shop',
+      story: INC + '**02:47.** Traffic is 10× normal and checkout is down. Three things are wrong, in three layers: the image, the namespace budget, and the Service in front. Get a request from `tester` to `checkout` through.',
+      caution: 'During a real incident avoid "fix everything at once" edits. Raising a quota or scaling up during an incident should be a conscious, recorded decision, and rolling back a bad image is usually safer than inventing a new tag under pressure.',
+      setup: [NS('shop'), TESTER('shop'), 'apiVersion: v1\nkind: ResourceQuota\nmetadata:\n  name: shop-budget\n  namespace: shop\nspec:\n  hard:\n    pods: "4"\n', D('checkout', 'shop', 4, C('app', 'nginx:1.255')), SVC('checkout', 'shop', 'check', 80)],
+      tasks: [T('Image: pods start', ['`kubectl get pods -n shop`', 'Tag `1.255` does not exist.', '`kubectl set image deploy/checkout app=nginx:1.25 -n shop`'], [{ t: 'jp', ref: 'deployment/checkout', ns: 'shop', path: '.spec.template.spec.containers[0].image', eq: 'nginx:1.25' }]),
+        T('Namespace budget: all 4 replicas can exist', ['`kubectl describe rs -n shop` shows `exceeded quota`.', '`kubectl patch resourcequota shop-budget -n shop -p \'{"spec":{"hard":{"pods":"8"}}}\'`'], [{ t: 'podsReady', ns: 'shop', sel: 'app=checkout', min: 4 }, { t: 'noQuotaErr', ns: 'shop' }]),
+        T('Service: it finds the pods', ['`kubectl get endpoints checkout -n shop` is empty.', 'The selector is `app=check` but pods are `app=checkout`.'], [{ t: 'endpoints', svc: 'checkout', ns: 'shop', min: 4 }]),
+        T('End-to-end request works', ['`kubectl exec tester -n shop -- wget -qO- checkout`'], [{ t: 'curl', ns: 'shop', from: 'tester', to: 'checkout:80' }])],
+      solution: ['kubectl set image deploy/checkout app=nginx:1.25 -n shop', 'kubectl patch resourcequota shop-budget -n shop -p \'{"spec":{"hard":{"pods":"8"}}}\'', 'kubectl patch svc checkout -n shop --type=json -p \'[{"op":"replace","path":"/spec/selector/app","value":"checkout"}]\'', 'kubectl exec tester -n shop -- wget -qO- checkout'] }),
+
+    L({ id: 's92-silent-database', num: 'S92', title: 'Incident: the silent database', diff: 'Advanced', track: ['CKA', 'CKAD'], domain: 'Troubleshooting', time: '20 min', ns: 'data',
+      story: INC + '**03:12.** The app reports "connection refused" to its database. Nothing is crashing loudly. Storage, configuration and the network are each broken. Restore `db`, then let `app` talk to it again.',
+      caution: 'Deleting and recreating a PersistentVolumeClaim can DESTROY DATA if the volume\'s reclaim policy is Delete. Here the claim is empty, but on a real cluster check `kubectl get pv` (RECLAIM POLICY) and take a backup first. Use placeholder passwords only — never paste real credentials into this simulator.',
+      setup: [NS('data'), 'apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: db-data\n  namespace: data\nspec:\n  storageClassName: fast\n  accessModes: [ReadWriteOnce]\n  resources:\n    requests:\n      storage: 1Gi\n',
+        D('db', 'data', 1, C('db', 'nginx:1.25', Y('        env:', '        - name: DB_PASSWORD', '          valueFrom:', '            secretKeyRef:', '              name: db-creds', '              key: password', '        volumeMounts:', '        - name: d', '          mountPath: /data') + Y('      volumes:', '      - name: d', '        persistentVolumeClaim:', '          claimName: db-data'))), SVC('db', 'data', 'db', 80),
+        'apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: db-lockdown\n  namespace: data\nspec:\n  podSelector:\n    matchLabels:\n      app: db\n  policyTypes: ["Ingress"]\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: backup\n',
+        'apiVersion: v1\nkind: Pod\nmetadata:\n  name: app\n  namespace: data\n  labels:\n    app: app\nspec:\n  containers:\n  - name: app\n    image: busybox:1.36\n    command: ["sleep", "3600"]\n'],
+      tasks: [T('Storage: the claim binds', ['`kubectl describe pvc db-data -n data` — class `fast` missing.', 'Delete and recreate with `storageClassName: standard`.'], [{ t: 'jp', ref: 'pvc/db-data', ns: 'data', path: '.status.phase', eq: 'Bound' }]),
+        T('Configuration: db starts', ['`kubectl describe pod -l app=db -n data` — secret `db-creds` not found.', '`kubectl create secret generic db-creds --from-literal=password=change-me -n data`'], [{ t: 'exists', ref: 'secret/db-creds', ns: 'data' }, { t: 'podsReady', ns: 'data', sel: 'app=db', min: 1 }]),
+        T('Network: app may reach db, nobody else', ['The policy only allows `app=backup`.', 'Add `app=app` as an allowed source — keep the lockdown.'], [{ t: 'curl', ns: 'data', from: 'app', to: 'db:80' }, { t: 'exists', ref: 'networkpolicy/db-lockdown', ns: 'data' }])],
+      solution: ['kubectl delete pvc db-data -n data', 'kubectl apply -f - <<EOF\napiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: db-data\n  namespace: data\nspec:\n  storageClassName: standard\n  accessModes: [ReadWriteOnce]\n  resources:\n    requests:\n      storage: 1Gi\nEOF', 'kubectl create secret generic db-creds --from-literal=password=change-me -n data', 'kubectl patch networkpolicy db-lockdown -n data --type=json -p \'[{"op":"add","path":"/spec/ingress/0/from/-","value":{"podSelector":{"matchLabels":{"app":"app"}}}}]\'', 'kubectl get pods -n data'] }),
+
+    L({ id: 's93-release-gone-wrong', num: 'S93', title: 'Incident: the release that never finishes', diff: 'Advanced', track: ['CKAD', 'CKA'], domain: 'Troubleshooting', time: '18 min', ns: 'rel',
+      story: INC + '**16:55 on a Friday.** Release v2 of `portal` is stuck: new pods never become Ready and the rollout will not complete. The probe and the configuration are both wrong. Finish the rollout without taking down the healthy v1 pods first.',
+      caution: '`kubectl rollout undo` is the fastest safe option in a real incident — use it when the new version cannot be fixed quickly. Editing probes to "just pass" hides real problems; point them at a real health endpoint.',
+      setup: [NS('rel'), D('portal', 'rel', 3, C('app', 'nginx:1.25')), 'apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: portal-config\n  namespace: rel\ndata:\n  APP_MODE: prod\n'],
+      setupCmds: ['kubectl patch deploy portal -n rel --type=json -p \'[{"op":"add","path":"/spec/template/spec/containers/0/readinessProbe","value":{"httpGet":{"path":"/ready","port":80},"initialDelaySeconds":1}},{"op":"add","path":"/spec/template/spec/containers/0/env","value":[{"name":"FEATURE_FLAGS","valueFrom":{"configMapKeyRef":{"name":"portal-config","key":"FEATURE_FLAGS"}}}]}]\''],
+      tasks: [T('Find why v2 pods are not Ready', ['`kubectl rollout status deploy/portal -n rel`', '`kubectl describe pod -n rel -l app=portal`', 'Two causes: a config key and a probe path.'], [{ t: 'exists', ref: 'deployment/portal', ns: 'rel' }]),
+        T('Config: add the missing key', ['ConfigMap `portal-config` lacks `FEATURE_FLAGS`.', '`kubectl patch cm portal-config -n rel -p \'{"data":{"FEATURE_FLAGS":"none"}}\'`'], [{ t: 'jp', ref: 'configmap/portal-config', ns: 'rel', path: '.data.FEATURE_FLAGS', ne: '' }]),
+        T('Probe: use a path that exists', ['nginx serves `/`, not `/ready`.', '`kubectl patch deploy portal -n rel --type=json -p \'[{"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/httpGet/path","value":"/"}]\'`'], [{ t: 'jp', ref: 'deployment/portal', ns: 'rel', path: '.spec.template.spec.containers[0].readinessProbe.httpGet.path', eq: '/' }]),
+        T('Rollout completes: 3 Ready', ['`kubectl rollout status deploy/portal -n rel`'], [{ t: 'podsReady', ns: 'rel', sel: 'app=portal', min: 3 }])],
+      solution: ['kubectl rollout status deploy/portal -n rel --timeout=5s', 'kubectl patch cm portal-config -n rel -p \'{"data":{"FEATURE_FLAGS":"none"}}\'', 'kubectl patch deploy portal -n rel --type=json -p \'[{"op":"replace","path":"/spec/template/spec/containers/0/readinessProbe/httpGet/path","value":"/"}]\'', 'kubectl rollout restart deploy/portal -n rel', 'kubectl get pods -n rel'] }),
+
+    L({ id: 's94-capacity-crunch', num: 'S94', title: 'Incident: capacity crunch', diff: 'Advanced', track: ['CKA'], domain: 'Scheduling', time: '18 min', ns: 'prod',
+      story: INC + '**04:05.** `orders` has 0 of 4 pods running. Last week\'s maintenance left a node cordoned, the pods request far more CPU than they use, and a PriorityClass the Deployment references was never created. Three scheduling blockers, one outage.',
+      caution: 'Uncordoning a node that was cordoned on purpose (hardware issue) can put workloads on a sick host — confirm with whoever cordoned it. Creating a PriorityClass changes preemption behaviour for the whole cluster; pick a value intentionally.',
+      setup: [NS('prod'), D('orders', 'prod', 4, Y('      priorityClassName: gold') + C('app', 'nginx:1.25', Y('        resources:', '          requests:', '            cpu: "3"', '            memory: 64Mi')))],
+      setupCmds: ['kubectl cordon worker1'],
+      tasks: [T('Admission: the PriorityClass exists', ['`kubectl describe rs -n prod` → no PriorityClass with name gold.', 'Create it: `value: 1000`.'], [{ t: 'exists', ref: 'priorityclass/gold', ns: '' }]),
+        T('Right-size the CPU request', ['`kubectl describe pod -n prod -l app=orders` → Insufficient cpu.', 'Real usage is ~100m: `kubectl set resources deploy/orders -n prod --requests=cpu=100m`'], [{ t: 'qty', ref: 'deployment/orders', ns: 'prod', path: '.spec.template.spec.containers[0].resources.requests.cpu', kind: 'cpu', max: 500 }]),
+        T('Return worker1 to service', ['`kubectl get nodes` shows SchedulingDisabled.', '`kubectl uncordon worker1`'], [{ t: 'nodeCordoned', node: 'worker1', v: false }]),
+        T('All 4 pods Ready', [], [{ t: 'podsReady', ns: 'prod', sel: 'app=orders', min: 4 }])],
+      solution: ['kubectl apply -f - <<EOF\napiVersion: scheduling.k8s.io/v1\nkind: PriorityClass\nmetadata:\n  name: gold\nvalue: 1000\nEOF', 'kubectl set resources deploy/orders -n prod --requests=cpu=100m', 'kubectl uncordon worker1', 'kubectl get pods -n prod'] }),
+
+    L({ id: 's95-pi-day-replay', num: 'S95', title: 'Incident: the Pi-Day replay', diff: 'Expert', track: ['CKA'], domain: 'Troubleshooting', time: '25 min', simOnly: true, ns: 'shop',
+      story: INC + '**Inspired by public post-mortems (see the Field Guide).** After an upgrade, `kubectl` fails with an expired certificate. Once you are back in, pod creation is rejected by a dead admission webhook, and a leftover namespace is stuck Terminating. Three layers, in order.',
+      caution: 'Real clusters: renew certificates during a maintenance window and restart components one at a time; never delete admission webhooks to "get unblocked" without understanding what they enforce; never force-finalize a namespace while objects still exist.',
+      setup: [NS('policy'), NS('shop'), NS('legacy'), 'apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: stuck\n  namespace: legacy\n  finalizers:\n  - example.com/cleanup\ndata:\n  a: "1"\n', D('policy-hook', 'policy', 1, C('app', 'nginx:1.25')), SVC('policy-hook', 'policy', 'policy-hook', 443, 80)],
+      setupCmds: ['kubectl label ns policy policy-hook=skip', 'kubectl scale deploy policy-hook -n policy --replicas=0', 'kubectl apply -f - <<EOF\napiVersion: admissionregistration.k8s.io/v1\nkind: ValidatingWebhookConfiguration\nmetadata:\n  name: policy-guard\nwebhooks:\n- name: pods.policy.example.com\n  failurePolicy: Fail\n  sideEffects: None\n  admissionReviewVersions: ["v1"]\n  namespaceSelector:\n    matchExpressions:\n    - key: policy-hook\n      operator: NotIn\n      values: ["skip"]\n  rules:\n  - apiGroups: [""]\n    apiVersions: ["v1"]\n    operations: ["CREATE"]\n    resources: ["pods"]\n  clientConfig:\n    service:\n      name: policy-hook\n      namespace: policy\n      path: /validate\n      port: 443\nEOF', 'kubectl create deployment web --image=nginx:1.25 --replicas=2 -n shop', 'kubectl delete ns legacy'],
+      flags: { certExpired: true },
+      tasks: [T('Layer 1: certificates renewed, kubectl works', ['`ssh cp1 \'sudo kubeadm certs check-expiration\'`', '`ssh cp1 \'sudo kubeadm certs renew all\'` then restart the kubelet on cp1.'], [{ t: 'flag', k: 'certExpired', v: false, msg: 'API server should accept connections again' }]),
+        T('Layer 2: restore the webhook backend', ['`kubectl get events -n shop` mentions the webhook.', '`kubectl scale deploy policy-hook -n policy --replicas=1` — keep the policy.'], [{ t: 'podsReady', ns: 'shop', sel: 'app=web', min: 2 }, { t: 'exists', ref: 'validatingwebhookconfiguration/policy-guard', ns: '' }]),
+        T('Layer 3: free the stuck namespace', ['`kubectl get ns legacy -o yaml` → conditions.', 'Patch the finalizer of the ConfigMap to null.'], [{ t: 'absent', ref: 'namespace/legacy', ns: '' }])],
+      solution: ['ssh cp1 \'sudo kubeadm certs check-expiration\'', 'ssh cp1 \'sudo kubeadm certs renew all\'', 'ssh cp1 \'sudo systemctl restart kubelet\'', 'kubectl scale deploy policy-hook -n policy --replicas=1', 'kubectl patch cm stuck -n legacy --type=merge -p \'{"metadata":{"finalizers":null}}\'', 'kubectl get pods -n shop'] }),
+
+    L({ id: 's96-two-nodes-down', num: 'S96', title: 'Incident: two workers down at once', diff: 'Expert', track: ['CKA'], domain: 'Troubleshooting', time: '22 min', simOnly: true, ns: 'shop',
+      story: INC + '**01:30.** `worker1` is NotReady after a reboot and `worker2` is under disk pressure. Only the control plane is healthy. Bring both workers back and get `web` (6 replicas) fully Ready.',
+      caution: 'With two nodes down, do NOT start deleting data to free space or rebooting repeatedly. Work one node at a time, read the logs first, and keep the control-plane node tainted so application pods do not land on it.',
+      setup: [NS('shop'), D('web', 'shop', 6, C('app', 'nginx:1.25'))], setupCmds: [], flags: { kubeletDown: { worker1: true }, swapOn: { worker1: true }, diskPressure: { worker2: true } },
+      tasks: [T('worker1: find the kubelet failure', ['`ssh worker1 \'journalctl -u kubelet\'` names swap.', '`ssh worker1 \'sudo swapoff -a\'`'], [{ t: 'flag', k: 'swapOn', sub: 'worker1', v: false, msg: 'swap on worker1 should be off' }]),
+        T('worker1: kubelet running, node Ready', ['`ssh worker1 \'sudo systemctl restart kubelet\'`'], [{ t: 'flag', k: 'kubeletDown', sub: 'worker1', v: false, msg: 'kubelet on worker1 should be running' }]),
+        T('worker2: free disk safely', ['`ssh worker2 \'df -h\'`, `du -sh /var/log/*`', '`ssh worker2 \'sudo journalctl --vacuum-size=200M\'`'], [{ t: 'flag', k: 'diskPressure', sub: 'worker2', v: false, msg: 'worker2 should no longer be under disk pressure' }]),
+        T('web fully Ready', ['`kubectl get pods -n shop -o wide`'], [{ t: 'podsReady', ns: 'shop', sel: 'app=web', min: 6 }])],
+      solution: ['ssh worker1 \'journalctl -u kubelet\'', 'ssh worker1 \'sudo swapoff -a\'', 'ssh worker1 \'sudo systemctl restart kubelet\'', 'ssh worker2 \'df -h\'', 'ssh worker2 \'sudo journalctl --vacuum-size=200M\'', 'kubectl get pods -n shop -o wide'] })
+  ]);
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
 <script>/* assets/js/data/debrief.js */
 /* Post-lab debrief cards: root cause · fix · how to spot it in production · pattern to memorise. id -> [cause, fix, spot, pattern] */
 (function (root) {
@@ -7261,7 +7714,30 @@ js-yaml/dist/js-yaml.mjs:
     's70-kubelet-down': ['The kubelet on worker2 stopped posting status, so the node went NotReady.', 'ssh to the node, systemctl start kubelet, confirm with get nodes.', 'Node Ready=Unknown and pods not ready on one node.', 'describe node → ssh → systemctl status → journalctl.'],
     's71-kubelet-swap': ['Swap was re-enabled after reboot; kubelet refuses to run with swap on by default.', 'swapoff -a (and remove it from fstab), then restart kubelet.', 'Kubelet auto-restart loop right after maintenance.', 'journalctl -u kubelet names the cause; restarting without fixing it just loops.'],
     's72-dead-webhook': ['A validating webhook with failurePolicy Fail and no backend endpoints rejects every pod create.', 'Restore the backend (and exempt its own namespace) rather than deleting the policy.', 'FailedCreate events mentioning failed calling webhook.', 'Events → webhook config → Service endpoints. Exempt the webhook\'s own namespace.'],
-    's73-expired-certs': ['Control-plane certificates expire after one year unless renewed or upgraded.', 'kubeadm certs check-expiration, renew all, restart the control-plane static pods.', 'x509: certificate has expired on every kubectl call.', 'Calendar the expiry; upgrading the cluster also renews certificates.']
+    's73-expired-certs': ['Control-plane certificates expire after one year unless renewed or upgraded.', 'kubeadm certs check-expiration, renew all, restart the control-plane static pods.', 'x509: certificate has expired on every kubectl call.', 'Calendar the expiry; upgrading the cluster also renews certificates.'],
+    's74-privileged-hunt': ["Three containers could escape isolation: privileged mode, a shared host PID namespace, and the runtime socket mounted via hostPath.", "JSON-patch each Deployment: privileged=false, remove hostPID, remove the socket volume and mount.", "grep manifests for privileged, hostPID, hostNetwork, hostPath; Pod Security Admission would have rejected them.", "Audit securityContext and volumes; fix by patching, not by loosening the namespace policy."],
+    's75-rbac-least-privilege': ["A Role granted * on * to the CI account, far beyond what deploying needs.", "Recreate the Role with only deployment verbs and keep the existing RoleBinding.", "kubectl auth can-i --as for the key verbs, especially secrets and delete.", "Test permissions with --as before and after tightening; wildcards are a review flag."],
+    's76-image-hygiene': ["Mutable or untrusted image references: :latest, no tag, and an unapproved registry.", "Pin an approved version (ideally by digest) for every workload.", "Search for :latest, untagged images and unknown registries across the namespace.", "Pin, scan and sign images; allow only approved registries."],
+    's77-hardened-pod': ["The container ran as root with a writable filesystem, escalation allowed and all capabilities.", "Set runAsNonRoot, readOnlyRootFilesystem, allowPrivilegeEscalation=false, drop ALL capabilities and RuntimeDefault seccomp.", "Pods that pass no restricted checks; look for missing securityContext fields.", "Apply the restricted profile, then add emptyDir mounts where the app must write."],
+    's78-default-sa-admin': ["cluster-admin was bound to the default ServiceAccount, so every pod in the namespace was a cluster admin.", "Delete the binding; give the dashboard its own ServiceAccount with a read-only pod Role.", "kubectl get clusterrolebindings -o wide and kubectl auth can-i --as=system:serviceaccount:...:default.", "One ServiceAccount per workload with namespaced least-privilege Roles."],
+    's79-kubeadm-upgrade': ["A minor-version upgrade must follow a strict order: control plane first, then each worker, one minor at a time.", "Upgrade kubeadm, run upgrade apply on the control plane, then drain, upgrade and uncordon each worker.", "kubeadm upgrade plan and kubectl get nodes show version skew; kubelet must never be newer than the API server.", "Back up etcd, upgrade one minor version, one node at a time, with PodDisruptionBudgets checked."],
+    's80-node-replace': ["A node with a failed disk had to be rebuilt: removed from the cluster, wiped and rejoined.", "Drain, delete the node object, kubeadm reset on the host, fresh token on the control plane, kubeadm join.", "NotReady node that will not recover; kubeadm token create --print-join-command gives the join line.", "Drain → delete → reset → rejoin; always use a fresh token and double-check the hostname before reset."],
+    's81-disk-pressure': ["The node disk filled (journals), the kubelet set DiskPressure, tainted the node and evicted pods.", "Vacuum logs (and prune unused images) on the node; never delete container or kubelet data.", "Evicted pods plus a disk-pressure taint; df -h and du -sh /var/log/* on the node.", "Free space the safe way, then fix the log source and add disk alerts and log rotation."],
+    's82-coredns-down': ["CoreDNS was scaled to zero, so the kube-dns Service had no endpoints and no name could resolve.", "Scale the coredns Deployment back to 2 replicas.", "bad address errors while IP traffic works; kubectl get endpoints kube-dns -n kube-system is empty.", "Treat CoreDNS as critical infrastructure: keep 2+ replicas and protect it with a PodDisruptionBudget."],
+    's83-lb-pending': ["A LoadBalancer Service needs a cloud or MetalLB controller; none exists here, so EXTERNAL-IP stays pending.", "Use NodePort (or an Ingress/Gateway) instead.", "EXTERNAL-IP <pending> forever on a bare-metal or kind cluster.", "Check which controller provisions LoadBalancers before choosing a Service type."],
+    's84-service-ladder': ["Three layered faults: the selector matched no pods, targetPort was wrong, and a default-deny policy blocked ingress.", "Fix the selector, point targetPort at the real container port, and add a narrow allow policy.", "kubectl get endpoints is empty (selector), connection refused (port), timeout (NetworkPolicy).", "Climb the ladder: pod → endpoints → Service port → NetworkPolicy; never disable policies to test."],
+    's85-priority-preemption': ["The cluster was full of default-priority pods, so the important Deployment stayed Pending.", "Create/use a high PriorityClass so the scheduler preempts lower-priority pods.", "Pending pod with Insufficient cpu while low-value workloads occupy the nodes.", "PriorityClass plus preemption: limit who can use high priority and mind PodDisruptionBudgets."],
+    's86-qos-eviction': ["A pod without memory limits caused node memory pressure; the kubelet evicts by QoS class, and api had none.", "Cap the hog and make the important workload Guaranteed (requests = limits).", "Evicted pods and a MemoryPressure condition on the node.", "Set requests and limits deliberately; Guaranteed pods are evicted last."],
+    's87-rightsizing': ["Requests were 20× real usage, wasting capacity and blocking scheduling.", "Set requests between the recommender's target and upper bound; keep a memory limit; drop the CPU limit.", "Pods barely fit nodes while kubectl top shows tiny usage.", "Right-size from measured usage; run VPA in Off/Initial mode for critical services and avoid mixing it with HPA on the same metric."],
+    's88-hpa-vs-quota': ["The HPA wanted 6 replicas but a ResourceQuota capped the namespace at 4 pods.", "Raise the quota (with approval); leave the HPA settings alone.", "FailedCreate: exceeded quota in ReplicaSet events while the HPA shows a higher desired count.", "Quota is a hard ceiling for autoscaling: size it above HPA max and alert on FailedCreate."],
+    's89-context-namespace': ["Without contexts pinned to namespaces you must type -n every time, and mistakes follow.", "Create named contexts per environment and switch deliberately.", "kubectl config get-contexts and current-context before any write.", "Name contexts by environment and namespace; check the active one before every destructive command."],
+    's90-wrong-context': ["The shell was on the production context, so an unqualified delete would hit production.", "Check current-context; use --context staging (or switch) for the delete.", "Same resource names in two environments.", "Make the active context obvious (prompt) and pass --context explicitly on destructive commands."],
+    's91-black-friday': ["Three layered faults: a bad image tag, a quota that blocked replicas, and a Service selector that matched nothing.", "Fix the image, raise the quota deliberately, correct the selector, then verify end to end.", "Pods not Ready, FailedCreate exceeded quota, then empty Endpoints.", "Fix layer by layer from the pod up; verify at each layer before moving on."],
+    's92-silent-database': ["Storage (missing StorageClass), configuration (missing Secret) and network (restrictive policy) were each broken.", "Recreate the PVC with an existing class, create the Secret, and add one narrow allow rule.", "Pending PVC, CreateContainerConfigError, then connection refused.", "Work storage → config → network; check reclaim policy and backups before deleting a claim."],
+    's93-release-gone-wrong': ["A readiness probe path that does not exist plus a missing ConfigMap key stalled the rollout.", "Add the key, fix the probe path, let the rollout finish (or roll back).", "kubectl rollout status hangs; new pods Running but not Ready or CreateContainerConfigError.", "Read describe events, fix both causes, and prefer rollout undo when time is short."],
+    's94-capacity-crunch': ["Three scheduling blockers: a missing PriorityClass, oversized CPU requests and a forgotten cordon.", "Create the PriorityClass, right-size requests, uncordon the node (after confirming it is healthy).", "Pods Pending or FailedCreate; nodes showing SchedulingDisabled.", "Check admission errors, requests versus allocatable, and node schedulability in that order."],
+    's95-pi-day-replay': ["Expired certificates, a dead admission webhook and a stuck namespace compounded each other.", "Renew certificates and restart components, restore the webhook backend, then clear the finalizer.", "x509 expiry errors, then FailedCreate webhook errors, then a Terminating namespace.", "Restore access first, then the write path, then clean up; never delete policy just to get unblocked."],
+    's96-two-nodes-down': ["One worker's kubelet died on swap and another hit disk pressure, leaving only the control plane healthy.", "Fix swap and restart the kubelet on one node; vacuum logs on the other; verify pods.", "Two NotReady/pressured nodes and Pending or Evicted pods.", "Triage one node at a time from its logs; do not delete data to free space."]
   };
 })(typeof window !== 'undefined' ? window : globalThis);
 
@@ -8799,7 +9275,7 @@ js-yaml/dist/js-yaml.mjs:
     }).join('');
   }
   function renderOutages() {
-    return '<p class="fg-sub">Three real, public post-mortems, summarised in our own words from the cited sources, with the labs that train the same failure class. Click through to read the originals.</p>' + KL.outages.map(function (o) {
+    return '<p class="fg-sub">Real, public post-mortems, summarised in our own words from the cited sources, with the labs that train the same failure class. Click through to read the originals.</p>' + KL.outages.map(function (o) {
       return '<article class="fg-out"><header><h3>' + esc(o.title) + '</h3><span class="fg-meta">' + esc(o.org) + ' · ' + esc(o.when) + ' · ' + esc(o.dur) + '</span></header><ol class="fg-chain">' + o.chain.map(function (c) { return '<li>' + esc(c).replace(/`([^`]+)`/g, '<code>$1</code>') + '</li>'; }).join('') + '</ol>' +
         '<div class="fg-cols"><div><h4>Root cause</h4><p>' + esc(o.cause) + '</p></div><div><h4>How to spot it earlier</h4><ul>' + o.spot.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul></div></div>' +
         '<h4>Practise this failure class</h4><div class="fg-labs">' + o.labs.map(function (x) { return labLink(x[0], x[1]); }).join('') + '</div><div class="fg-src">Sources: ' + o.src.map(function (s) { return '<a href="' + s.u + '" target="_blank" rel="noopener noreferrer">' + esc(s.t) + '</a>'; }).join(' · ') + '</div></article>';
@@ -8821,14 +9297,254 @@ js-yaml/dist/js-yaml.mjs:
   }
   function renderField() {
     var r = $('fieldRoot'); if (!r) return; if (anim.timer) { clearInterval(anim.timer); anim.timer = 0; }
-    var tabs = [['stories', '🚨 3 a.m. page'], ['outages', '🔍 Anatomy of an outage'], ['concepts', '🎞 Concepts in motion']];
+    var tabs = [['stories', '🚨 3 a.m. page'], ['outages', '🔍 Anatomy of an outage'], ['flows', '🧭 Flowcharts'], ['concepts', '🎞 Concepts in motion']];
     r.innerHTML = '<div class="section-header"><h2>Field Guide</h2><p>Stories, real post-mortems and animated explainers that put the labs in context. <button class="btn-secondary" id="fgTour">▶ 90-second tour</button></p></div><div class="fg-tabs" role="tablist">' + tabs.map(function (t) { return '<button role="tab" aria-selected="' + (t[0] === tab) + '" data-t="' + t[0] + '">' + t[1] + '</button>'; }).join('') + '</div><div id="fgBody"></div>';
     r.querySelectorAll('[data-t]').forEach(function (b) { b.onclick = function () { tab = b.dataset.t; renderField(); }; });
     $('fgTour').onclick = function () { OB.open(true); };
-    var body = $('fgBody'); if (tab === 'stories') body.innerHTML = renderStories(); else if (tab === 'outages') body.innerHTML = renderOutages(); else bindAnim(body);
+    var body = $('fgBody'); if (tab === 'stories') body.innerHTML = renderStories(); else if (tab === 'outages') body.innerHTML = renderOutages(); else if (tab === 'flows') KL.renderFlows(body); else bindAnim(body);
   }
   KL.route('field', renderField); window.addEventListener('kl:store', function () { if (/^#field/.test(location.hash)) renderField(); });
   KL.fieldTab = function (t) { tab = t; };
+})();
+
+</script>
+<script>/* assets/js/data/flow.js */
+/* Outage additions (paraphrased from cited primary write-ups) + troubleshooting flowcharts + risky-command patterns. */
+(function (root) {
+  'use strict';
+  var KL = root.KL = root.KL || {};
+  KL.outages = KL.outages || [];
+  KL.outages.push(
+    { id: 'monzo-2017', org: 'Monzo', when: '27 Oct 2017', dur: '~1 h 21 min of cluster downtime', title: 'An empty endpoint list crashed the service mesh',
+      src: [{ t: 'Monzo community: post-mortem by Oliver Beattie (head of engineering)', u: 'https://community.monzo.com/t/resolved-current-account-payments-may-fail-major-outage-27-10-2017/26296/95' }, { t: 'KubeCon EU 2018 keynote: “Anatomy of a Production Kubernetes Outage”', u: 'https://kccnceu18.sched.com/event/Dsan/keynote-anatomy-of-a-production-kubernetes-outage-oliver-beattie-head-of-engineering-monzo-bank' }],
+      chain: [
+        'About two weeks earlier the platform team upgraded etcd and grew it from three to nine nodes.',
+        'A day before, a new service was deployed and then scaled down to zero replicas, leaving a Service with no pods behind it.',
+        'On the day, the service mesh (linkerd) stopped receiving endpoint updates from Kubernetes and sent requests to IP addresses that no longer existed: a partial outage.',
+        'Engineers restarted the mesh pods. The replacements could not start until the API servers were restarted too.',
+        'Once started, the new mesh pods crashed with a null-pointer error: Kubernetes (1.6+) returned `null` instead of an empty list for a Service with no endpoints, which the mesh version in use could not parse. The partial outage became a platform-wide one.',
+        'Deleting the empty Services let the mesh start. Monzo reported that the vast majority of payments still went through.'],
+      cause: 'Several small bugs and version mismatches lined up: an etcd client problem, a mesh/Kubernetes incompatibility on empty endpoints, and a restart that exposed it.',
+      spot: ['Test component version pairs (mesh, controllers, API) together, including the “zero endpoints” edge case.', 'Restarting everything is not a neutral action; know what a restart depends on first.', 'Practise failure on purpose (chaos tests) before production does it for you.'],
+      labs: [['s04-no-endpoints', 'A Service with no endpoints: find out why and what depends on it.'], ['s84-service-ladder', 'Walk the Service → Endpoints → Pod ladder in order.'], ['s93-release-gone-wrong', 'A change goes out and the blast radius is wider than expected.']] },
+    { id: 'zalando-2019', org: 'Zalando', when: '7 Jan 2019', dur: 'over 1 hour', title: 'Cluster DNS ran out of memory, all at once',
+      src: [{ t: 'Zalando: “Total DNS outage in Kubernetes cluster” post-mortem', u: 'https://kubernetes-on-aws.readthedocs.io/en/latest/postmortems/jan-2019-dns-outage.html' }, { t: 'Kubernetes Failure Stories (index)', u: 'https://k8s.af/' }],
+      chain: [
+        'A spike in requests from the main aggregation service produced an equal spike in DNS queries to CoreDNS.',
+        'The query spike drove CoreDNS memory up, and the pods hit their memory limit and were OOM-killed at the same moment.',
+        'When they restarted, the constant high query load killed them again, so the whole cluster lost DNS.',
+        'Missing monitoring delayed paging the on-call engineer.',
+        'The engineer found the OOM kills and raised the CoreDNS memory request/limit from 100Mi to 2000Mi by hand.',
+        'DNS came back, circuit breakers closed, and the store recovered. Product and outfit pages had been erroring for over an hour. (The failure-stories index also lists ndots:5 and HTTP retries as involved.)'],
+      cause: 'A critical shared component had a small fixed memory limit and no automatic scaling, so a load spike turned into a crash loop for everyone.',
+      spot: ['Size and autoscale shared infrastructure (CoreDNS) for spikes, not for averages.', 'Alert on OOMKilled and restarts of kube-system pods.', 'Make sure the paging path does not itself need the thing that broke.'],
+      labs: [['s82-coredns-down', 'DNS down: confirm it from a pod, then restore CoreDNS.'], ['s03-oomkilled', 'Recognise an OOM kill and fix the limit.'], ['s86-qos-eviction', 'How limits and QoS decide who dies first.']] });
+
+  /* Flowcharts: node = {q, cmd, opts:[[label,next]]}; leaf = {leaf:1, title, fix, lab, caution}. */
+  KL.flows = [
+    { id: 'pending', title: 'Pod stuck Pending', start: 'p1', nodes: {
+      p1: { q: 'Does `kubectl describe pod` show a FailedScheduling event?', cmd: 'kubectl describe pod <pod> -n <ns>', opts: [['Yes', 'p2'], ['No events at all', 'p5']] },
+      p2: { q: 'What does the event message say?', opts: [['Insufficient cpu / memory', 'p3'], ['untolerated taint', 'L_taint'], ['didn’t match node selector / affinity', 'L_sel'], ['unbound PersistentVolumeClaims', 'L_pvc']] },
+      p3: { q: 'Is the request bigger than any single node can offer, or is the cluster simply full?', cmd: 'kubectl describe nodes | grep -A6 "Allocated resources"', opts: [['One pod request is too big', 'L_big'], ['Cluster is full', 'p4']] },
+      p4: { q: 'Is a Cluster Autoscaler / node autoscaler installed and allowed to add nodes?', opts: [['Yes, but still Pending', 'L_ca'], ['No autoscaler', 'L_full']] },
+      p5: { q: 'Is the namespace over quota or are priorities involved?', cmd: 'kubectl describe quota -n <ns>', opts: [['Quota exhausted / forbidden', 'L_quota'], ['Quota is fine', 'L_prio']] },
+      L_taint: { leaf: 1, title: 'Taint not tolerated', fix: 'Add a matching toleration, or schedule on a node without the taint. Check `kubectl describe node | grep Taints`.', lab: 's35-taint-toleration', caution: 'Do not remove a taint on a shared node just to get your pod running: it may be protecting that node on purpose.' },
+      L_sel: { leaf: 1, title: 'Selector or affinity matches no node', fix: 'Compare `nodeSelector`/affinity with `kubectl get nodes --show-labels`; fix the pod spec or label the node.', lab: 's34-nodeselector', caution: 'Labelling nodes on a real cluster changes scheduling for everyone who selects on that label.' },
+      L_pvc: { leaf: 1, title: 'Claim not bound', fix: 'Describe the PVC: wrong StorageClass, no matching PV, or access mode mismatch.', lab: 's13-pvc-pending', caution: 'Never delete a PVC or PV to “unstick” it before checking the reclaim policy: you can lose the data.' },
+      L_big: { leaf: 1, title: 'Request larger than any node', fix: 'Lower the request or use a bigger node. Check actual use with `kubectl top` before choosing a number.', lab: 's87-rightsizing', caution: 'Cutting requests too far trades Pending for throttling and OOM kills. Use measured values.' },
+      L_ca: { leaf: 1, title: '“Pending even with autoscaling”', fix: 'Check why the autoscaler did not scale: node group at its max size, pod requests larger than the largest node type, a selector/taint no new node would satisfy, a quota on the cloud account, or a PodDisruptionBudget/annotation blocking scale-down churn. The autoscaler logs state the reason per pod.', lab: 's94-capacity-crunch', caution: 'Raising max nodes costs money immediately. Confirm limits and budget before changing them.' },
+      L_full: { leaf: 1, title: 'Cluster full, nothing to add capacity', fix: 'Add a node, free capacity, or let higher-priority pods preempt lower ones (PriorityClass).', lab: 's85-priority-preemption', caution: 'Preemption evicts running pods. Do not give batch work a high priority by accident.' },
+      L_quota: { leaf: 1, title: 'Quota exhausted', fix: 'Reduce usage or raise the ResourceQuota (with the owner’s approval). Errors appear on the ReplicaSet/Job, not the pod.', lab: 's15-quota-limits', caution: 'Quotas are a guardrail. Raising them silently defeats capacity planning.' },
+      L_prio: { leaf: 1, title: 'Look wider', fix: 'Check events at namespace level (`kubectl get events -n <ns> --sort-by=.lastTimestamp`), admission webhooks, and whether the scheduler itself is healthy.', lab: 's72-dead-webhook', caution: 'Deleting a webhook configuration disables a policy control. Fix the webhook backend first if you can.' } } },
+
+    { id: 'crash', title: 'Pod restarting or not Ready', start: 'c1', nodes: {
+      c1: { q: 'What is the pod status?', cmd: 'kubectl get pod <pod> -n <ns>', opts: [['ImagePullBackOff / ErrImagePull', 'L_img'], ['CrashLoopBackOff', 'c2'], ['Running but 0/1 Ready', 'L_ready'], ['CreateContainerConfigError', 'L_cfg']] },
+      c2: { q: 'What does the last state say?', cmd: 'kubectl describe pod <pod> | grep -A6 "Last State"', opts: [['OOMKilled', 'L_oom'], ['Exit code 1 / error in logs', 'c3'], ['Restarts every ~N seconds with no app error', 'L_probe']] },
+      c3: { q: 'Do the previous logs show the reason?', cmd: 'kubectl logs <pod> --previous', opts: [['Missing env var / config / file', 'L_cfg'], ['App bug', 'L_bug']] },
+      L_img: { leaf: 1, title: 'Image cannot be pulled', fix: 'Check the image name and tag, and the pull secret if the registry is private.', lab: 's02-imagepull', caution: 'Do not paste real registry passwords into the terminal or a shared manifest. Create the secret from a file or a secure store.' },
+      L_oom: { leaf: 1, title: 'Out of memory', fix: 'Compare the memory limit with real use; raise the limit or fix the leak.', lab: 's03-oomkilled', caution: 'Raising limits everywhere hides leaks and can starve neighbours on the node.' },
+      L_probe: { leaf: 1, title: 'Probe is killing a healthy app', fix: 'Check the liveness path/port and the initial delay; a too-strict probe restarts a slow starter.', lab: 's08-probes', caution: 'Removing a liveness probe fixes the symptom but also removes self-healing.' },
+      L_cfg: { leaf: 1, title: 'Config or secret missing', fix: 'The referenced ConfigMap/Secret or key does not exist in this namespace.', lab: 's32-cm-env-missing', caution: 'Do not print secrets with `kubectl get secret -o yaml` in shared screens or tickets: values are only base64.' },
+      L_ready: { leaf: 1, title: 'Readiness failing', fix: 'The pod runs but is excluded from the Service. Check the readiness probe and port, then `kubectl get endpoints`.', lab: 's04-no-endpoints', caution: 'Loosening readiness lets broken pods receive traffic.' },
+      L_bug: { leaf: 1, title: 'Application error', fix: 'Roll back to the last good revision, then debug at leisure.', lab: 's06-rollout-rollback', caution: 'Rolling back also reverts config in that revision: check the diff first with `kubectl rollout history`.' } } },
+
+    { id: 'svc', title: 'Service not reachable', start: 's1', nodes: {
+      s1: { q: 'Does the Service have endpoints?', cmd: 'kubectl get endpoints <svc> -n <ns>', opts: [['<none>', 's2'], ['Yes, addresses listed', 's3']] },
+      s2: { q: 'Do the Service selector and the pod labels match, and are the pods Ready?', cmd: 'kubectl get pods -n <ns> --show-labels', opts: [['Labels differ', 'L_sel'], ['Labels match but pods not Ready', 'L_ready']] },
+      s3: { q: 'Does the Service port map to the container port (targetPort)?', cmd: 'kubectl describe svc <svc> -n <ns>', opts: [['Wrong targetPort', 'L_tp'], ['Ports are right', 's4']] },
+      s4: { q: 'Does it fail by name (DNS) or by IP?', cmd: 'kubectl exec <pod> -- nslookup <svc>', opts: [['Name fails, IP works', 'L_dns'], ['Both fail', 'L_np']] },
+      L_sel: { leaf: 1, title: 'Selector mismatch', fix: 'Fix the labels or the selector so they match exactly.', lab: 's04-no-endpoints', caution: 'Editing live Service selectors affects traffic immediately. Prefer changing manifests and applying them.' },
+      L_ready: { leaf: 1, title: 'Backends not Ready', fix: 'Pods are excluded until readiness passes; fix the probe or the app.', lab: 's84-service-ladder', caution: '' },
+      L_tp: { leaf: 1, title: 'Wrong targetPort', fix: 'Point targetPort at the port the container listens on.', lab: 's29-svc-targetport', caution: '' },
+      L_dns: { leaf: 1, title: 'DNS problem', fix: 'Check that CoreDNS pods are Running and the kube-dns Service has endpoints.', lab: 's82-coredns-down', caution: 'Restarting CoreDNS briefly drops name resolution for the whole cluster. Do it off-peak.' },
+      L_np: { leaf: 1, title: 'Probably a NetworkPolicy', fix: 'List policies in both namespaces; a default-deny with no matching allow blocks traffic.', lab: 's12-netpol-isolate', caution: 'Deleting a NetworkPolicy to “test” opens traffic you meant to restrict. Add a narrow allow instead.' } } },
+
+    { id: 'node', title: 'Node NotReady', start: 'n1', nodes: {
+      n1: { q: 'What are the node conditions?', cmd: 'kubectl describe node <node> | grep -A8 Conditions', opts: [['Ready=Unknown / kubelet stopped posting', 'n2'], ['DiskPressure / MemoryPressure true', 'L_press'], ['NetworkUnavailable', 'L_net']] },
+      n2: { q: 'On the node, is the kubelet running?', cmd: 'ssh <node> "sudo systemctl status kubelet"', opts: [['Stopped or crash-looping', 'n3'], ['Running, but cannot reach the API', 'L_cert']] },
+      n3: { q: 'What do the kubelet logs say?', cmd: 'ssh <node> "sudo journalctl -u kubelet -n 30"', opts: [['swap is enabled', 'L_swap'], ['Just stopped', 'L_start']] },
+      L_swap: { leaf: 1, title: 'Swap enabled', fix: 'Turn swap off and restart the kubelet; also remove it from fstab so a reboot does not bring it back.', lab: 's71-kubelet-swap', caution: 'Check the node is not hosting something that relies on swap. Drain first on a real cluster.' },
+      L_start: { leaf: 1, title: 'Kubelet stopped', fix: 'Start the kubelet and confirm the node returns to Ready.', lab: 's70-kubelet-down', caution: 'Pods were possibly already rescheduled elsewhere; expect brief duplicates of stateful workloads.' },
+      L_press: { leaf: 1, title: 'Resource pressure', fix: 'Free disk (logs, unused images) or find the memory hog; pods get evicted until pressure clears.', lab: 's81-disk-pressure', caution: 'Never run `rm -rf` on /var/lib on a node: you can destroy container state. Use crictl/journalctl vacuum.' },
+      L_net: { leaf: 1, title: 'Network plugin not ready', fix: 'Check the CNI DaemonSet pod on that node and the node’s routes.', lab: 's95-pi-day-replay', caution: 'Flushing iptables/routes on a node can cut it off entirely.' },
+      L_cert: { leaf: 1, title: 'Credentials problem', fix: 'Check certificate expiry (`kubeadm certs check-expiration`) and renew.', lab: 's73-expired-certs', caution: 'Back up /etc/kubernetes before renewing, and never share the resulting kubeconfig or tokens.' } } },
+
+    { id: 'scale', title: 'Autoscaling is not scaling', start: 'a1', nodes: {
+      a1: { q: 'Which autoscaler is not acting?', opts: [['HPA (pods)', 'a2'], ['Cluster Autoscaler (nodes)', 'a5']] },
+      a2: { q: 'What does `kubectl get hpa` show for TARGETS?', cmd: 'kubectl get hpa -n <ns>', opts: [['<unknown>/…', 'L_metrics'], ['A number, but replicas stay put', 'a3']] },
+      a3: { q: 'Is the HPA already at maxReplicas?', opts: [['Yes', 'L_max'], ['No, but new pods stay Pending', 'a4']] },
+      a4: { q: 'Is the namespace quota or node capacity the limit?', opts: [['Quota', 'L_hq'], ['Node capacity', 'a5']] },
+      a5: { q: 'Would a new node satisfy the pending pod (size, labels, taints, zone)?', opts: [['No', 'L_shape'], ['Yes, but the node group is at max', 'L_cap']] },
+      L_metrics: { leaf: 1, title: 'No metrics', fix: 'The HPA needs metrics-server and CPU requests on the pods; without requests the percentage is undefined.', lab: 's45-hpa-wrong-target', caution: '' },
+      L_max: { leaf: 1, title: 'At maxReplicas', fix: 'It is working as configured. Raise maxReplicas only if the dependencies behind it can take the load.', lab: 's16-hpa', caution: 'Scaling a frontend up can overload its database. Check downstream limits first.' },
+      L_hq: { leaf: 1, title: 'HPA blocked by quota', fix: 'Replicas are created but the quota rejects them. See errors on the ReplicaSet.', lab: 's88-hpa-vs-quota', caution: 'Raising quota is a policy decision, not just a number.' },
+      L_shape: { leaf: 1, title: 'New node would not fit the pod', fix: 'The pod asks for more than any node type offers, or needs a label/taint no new node carries.', lab: 's94-capacity-crunch', caution: '' },
+      L_cap: { leaf: 1, title: 'Node group at its limit', fix: 'Raise the group maximum or add a new group.', lab: 's94-capacity-crunch', caution: 'More nodes means a bigger bill straight away. Confirm cost approval.' } } }
+  ];
+
+  /* Risky command patterns: [regex, plain-language caution] — guidance only, not a security control. */
+  KL.risky = [
+    [/\bkubectl\s+delete\b.*(--all\b|-A\b|--all-namespaces)/, 'Deleting “all” can wipe a whole namespace or cluster. Run the same command with `get` first to see what matches.'],
+    [/\bkubectl\s+delete\b.*(--force|--grace-period=0)/, 'Force-deleting skips graceful shutdown. For stateful pods it can corrupt data or run two copies at once.'],
+    [/\bkubectl\s+delete\s+(ns|namespace)\b/, 'Deleting a namespace deletes everything in it, including volumes’ claims. Confirm your current context first.'],
+    [/\bkubectl\s+drain\b/, 'Drain evicts pods from the node. Check PodDisruptionBudgets and that other nodes have room. Cordon first if unsure.'],
+    [/\bkubeadm\s+reset\b/, 'kubeadm reset wipes the node’s cluster state. Only run it on a node you intend to rebuild.'],
+    [/finalizers.*null|"finalizers"\s*:\s*\[\s*\]/, 'Removing finalizers skips cleanup the owner expected (for example, external storage). Find what holds it first.'],
+    [/\brm\s+-[a-z]*r[a-z]*f?\b|\brm\s+-rf\b/, '`rm -rf` is irreversible. On a node, never remove /var/lib or /etc/kubernetes by hand.'],
+    [/\bkubectl\s+apply\s+-f\s+https?:/, 'Applying a manifest straight from a URL runs whatever the URL serves today. Download, read, then apply.'],
+    [/\bkubectl\s+(auth\s+reconcile|create\s+(clusterrolebinding|rolebinding))\b.*cluster-admin/, 'cluster-admin grants full control. Prefer a narrow Role and test with `kubectl auth can-i --as=…`.'],
+    [/\bkubectl\s+get\s+secrets?\b.*-o\s*(yaml|json|jsonpath)/, 'Secret values are only base64: anyone who sees the output can read them. Do not paste it into tickets or chat.'],
+    [/\bkubectl\s+config\s+(use-context|set-context)\b/, 'Check `kubectl config current-context` before destructive commands: the wrong context is how staging commands hit production.'],
+    [/\bkubectl\s+replace\s+--force\b/, '`replace --force` deletes and recreates the object, restarting its pods.'],
+    [/\bkubectl\s+(taint|cordon)\b/, 'This changes where pods can run on a shared node. Make sure nothing depends on it.'],
+    [/\betcdctl\s+.*(snapshot\s+restore|del\b)/, 'Restoring or deleting in etcd rewrites cluster state. Back up first and stop the API server before a restore.']
+  ];
+  KL.secretPatterns = [
+    [/eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]{5,}/, 'a JWT / service-account token'],
+    [/-----BEGIN [A-Z ]*PRIVATE KEY-----/, 'a private key'],
+    [/\bAKIA[0-9A-Z]{16}\b/, 'an AWS access key id'],
+    [/\bgh[pousr]_[A-Za-z0-9]{30,}\b/, 'a GitHub token'],
+    [/client-key-data:\s*\S{20,}|client-certificate-data:\s*\S{20,}/, 'kubeconfig credentials']
+  ];
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>/* assets/js/more.js */
+/* Cautions, terminal skins, troubleshooting flowcharts, diagram traffic/pending/ingress helpers. Local only. */
+(function () {
+  'use strict';
+  var KL = window.KL, Labs = KL.Labs || window.Labs;
+  function $(i) { return document.getElementById(i); }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) {} }
+  function code(s) { return esc(s).replace(/`([^`]+)`/g, '<code>$1</code>'); }
+  function curLab() { var m = location.hash.match(/^#lab\/([^/?]+)/); return m ? (Labs || window.Labs).byId[m[1]] : null; }
+
+  // ── cautions ──
+  var DATA_NOTE = 'Use placeholder values only. Never paste real passwords, tokens, kubeconfigs or private keys here. Your progress is stored in this browser, unencrypted, and is cleared with your browser data.';
+  function cautionBanner() {
+    var lab = curLab(); var old = document.querySelector('.lr-caution'); if (old) old.remove(); if (!lab) return;
+    var bar = document.querySelector('.story-bar') || document.querySelector('.lr-bar'); if (!bar) return;
+    var d = document.createElement('details'); d.className = 'lr-caution'; d.open = ls('kl.cautionOpen') !== '0';
+    d.innerHTML = '<summary>⚠ Caution before you try this on a real cluster</summary><p>' + code(lab.caution || 'Check the current context and the namespace before any change, and read the output of a command with `get` before you delete anything.') + '</p><p class="lr-caution-data">🔒 ' + esc(DATA_NOTE) + '</p>';
+    d.addEventListener('toggle', function () { ls('kl.cautionOpen', d.open ? '1' : '0'); });
+    bar.parentNode.insertBefore(d, bar.nextSibling);
+  }
+  function warnFor(line) { var out = []; KL.risky.forEach(function (r) { if (r[0].test(line)) out.push(r[1]); }); return out; }
+  document.addEventListener('input', function (e) {
+    if (!e.target || e.target.id !== 'lrIn') return; var w = warnFor(e.target.value); if (!w.length) return;
+    var box = $('lrTeach'); if (!box) return; box.hidden = false; box.innerHTML += '<div class="lr-warn">⚠ ' + code(w[0]) + '</div>';
+  });
+  document.addEventListener('paste', function (e) {
+    if (!e.target || e.target.id !== 'lrIn') return; var t = (e.clipboardData || window.clipboardData); if (!t) return; var s = t.getData('text'), hit = '';
+    KL.secretPatterns.forEach(function (p) { if (!hit && p[0].test(s)) hit = p[1]; });
+    if (!hit) return; e.preventDefault();
+    var box = $('lrTeach'); if (box) { box.hidden = false; box.innerHTML = '<div class="lr-warn">⚠ That looks like ' + esc(hit) + '. It was not pasted. Real credentials do not belong in a practice terminal; use a placeholder.</div>'; }
+  }, true);
+
+  // ── terminal skins ──
+  var SKINS = [['default', 'Default'], ['matrix', 'Green phosphor'], ['amber', 'Amber'], ['solar', 'Solarized dark'], ['paper', 'Paper (light)'], ['contrast', 'High contrast']];
+  function applySkin() {
+    var t = $('lrTerm'); if (!t) return; var s = ls('kl.skin') || 'default', fs = +(ls('kl.tfs') || 13);
+    if (s === 'default') t.removeAttribute('data-skin'); else t.setAttribute('data-skin', s); t.style.fontSize = fs + 'px';
+    var sel = $('lrSkin'); if (sel) sel.value = s;
+  }
+  function skinPicker() {
+    var bar = document.querySelector('.lr-bar'); if (!bar || $('lrSkinBox')) { applySkin(); return; }
+    var box = document.createElement('span'); box.id = 'lrSkinBox'; box.className = 'lr-skinbox';
+    box.innerHTML = '<label class="sr-only" for="lrSkin">Terminal skin</label><select id="lrSkin" title="Terminal skin">' + SKINS.map(function (s) { return '<option value="' + s[0] + '">' + s[1] + '</option>'; }).join('') + '</select><button type="button" class="btn-secondary" id="lrFsM" aria-label="Smaller terminal text">A−</button><button type="button" class="btn-secondary" id="lrFsP" aria-label="Larger terminal text">A+</button>';
+    var timer = $('lrTimer'); bar.insertBefore(box, timer || null);
+    $('lrSkin').onchange = function () { ls('kl.skin', this.value); applySkin(); };
+    function fs(d) { var v = Math.max(10, Math.min(22, +(ls('kl.tfs') || 13) + d)); ls('kl.tfs', String(v)); applySkin(); }
+    $('lrFsM').onclick = function () { fs(-1); }; $('lrFsP').onclick = function () { fs(1); };
+    applySkin();
+  }
+
+  // ── diagram: traffic lines, ingress trace, why-Pending popover ──
+  function simNow() { var lab = curLab(); if (!lab || !KL.labRun) return Promise.resolve(null); return KL.labRun(lab.id).then(function (r) { return r && r.sim; }); }
+  function clearTrace() { var o = document.querySelector('.dia-lines'); if (o) o.remove(); var t = document.querySelector('.dia-trace'); if (t) t.remove(); }
+  function drawLines(svcEl) {
+    clearTrace(); var root = $('lrDia'); if (!root || !svcEl) return;
+    setTimeout(function () {
+      var pods = root.querySelectorAll('.dia-pod.hl'), rb = root.getBoundingClientRect(), sb = svcEl.getBoundingClientRect(); if (!pods.length) return;
+      var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg'); svg.setAttribute('class', 'dia-lines'); svg.setAttribute('width', root.scrollWidth); svg.setAttribute('height', root.scrollHeight); svg.setAttribute('aria-hidden', 'true');
+      var x1 = sb.left - rb.left + sb.width / 2 + root.scrollLeft, y1 = sb.top - rb.top + sb.height + root.scrollTop;
+      pods.forEach(function (p) { var pb = p.getBoundingClientRect(), x2 = pb.left - rb.left + pb.width / 2 + root.scrollLeft, y2 = pb.top - rb.top + root.scrollTop, path = document.createElementNS(ns, 'path'); path.setAttribute('d', 'M' + x1 + ',' + y1 + ' C' + x1 + ',' + (y1 + 40) + ' ' + x2 + ',' + (y2 - 40) + ' ' + x2 + ',' + y2); svg.appendChild(path); });
+      root.appendChild(svg);
+    }, 30);
+    var key = (svcEl.dataset.svc || '').split('/'); simNow().then(function (s) {
+      if (!s || key.length < 2 || !root.contains(svcEl)) return;
+      try {
+        var ings = s.list('Ingress', key[0]).filter(function (g) { return JSON.stringify(g.spec || {}).indexOf('"name":"' + key[1] + '"') >= 0; }), n = s.endpointsFor(s.get('Service', key[0], key[1])).length;
+        var tr = document.createElement('div'); tr.className = 'dia-trace';
+        tr.innerHTML = (ings.length ? '🌐 Ingress <b>' + esc(ings[0].metadata.name) + '</b> → ' : '') + 'Service <b>' + esc(key[1]) + '</b> → <b>' + n + '</b> ready pod' + (n === 1 ? '' : 's') + (n ? '' : ' <em>(no traffic can flow)</em>');
+        root.insertBefore(tr, root.firstChild);
+      } catch (e) {}
+    });
+  }
+  document.addEventListener('mouseover', function (e) { var sv = e.target.closest && e.target.closest('#lrDia .dia-svc'); if (sv) drawLines(sv); });
+  document.addEventListener('focusin', function (e) { var sv = e.target.closest && e.target.closest('#lrDia .dia-svc'); if (sv) drawLines(sv); });
+  document.addEventListener('mouseout', function (e) { if (e.target.closest && e.target.closest('#lrDia .dia-svc')) clearTrace(); });
+  document.addEventListener('focusout', function (e) { if (e.target.closest && e.target.closest('#lrDia .dia-svc')) clearTrace(); });
+  document.addEventListener('click', function (e) {
+    var old = document.querySelector('.dia-why'); if (old) old.remove();
+    var p = e.target.closest && e.target.closest('#lrDia .dia-pod.st-wait'); if (!p) return; var k = (p.dataset.k || '').split('/');
+    simNow().then(function (s) {
+      if (!s) return; var ev = null; s.events.forEach(function (x) { if (x.kind === 'Pod' && x.name === k[1] && x.ns === k[0] && /FailedScheduling|Failed|Backoff/.test(x.reason)) ev = x; });
+      var d = document.createElement('div'); d.className = 'dia-why'; d.setAttribute('role', 'status');
+      d.innerHTML = '<b>Why is ' + esc(k[1]) + ' waiting?</b><br>' + (ev ? esc(ev.reason) + ': ' + esc(ev.msg) : 'No scheduler event yet. Run <code>kubectl describe pod ' + esc(k[1]) + ' -n ' + esc(k[0]) + '</code> and read Events.') + '<button type="button" aria-label="Close">×</button>';
+      d.querySelector('button').onclick = function () { d.remove(); }; var root = $('lrDia'); if (root) root.insertBefore(d, root.firstChild);
+    });
+  });
+
+  // ── flowcharts (Field Guide tab) ──
+  var fs = { flow: 0, path: [] };
+  function flowHtml() {
+    var f = KL.flows[fs.flow], cur = fs.path.length ? fs.path[fs.path.length - 1] : f.start, n = f.nodes[cur];
+    var h = '<p class="fg-sub">Pick a symptom, answer the questions, and end at a fix and a lab that trains it. Commands are copy-only: run them in a lab terminal. ' + esc('Guidance only; adapt to your cluster.') + '</p><div class="cp-tabs" role="tablist">' + KL.flows.map(function (x, i) { return '<button role="tab" aria-selected="' + (i === fs.flow) + '" data-fl="' + i + '">' + esc(x.title) + '</button>'; }).join('') + '</div><div class="fl-card">';
+    h += '<div class="fl-crumb">' + [f.title].concat(fs.path.slice(0, -1).map(function () { return '•'; })).join(' › ') + '</div>';
+    if (n.leaf) {
+      h += '<h4 class="fl-leaf">✔ ' + esc(n.title) + '</h4><p>' + code(n.fix) + '</p>' + (n.caution ? '<div class="lr-warn">⚠ ' + code(n.caution) + '</div>' : '') + (n.lab && Labs.byId[n.lab] ? '<a class="fg-lab" href="#lab/' + n.lab + '"><b>' + esc(Labs.byId[n.lab].num + ' · ' + Labs.byId[n.lab].title) + '</b><em>Practise this</em></a>' : '');
+    } else {
+      h += '<h4>' + code(n.q) + '</h4>' + (n.cmd ? '<div class="fl-cmd"><code>' + esc(n.cmd) + '</code><button type="button" class="btn-secondary" data-copy="' + esc(n.cmd) + '">Copy</button></div>' : '') + '<div class="fl-opts">' + n.opts.map(function (o, i) { return '<button type="button" class="btn-secondary fl-opt" data-o="' + i + '">' + esc(o[0]) + '</button>'; }).join('') + '</div>';
+    }
+    return h + '<div class="fl-nav">' + (fs.path.length ? '<button type="button" class="btn-secondary" id="flBack">← Back</button>' : '') + (fs.path.length ? '<button type="button" class="btn-secondary" id="flRestart">↺ Start over</button>' : '') + '</div></div>';
+  }
+  KL.renderFlows = function (root) {
+    function draw() {
+      root.innerHTML = flowHtml();
+      root.querySelectorAll('[data-fl]').forEach(function (b) { b.onclick = function () { fs.flow = +b.dataset.fl; fs.path = []; draw(); }; });
+      var f = KL.flows[fs.flow], cur = fs.path.length ? fs.path[fs.path.length - 1] : f.start;
+      root.querySelectorAll('.fl-opt').forEach(function (b) { b.onclick = function () { fs.path.push(f.nodes[cur].opts[+b.dataset.o][1]); draw(); }; });
+      root.querySelectorAll('[data-copy]').forEach(function (b) { b.onclick = function () { try { navigator.clipboard.writeText(b.dataset.copy); b.textContent = 'Copied'; } catch (e) {} }; });
+      var bk = $('flBack'); if (bk) bk.onclick = function () { fs.path.pop(); draw(); }; var rs = $('flRestart'); if (rs) rs.onclick = function () { fs.path = []; draw(); };
+    }
+    draw();
+  };
+
+  function decorate() { cautionBanner(); skinPicker(); }
+  KL.route('lab', function () { setTimeout(decorate, 50); setTimeout(decorate, 350); });
+  window.addEventListener('kl:page', function (e) { if (e.detail && e.detail.name !== 'lab') clearTrace(); });
 })();
 
 </script>

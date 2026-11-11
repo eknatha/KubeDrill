@@ -1,6 +1,6 @@
 // Runs every interactive lab: broken state must FAIL checks, applying the solution must PASS all tasks.
 const path=require('path');
-const Sim=require('../assets/js/sim.js');['sim-shell','sim-kubectl','sim-kubectl2','sim-kubectl3','sim-faults'].forEach(f=>require('../assets/js/'+f+'.js'));
+const Sim=require('../assets/js/sim.js');['sim-shell','sim-kubectl','sim-kubectl2','sim-kubectl3','sim-faults','sim-faults2'].forEach(f=>require('../assets/js/'+f+'.js'));
 const Labs=require('../assets/js/labs-engine.js');
 const fs=require('fs');
 for(const f of fs.readdirSync(path.join(__dirname,'../assets/js/data')).filter(x=>/^labs-sim-.*\.js$/.test(x)).sort()) require('../assets/js/data/'+f);

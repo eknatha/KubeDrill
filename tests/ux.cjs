@@ -26,7 +26,7 @@ await run('kubctl get pods');ok((await pg.locator('.lr-o.hint').allInnerTexts())
 await pg.goto(BASE+'#labs');await pg.waitForTimeout(400);ok(await pg.locator('.fail-card').count()===5,'failure library strip: 5 cards');
 // field guide
 await pg.goto(BASE+'#field');await pg.waitForTimeout(300);ok(await pg.locator('.fg-ep').count()===3,'3 story episodes');
-await pg.click('[data-t="outages"]');ok(await pg.locator('.fg-out').count()===3,'3 outage explainers');
+await pg.click('[data-t="outages"]');ok(await pg.locator('.fg-out').count()===5,'5 outage explainers');
 ok(await pg.locator('.fg-src a[href^="https://"]').count()>=4,'outage sources linked');
 await pg.click('[data-t="concepts"]');const s1=await pg.locator('.cp-stage h4').innerText();await pg.click('#cpNext');ok((await pg.locator('.cp-stage h4').innerText())!==s1,'animation steps forward');
 await pg.click('#cpPlay');await pg.waitForTimeout(3000);ok((await pg.locator('.cp-n').innerText()).startsWith('2')||(await pg.locator('.cp-n').innerText()).startsWith('3'),'autoplay advances: '+await pg.locator('.cp-n').innerText());
@@ -39,6 +39,25 @@ await run("ssh worker2 'sudo systemctl start kubelet'");await run('kubectl get n
 ok((await pg.locator('#lrTasks li.ok').count())>=2,'checker passes node tasks');
 await pg.goto(BASE+'#lab/s73-expired-certs');await pg.waitForSelector('#lrIn');await pg.waitForTimeout(500);await run('kubectl get nodes');
 ok((await pg.locator('#lrOut').innerText()).includes('x509'),'expired certs block kubectl');
+
+// flowcharts, cautions, skins, diagram
+await pg.setViewportSize({width:1280,height:800});await pg.goto(BASE+'#field');await pg.waitForTimeout(300);await pg.click('[data-t="flows"]');
+ok(await pg.locator('.fl-opt').count()>=2,'flowchart shows options');
+await pg.click('.fl-opt >> nth=0');await pg.click('.fl-opt >> nth=0');await pg.click('.fl-opt >> nth=0');await pg.waitForTimeout(100);
+ok(await pg.locator('.fl-card').count()===1,'flowchart walks');
+await pg.click('[data-fl="4"]');ok((await pg.locator('.fl-card').innerText()).includes('autoscaler'),'autoscaling flow');
+await pg.goto(BASE+'#lab/s74-privileged-hunt');await pg.waitForSelector('#lrIn');await pg.waitForTimeout(700);
+ok(await pg.locator('.lr-caution').count()===1,'caution banner');
+ok((await pg.locator('.lr-caution').innerText()).includes('real cluster'),'caution text from lab');
+await pg.fill('#lrIn','kubectl delete pods --all');await pg.dispatchEvent('#lrIn','input');await pg.waitForTimeout(100);
+ok(await pg.locator('#lrTeach .lr-warn').count()===1,'risky command warning');
+await pg.fill('#lrIn','');
+await pg.evaluate(()=>{const i=document.getElementById('lrIn');const e=new Event('paste',{bubbles:true,cancelable:true});e.clipboardData={getData:()=>'-----BEGIN RSA PRIVATE KEY-----'};i.dispatchEvent(e)});
+ok((await pg.locator('#lrTeach').innerText()).includes('private key'),'secret paste blocked');
+await pg.selectOption('#lrSkin','matrix');ok(await pg.getAttribute('#lrTerm','data-skin')==='matrix','skin applied');
+await pg.click('#lrFsP');ok((await pg.evaluate(()=>document.getElementById('lrTerm').style.fontSize))==='14px','font size up');
+await pg.reload();await pg.waitForSelector('#lrIn');await pg.waitForTimeout(700);ok(await pg.getAttribute('#lrTerm','data-skin')==='matrix','skin persists');
+await pg.goto(BASE+'#lab/s84-service-ladder');await pg.waitForSelector('.dia-svc');await pg.waitForTimeout(500);await pg.dispatchEvent('.dia-svc >> nth=0','mouseover');await pg.waitForTimeout(200);ok(await pg.locator('.dia-trace').count()===1,'service trace shown');
 await pg.setViewportSize({width:390,height:800});await pg.goto(BASE+'#field');await pg.waitForTimeout(300);
 ok(await pg.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1),'field guide no overflow on mobile');
 await pg.screenshot({path:'/tmp/field-mobile.png'});

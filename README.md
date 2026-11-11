@@ -14,7 +14,7 @@ Practise Kubernetes the way the exams test it: break things, read events, fix th
 | **Mock exam bundles** | Fixed CKA/CKAD/CKS sets with weighted tasks, flag-for-review, pass mark 66% and a score-by-domain report. |
 | **Real exam environment** | Optional: no checker, no cluster panel, several kube contexts (each task starts in the wrong one, as on the real exam), submit to score. |
 | **Real-world failure library** | 5 simulator-only labs (S69–S73): stuck finalizers, NotReady node, kubelet vs swap, a dead admission webhook, expired control-plane certificates. They use `ssh <node> '<cmd>'`, which exists only in the simulator, so they have no kind pack. |
-| **Field Guide** | 3 fictional "3 a.m. page" story episodes (chained labs), 3 "Anatomy of an outage" explainers (Reddit 2023, Datadog 2023, OpenAI 2024: paraphrased from the cited post-mortems and linked to them), and 3 step-through concept animations. |
+| **Field Guide** | 3 fictional "3 a.m. page" story episodes (chained labs), 5 "Anatomy of an outage" explainers (Reddit 2023, Datadog 2023, OpenAI 2024, Monzo 2017, Zalando 2019: paraphrased from the cited post-mortems and linked to them), and 3 step-through concept animations. |
 | **90-second onboarding** | First-run walkthrough with a real mini-terminal; replay from Field Guide. |
 | **Workbench layouts** | Split, focus (press `F`) and stacked layouts, remembered per browser. |
 | **Terminal that teaches** | Live explanation of the verb, flags and short names as you type, plus did-you-mean for mistyped resources and commands. |
@@ -24,7 +24,7 @@ Practise Kubernetes the way the exams test it: break things, read events, fix th
 | **Learn / Exam modes** | Every lab runs in Learn mode (hints, solution, debrief) or Exam mode (no hints, countdown timer, scored result). |
 | **Live cluster diagram** | Nodes and pods colour-coded by health, services with endpoint counts; animates as you fix things. Switch to the text view any time. |
 | **Debrief card** | After each lab: root cause, the fix, how to spot it in production and the command pattern to remember. |
-| **Interactive labs** | 73 broken-cluster scenarios (beginner → expert) in a split view: instructions · terminal · live cluster state. Hints, solution, **Check** button. |
+| **Interactive labs** | 96 broken-cluster scenarios (beginner → expert) in a split view: instructions · terminal · live cluster state. Hints, solution, **Check** button. |
 | **Walkthrough labs** | 12 step-by-step guides for a real cluster |
 | **kubectl simulator** | Deployments/ReplicaSets, StatefulSets, DaemonSets, Jobs, PVC binding, Services/Endpoints, HPA, PDB, scheduler (taints, affinity, spread), kubelet failures (ImagePullBackOff, CrashLoop, OOMKilled, probes), ResourceQuota/LimitRange, Pod Security Admission, NetworkPolicy, RBAC `can-i`, CRDs, Gateway API objects, Kustomize, bash-like shell with pipes/heredocs/`vi` |
 | **Exam mode** | Timed CKA/CKAD/CKS-style sessions (30/60/120 min), no hints, scored at the end (pass ≥ 66%) |
@@ -84,3 +84,9 @@ The simulator is a **teaching model** of Kubernetes (v1.34 behaviour, simplified
 ## License
 
 MIT — see [LICENSE](LICENSE). Bundled: js-yaml (MIT), Inter, Syne, JetBrains Mono (SIL OFL) via @fontsource.
+
+## New in this release
+- **S74–S96**: CKS depth (S74–S78), day-2 ops (kubeadm upgrade, node replace, disk pressure), networking (CoreDNS, LoadBalancer, service ladder), scheduler/resources (priority, QoS, right-sizing, HPA vs quota), multi-cluster context labs, and six multi-step incident labs.
+- **Field Guide → Flowcharts**: Pending, crash loops, Service unreachable, NotReady node, "autoscaling is not scaling" (incl. Cluster Autoscaler), each ending in a lab.
+- **Terminal skins** and text size (saved in your browser). **Diagram**: hover a Service to see animated traffic lines and the Ingress→Service→Pod trace; click a Pending pod for the scheduler's reason.
+- **Cautions**: every new lab has a "before you try this on a real cluster" note; risky commands (delete --all, force delete, drain, kubeadm reset, rm -rf, finalizer removal, apply from URL…) show a warning; pasting tokens/private keys into the terminal is blocked. These are guidance, not security controls. Session data lives unencrypted in your browser; use placeholder values only. Only run kind packs on throwaway clusters and check `kubectl config current-context` first.
