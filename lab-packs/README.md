@@ -17,7 +17,7 @@ Notes
 - Check scripts assert the same end state as the in-browser Check button. Real clusters converge slower: re-run `check.sh` after a few seconds.
 - These packs are generated, and have been syntax-checked (`bash -n`) but **not every lab has been run end-to-end against a real cluster** — please open an issue if one misbehaves.
 
-## Labs (68)
+## Labs (81)
 
 | Lab | Level | Tracks | Time |
 |---|---|---|---|
@@ -89,3 +89,16 @@ Notes
 | [S66 Imperative speed run (CKAD style)](s66-imperative-speedrun/README.md) | Beginner | CKAD, CKA | 8 min |
 | [S67 Find the pod that keeps restarting](s67-find-restarts/README.md) | Intermediate | CKA, CKAD | 10 min |
 | [S68 Clean up temporary namespaces by label](s68-multi-ns-cleanup/README.md) | Beginner | CKA | 8 min |
+| [S74 Hunt the privileged workloads](s74-privileged-hunt/README.md) | Advanced | CKS | 12 min |
+| [S75 Cut a wildcard Role down to least privilege](s75-rbac-least-privilege/README.md) | Advanced | CKS, CKA | 10 min |
+| [S76 Pin and vet container images](s76-image-hygiene/README.md) | Intermediate | CKS | 10 min |
+| [S77 Harden a pod's securityContext](s77-hardened-pod/README.md) | Advanced | CKS, CKAD | 12 min |
+| [S78 The default ServiceAccount is cluster-admin](s78-default-sa-admin/README.md) | Advanced | CKS, CKA | 10 min |
+| [S82 Nothing resolves: CoreDNS scaled to zero](s82-coredns-down/README.md) | Intermediate | CKA | 8 min |
+| [S83 LoadBalancer stuck on <pending>](s83-lb-pending/README.md) | Intermediate | CKA, CKAD | 8 min |
+| [S84 Service unreachable: climb the ladder](s84-service-ladder/README.md) | Advanced | CKA, CKAD | 15 min |
+| [S85 Critical pods Pending: priority and preemption](s85-priority-preemption/README.md) | Advanced | CKA | 12 min |
+| [S91 Incident: Black Friday checkout](s91-black-friday/README.md) | Advanced | CKA, CKAD | 20 min |
+| [S92 Incident: the silent database](s92-silent-database/README.md) | Advanced | CKA, CKAD | 20 min |
+| [S93 Incident: the release that never finishes](s93-release-gone-wrong/README.md) | Advanced | CKAD, CKA | 18 min |
+| [S94 Incident: capacity crunch](s94-capacity-crunch/README.md) | Advanced | CKA | 18 min |

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# KubeLab lab pack: Service unreachable: climb the ladder (s84-service-ladder)
+# Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
+set -uo pipefail
+echo "Removing lab namespaces…"
+kubectl delete namespace store --ignore-not-found
+
