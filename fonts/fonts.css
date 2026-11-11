@@ -1,0 +1,9 @@
+/* Self-hosted fonts (SIL OFL) — no Google Fonts requests, works fully offline */
+@font-face{font-family:'Inter';font-weight:400;font-style:normal;font-display:swap;src:url(inter-latin-400-normal.woff2) format('woff2');}
+@font-face{font-family:'Inter';font-weight:500;font-style:normal;font-display:swap;src:url(inter-latin-500-normal.woff2) format('woff2');}
+@font-face{font-family:'Syne';font-weight:600;font-style:normal;font-display:swap;src:url(syne-latin-600-normal.woff2) format('woff2');}
+@font-face{font-family:'Syne';font-weight:700;font-style:normal;font-display:swap;src:url(syne-latin-700-normal.woff2) format('woff2');}
+@font-face{font-family:'Syne';font-weight:800;font-style:normal;font-display:swap;src:url(syne-latin-800-normal.woff2) format('woff2');}
+@font-face{font-family:'JetBrains Mono';font-weight:400;font-style:normal;font-display:swap;src:url(jetbrains-mono-latin-400-normal.woff2) format('woff2');}
+@font-face{font-family:'JetBrains Mono';font-weight:500;font-style:normal;font-display:swap;src:url(jetbrains-mono-latin-500-normal.woff2) format('woff2');}
+@font-face{font-family:'JetBrains Mono';font-weight:700;font-style:normal;font-display:swap;src:url(jetbrains-mono-latin-700-normal.woff2) format('woff2');}
