@@ -1,6 +1,6 @@
 # KubeLab — free, offline Kubernetes practice
 
-> **Live:** [kubelab.eknathalabs.com](https://kubelab.eknathalabs.com) · Free · No ads · No signup · No tracking · Works offline
+> **Live:** [kubedrill.eknathalabs.com](https://kubedrill.eknathalabs.com) · Free · No ads · No signup · No tracking · Works offline
 > Part of [EknathaLabs](https://eknathalabs.com)
 
 Practise Kubernetes the way the exams test it: break things, read events, fix them with `kubectl`. KubeLab runs a **deterministic kubectl simulator in your browser** with auto-checked labs, a timed exam mode and a spaced-repetition quiz — and every lab is also exported as bash scripts for a **real kind cluster**.
