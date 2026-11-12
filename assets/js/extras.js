@@ -84,7 +84,7 @@
     CKAD: { title: 'CKAD — Certified Kubernetes Application Developer', mods: [19, 3, 4, 7, 15, 16], labs: ['s02-imagepull', 's05-config-error', 's06-rollout-rollback', 's08-probes', 's09-jobs', 's10-sidecar', 's16-hpa', 's18-secret-env', 's19-ingress', 's25-kustomize', 's31-init-container', 's33-cm-volume', 's39-rollout-revision', 's40-cronjob-fix', 's55-image-pull-secret', 's60-canary-weights', 's66-imperative-speedrun'], quiz: 'CKAD' },
     CKS: { title: 'CKS — Certified Kubernetes Security Specialist', mods: [9, 17, 18], labs: ['s11-rbac-sa', 's12-netpol-isolate', 's21-psa-restricted', 's22-sa-token', 's26-multitenant', 's27-image-scan', 's49-clusterrole-nodes', 's50-rolebinding-wrong-role', 's51-netpol-egress', 's52-netpol-namespace', 's53-psa-baseline', 's54-hostpath-baseline'], quiz: 'CKS' }
   };
-  var pathTrack = 'CKA';
+  var pathTrack = 'CKA'; KL.PATHS = PATHS; KL.setPathTrack = function (t) { if (PATHS[t]) pathTrack = t; };
   function renderPath() {
     var root = $('pathRoot'); if (!root) return; var P = PATHS[pathTrack], mods = typeof MODULES !== 'undefined' ? MODULES : [];
     var steps = []; P.mods.forEach(function (n) { var m = mods[n - 1]; if (m) steps.push({ k: 'mod', id: n, t: m.title, sub: 'Module ' + m.num + ' · ' + m.level, done: store.moduleDone(n), a: function () { showPage('modules'); openModule(n - 1); } }); });

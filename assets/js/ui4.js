@@ -70,7 +70,7 @@
   // ───────── reveals, spotlight, count-up ─────────
   function reveals() {
     if (!motionOn() || !window.IntersectionObserver) return;
-    var els = [].filter.call(document.querySelectorAll('#page-home .stat, #page-home .tool-card, #page-home .section-header, #homeFree .u3-card, #homeFree .free-top>div'), function (e) { return !e.dataset.rv; }); if (!els.length) return;
+    var els = [].filter.call(document.querySelectorAll('#page-home .stat, #page-home .tool-card, #page-home .pc, #page-home .how-steps li, #page-home .feat, #page-home .band-head, #homeFree .u3-card'), function (e) { return !e.dataset.rv; }); if (!els.length) return;
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (x) { if (!x.isIntersecting) return; var e = x.target; io.unobserve(e); e.classList.add('in'); setTimeout(function () { e.classList.remove('rv', 'in'); e.style.removeProperty('--d'); }, 1100); });
     }, { threshold: .12 });
@@ -86,7 +86,26 @@
       });
     }, { threshold: .5 }); io.observe(st);
   }
-  var SPOT = '.tool-card,.stat,.u3-card,.ilab-card,.pledge-grid>div'; var sp = 0;
+  // ───────── landing: path cards + live counts ─────────
+  function pathCards(force) {
+    var root = $('pathCards'); if (!root || !KL.PATHS || !KL.Labs || (!force && root.children.length)) return; var st = KL.store, P = KL.PATHS, L = KL.lessons || [];
+    var nm = { CKA: 'Certified Kubernetes Administrator', CKAD: 'Certified Kubernetes Application Developer', CKS: 'Certified Kubernetes Security Specialist' };
+    root.innerHTML = Object.keys(P).map(function (t) {
+      var p = P[t], labs = p.labs.filter(function (id) { return KL.Labs.byId[id]; }), nl = L.filter(function (x) { return p.mods.indexOf(parseInt(x.mod, 10)) >= 0; }).length;
+      var done = 0; try { done = labs.filter(function (id) { return st.labDone(id); }).length; } catch (e) { /* ignore */ }
+      var pct = labs.length ? Math.round(100 * done / labs.length) : 0;
+      return '<div class="pc" data-t="' + t + '"><div class="pc-top"><div><h3>' + t + '</h3><div class="pc-name">' + nm[t] + '</div></div><div class="ring" style="--p:' + pct + '" role="img" aria-label="' + pct + ' percent of labs done"><span>' + pct + '%</span></div></div>' +
+        '<ul><li><b>' + labs.length + '</b> auto-checked labs</li><li><b>' + p.mods.length + '</b> modules' + (nl ? ' · <b>' + nl + '</b> lessons' : '') + '</li><li>Quiz round and timed exam</li></ul>' +
+        '<button type="button" class="btn-primary pc-go" data-t="' + t + '">' + (done ? 'Continue ' : 'Start ') + t + ' path</button></div>';
+    }).join('');
+    root.querySelectorAll('.pc-go').forEach(function (b) { b.onclick = function () { if (KL.setPathTrack) KL.setPathTrack(b.dataset.t); location.hash = '#path'; }; });
+  }
+  function fills() {
+    document.querySelectorAll('[data-fill=labs]').forEach(function (n) { if (KL.Labs && KL.Labs.list.length) n.textContent = KL.Labs.list.length; });
+    document.querySelectorAll('[data-fill=lessons],[data-count=lessons]').forEach(function (n) { if (KL.lessons && KL.lessons.length) n.textContent = KL.lessons.length; });
+  }
+  window.addEventListener('kl:store', function () { if (pageOn('home')) pathCards(true); });
+  var SPOT = '.tool-card,.stat,.u3-card,.ilab-card,.pledge-grid>div,.pc,.feat,.how-steps li'; var sp = 0;
   document.addEventListener('pointermove', function (e) {
     if (sp || !motionOn() || e.pointerType === 'touch') return; var t = e.target.closest && e.target.closest(SPOT); if (!t) return;
     sp = requestAnimationFrame(function () { sp = 0; var r = t.getBoundingClientRect(); t.classList.add('spot'); t.style.setProperty('--mx', (e.clientX - r.left) + 'px'); t.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
@@ -215,7 +234,7 @@
   KL.route('lab', function () { closePop(); setTimeout(decorate, 150); setTimeout(decorate, 600); });
   window.addEventListener('kl:runner', function () { closePop(); setTimeout(decorate, 80); });
   window.addEventListener('kl:page', function (e) { if (e.detail.name !== 'lab') closePop(); });
-  function tick() { navMore(); heroDemo(); reveals(); countUp(); }
+  function tick() { navMore(); fills(); pathCards(); heroDemo(); reveals(); countUp(); }
   document.addEventListener('DOMContentLoaded', tick); tick();
-  setInterval(function () { if (pageOn('home')) { heroDemo(); reveals(); countUp(); } }, 1500);
+  setInterval(function () { if (pageOn('home')) { fills(); pathCards(); heroDemo(); reveals(); countUp(); } }, 1500);
 })();

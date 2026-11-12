@@ -109,3 +109,6 @@ MIT — see [LICENSE](LICENSE). Bundled: js-yaml (MIT), Inter, Syne, JetBrains M
 - Labs (Learn mode): **blast-radius preview** before risky commands (toggle `Preview` in the lab bar, key `kl.blast`), **shadow expert** after a lab, **draft post-mortem** after incident labs.
 - `#learn`: 22 lessons covering all 19 modules, one shape each (why, mental model, anatomy, do it, myths, spot the bug, check, teach back, remember, exam trap, production). Widgets: step player, rollout calculator, QoS checker, matrix, decision tree, runbook. Glossary tooltips. Progress is local (`kl.lessons`).
 - Add lessons in `assets/js/data/lessons-a.js` / `lessons-b.js`; `node tests/lessons.test.js` runs every lesson command in the simulator and checks links, quiz answers and field docs.
+
+## Landing page redesign
+Split hero (copy + live terminal), three exam path cards (CKA/CKAD/CKS, with progress rings), "how it works" dark band, four stats, tools grid, quieter free-promise band, closing call to action. Styles in `assets/css/home.css`; dark bands use local tokens so they stay dark in the light theme.

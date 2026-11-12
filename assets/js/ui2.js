@@ -8,7 +8,7 @@
 
   // ── hero: live cluster + proof chips ──
   function hero() {
-    var h = document.querySelector('#page-home .hero'); if (!h || h.querySelector('.hero-live')) return;
+    var h = document.querySelector('#page-home .hero'); if (!h || h.querySelector('.hero-live') || h.querySelector('.hero-proof')) return;
     var dots = [[0, '#22c55e'], [60, '#22c55e'], [120, '#38bdf8'], [180, '#22c55e'], [240, '#ef4444'], [300, '#22c55e']].map(function (d) { return '<g transform="rotate(' + d[0] + ' 150 150)"><circle cx="150" cy="40" r="11" fill="#0f1a30" stroke="' + d[1] + '" stroke-width="2"/><circle cx="150" cy="40" r="4" fill="' + d[1] + '"' + (d[1] === '#ef4444' ? ' class="hl-bad"' : '') + '/></g>'; }).join('');
     var fig = document.createElement('figure'); fig.className = 'hero-live';
     fig.innerHTML = '<svg width="300" height="300" viewBox="0 0 300 300" role="img" aria-label="Animated ring of pods around a control plane; one pod is failing"><circle cx="150" cy="150" r="110" fill="none" stroke="rgba(148,163,184,.25)" stroke-dasharray="3 7"/><circle cx="150" cy="150" r="46" fill="rgba(56,189,248,.10)" stroke="#38bdf8" stroke-width="2"/><text x="150" y="147" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600">Control</text><text x="150" y="162" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600">plane</text><g class="hl-orbit">' + dots + '</g></svg><figcaption>One pod is failing. Can you find out why?</figcaption>';

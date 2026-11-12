@@ -8,7 +8,7 @@ await pg.goto(BASE);await pg.waitForTimeout(700);
 ok(await pg.locator('.aurora i').count()===3,'aurora blobs present');
 ok(await pg.locator('.hero-mq span').count()===16,'command marquee');
 ok(await pg.locator('#homeFree .gate .g1').count()===1&&await pg.locator('#homeFree .gate .g2').count()===1,'no-paywall gate card pair');
-ok((await pg.locator('#freeH').innerText()).includes('payment gateway'),'no payment gateway headline');
+ok((await pg.locator('#page-home .free-top .lead').innerText()).includes('payment gateway'),'free section mentions no payment gateway');
 ok(await pg.locator('.pledge-grid .u3-card').count()===4,'promise cards x4');
 // motion off hides gate loop
 await pg.evaluate(()=>{localStorage.setItem('kl.motion','off');document.documentElement.setAttribute('data-motion','off')});

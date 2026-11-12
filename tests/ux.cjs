@@ -77,7 +77,7 @@ await pg.goto(BASE+'#field');await pg.waitForTimeout(1200);ok(await pg.locator('
 
 // unified UI: hero, palette, labs states, progress, mobile tabs
 await pg.setViewportSize({width:1280,height:800});await pg.goto(BASE+'#home');await pg.waitForTimeout(500);
-ok(await pg.locator('.hero-live svg').count()===1,'live hero');ok(await pg.locator('.hero-proof span').count()===4,'proof chips');
+ok(await pg.locator('.hero-grid .hero-terminal').count()===1,'split hero: terminal beside copy');ok(await pg.locator('.hero-proof span').count()===3,'proof chips');
 await pg.keyboard.press('Control+k');await pg.waitForSelector('#palIn');await pg.fill('#palIn','monzo');await pg.waitForTimeout(100);
 ok((await pg.locator('.pal li').count())===1,'palette filters outages');await pg.keyboard.press('Enter');await pg.waitForTimeout(500);
 ok(pg.url().endsWith('#field'),'palette navigates');ok(await pg.locator('.pal').count()===0,'palette closes');

@@ -21,12 +21,12 @@
 
   // ───────── hero: command marquee; zero counter ─────────
   function heroExtras() {
-    var proof = document.querySelector('#page-home .hero-proof');
+    var proof = document.getElementById('mqSlot');
     if (proof && !document.querySelector('.hero-mq')) {
       var c = ['kubectl describe pod', 'kubectl rollout undo', 'kubectl top nodes', 'kubectl auth can-i', 'kubectl drain node', 'kubectl logs --previous', 'kubectl port-forward', 'kubectl get events'];
       var h = c.concat(c).map(function (x) { return '<span>' + x + '</span>'; }).join('');
       var d = document.createElement('div'); d.className = 'hero-mq'; d.setAttribute('aria-hidden', 'true'); d.innerHTML = '<div>' + h + '</div>';
-      proof.parentNode.insertBefore(d, proof.nextSibling);
+      proof.appendChild(d);
     }
     var z = $('zeroN');
     if (z && !z.dataset.u3) {

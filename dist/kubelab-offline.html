@@ -986,6 +986,88 @@ table.wg-t tr.hl td,table.wg-t td.hl{background:rgba(56,189,248,.12)}
 .mod-lessons a:hover{border-color:var(--accent2)}
 .lr-right{position:relative}
 </style>
+<style>/* ── Landing page: split hero, path cards, light/dark rhythm, stats, closing CTA ── */
+.hero.hero2{min-height:0;display:block;text-align:left;padding:112px 24px 72px;overflow:hidden}
+.hero-grid{position:relative;z-index:1;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);gap:48px;align-items:center}
+.hero2 .hero-tag{margin:0 0 18px}
+.hero2 h1{font-family:var(--display);font-size:clamp(2.6rem,6.4vw,4.9rem);line-height:1.02;letter-spacing:-.03em;margin:0 0 18px;animation:none}
+.hero2 h1 .h1-free{background:linear-gradient(135deg,var(--green),var(--accent));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.hero2 .hero-sub{margin:0 0 26px;max-width:520px;font-size:1.08rem;color:var(--text2)}
+.hero2 .hero-ctas{justify-content:flex-start;margin:0 0 22px}
+.hero2 .hero-proof{justify-content:flex-start;margin:0}
+.hero2 .hero-terminal{margin:0;max-width:none;width:100%;box-shadow:0 30px 80px rgba(2,8,23,.35),0 0 0 1px rgba(148,163,184,.12)}
+.hero2 .hero-terminal .terminal-body{min-height:300px}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:32px}.hero.hero2{padding:92px 18px 48px}.hero2 .hero-sub{max-width:none}}
+@media(max-width:480px){.hero2 h1{font-size:clamp(2.3rem,12vw,3.2rem)}.hero2 .hero-ctas{gap:12px}}
+
+/* bands: alternate light surface and always-dark */
+.band{position:relative;padding:76px 24px}
+.band-in{max-width:1120px;margin:0 auto}
+.band-head{max-width:640px;margin:0 0 34px}
+.band-head h2{font-family:var(--display);font-size:clamp(1.7rem,3.8vw,2.6rem);line-height:1.1;letter-spacing:-.02em;margin:8px 0 10px}
+.band-head p{color:var(--text2);margin:0;font-size:1.02rem}
+.band-l{background:var(--bg2)}
+.band-d{--bg:#0a1120;--surface:#111b30;--border:rgba(148,163,184,.2);--text:#e8eef9;--text2:#a5b4cc;--text3:#7f8fa8;background:linear-gradient(180deg,#0a1120,#0d1830);color:var(--text)}
+.band-d h2,.band-d h3{color:var(--text)}
+.band-d .band-head p,.band-d p{color:var(--text2)}
+
+/* path cards */
+.path-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+@media(max-width:860px){.path-cards{grid-template-columns:1fr}}
+.pc{position:relative;display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:22px;transition:transform .2s,border-color .2s,box-shadow .2s;text-align:left}
+.pc:hover{transform:translateY(-3px);border-color:var(--pc,var(--accent2));box-shadow:0 18px 40px rgba(2,8,23,.18)}
+.pc[data-t=CKA]{--pc:#38bdf8}.pc[data-t=CKAD]{--pc:#22c55e}.pc[data-t=CKS]{--pc:#f59e0b}
+.pc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.pc h3{font-family:var(--display);font-size:2rem;margin:0;color:var(--pc);letter-spacing:-.02em;line-height:1}
+.pc .pc-name{font-size:13px;color:var(--text2);margin-top:6px}
+.pc .ring{--p:0;width:54px;height:54px;border-radius:50%;flex:0 0 auto;background:conic-gradient(var(--pc) calc(var(--p)*1%),rgba(148,163,184,.22) 0);display:grid;place-items:center}
+.pc .ring span{width:42px;height:42px;border-radius:50%;background:var(--surface);display:grid;place-items:center;font-family:var(--mono);font-size:11px;color:var(--text)}
+.pc ul{list-style:none;margin:0;padding:0;display:grid;gap:6px;font-size:13.5px;color:var(--text2)}
+.pc ul b{color:var(--text);font-family:var(--mono)}
+.pc .pc-go{margin-top:auto;align-self:flex-start}
+.path-alt{margin:22px 0 0;color:var(--text2);font-size:14px}.path-alt a{color:var(--accent2)}
+
+/* how it works (dark) */
+.how-steps{list-style:none;margin:0 0 26px;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media(max-width:860px){.how-steps{grid-template-columns:1fr}}
+.how-steps li{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px}
+.how-steps li b{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(56,189,248,.16);color:#38bdf8;font-family:var(--mono);font-size:13px;margin-bottom:10px}
+.how-steps h3{margin:0 0 8px;font-size:1.15rem;font-family:var(--display)}
+.how-steps code{display:block;background:#060c19;border:1px solid rgba(148,163,184,.18);border-radius:8px;padding:8px 10px;font-size:12.5px;color:#cbd5e1;margin-bottom:10px;overflow:auto;white-space:nowrap}
+.how-steps p{margin:0;font-size:14px}
+.feat-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+@media(max-width:980px){.feat-row{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.feat-row{grid-template-columns:1fr}}
+.feat{display:block;text-decoration:none;color:inherit;border:1px solid var(--border);border-radius:14px;padding:16px;background:rgba(255,255,255,.02);transition:border-color .2s,background .2s}
+.feat:hover{border-color:#38bdf8;background:rgba(56,189,248,.07)}
+.feat h3{margin:0 0 6px;font-size:1rem;font-family:var(--display)}.feat p{margin:0;font-size:13.5px}
+#mqSlot .hero-mq{margin:30px auto 0}
+.band-d .hero-mq span{background:#111b30;color:#a5b4cc;border-color:rgba(148,163,184,.2)}
+
+/* stats: four, inside the column */
+.stats4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 56px}
+@media(max-width:700px){.stats4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stats4 .stat{max-width:none;min-width:0;border-radius:16px;padding:22px 16px}
+.stats4 .stat-num{font-size:clamp(1.8rem,4vw,2.6rem)}
+.tools-head{margin-bottom:22px}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+
+/* free: quieter, tinted */
+.free.free-quiet{max-width:none;padding:68px 24px 60px;background:var(--bg)}
+.free.free-quiet>.free-top,.free.free-quiet>.pledge{max-width:1120px;margin-left:auto;margin-right:auto}
+.free-quiet h2{font-size:clamp(1.7rem,3.8vw,2.6rem)}
+.free-quiet .pledge{margin-top:44px;padding:0;text-align:left}
+.free-quiet .zero{margin:0 0 20px}
+
+/* closing CTA */
+.band-cta{text-align:center;padding:92px 24px;background:radial-gradient(60% 120% at 50% 0%,rgba(56,189,248,.18),transparent 70%),linear-gradient(180deg,#0a1120,#0c1428)}
+.band-cta h2{font-family:var(--display);font-size:clamp(2rem,5vw,3.4rem);line-height:1.06;letter-spacing:-.025em;margin:0 0 14px}
+.band-cta p{margin:0 auto 26px;max-width:460px}
+.cta-row{display:flex;gap:18px;justify-content:center;align-items:center;flex-wrap:wrap}
+.band-cta .btn-quiet{color:#cbd5e1}
+.tools-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:860px){.tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:520px){.tools-grid{grid-template-columns:1fr}}
+.free-quiet .zero{margin:0 0 22px 0}
+</style>
 </head>
 <body data-build="offline-single-file">
 <div id="main" tabindex="-1"></div>
@@ -1026,46 +1108,86 @@ table.wg-t tr.hl td,table.wg-t td.hl{background:rgba(56,189,248,.12)}
      PAGE: HOME
 ════════════════════════════════════════════ -->
 <div class="page active" id="page-home" role="main">
-<div class="hero">
-  <div class="hero-glow"></div>
+<div class="hero hero2">
   <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
-  <div class="hero-tag">kubelab.eknathalabs.com · Free · No ads · No signup · Works offline</div>
-  <h1><span class="kube">Kube</span><span class="lab">Lab</span><br>Master Kubernetes.<br>Ship with Confidence.</h1>
-  <p class="hero-sub">A structured, hands-on Kubernetes learning lab — concepts, an in-browser kubectl simulator with auto-checked labs, CKA/CKAD/CKS exam mode, 300+ quiz questions and offline tools. Free forever. No signup. No ads. Works offline.</p>
-  <div class="hero-ctas">
-    <button class="btn-primary btn-lg" onclick="showPage('labs')">Start a lab</button>
-    <a class="btn-quiet" href="#exam">Exam mode</a>
-    <a class="btn-quiet" href="#learn">Lessons</a>
-    <a class="btn-quiet" href="#quiz">Take a quiz</a>
-  </div>
-  <div class="hero-terminal">
-    <div class="terminal-bar">
-      <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-      <span class="terminal-title">kubelab ~ kubectl</span>
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <div class="hero-tag">Free · No ads · No signup · Works offline</div>
+      <h1>Break a cluster.<br>Fix it.<br><span class="h1-free">Free.</span></h1>
+      <p class="hero-sub"><span data-fill="labs">96</span> auto-checked Kubernetes labs with a kubectl simulator that runs in your browser. Practise for CKA, CKAD and CKS, then check your work.</p>
+      <div class="hero-ctas">
+        <button class="btn-primary btn-lg" onclick="location.hash='#lab/s03-oomkilled'">Fix the broken pod</button>
+        <a class="btn-quiet" href="#labs">Browse all labs</a>
+        <a class="btn-quiet" href="#exam">Exam mode</a>
+      </div>
+      <div class="hero-proof"><span>Free</span><span>Works offline</span><span>No ads or tracking</span></div>
     </div>
-    <div class="terminal-body">
-      <div><span class="t-prompt">student@kubelab</span> <span class="t-cmd">$ kubectl get pods -n production</span></div>
-      <div><span class="t-out">NAME&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; READY&nbsp;&nbsp; STATUS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; RESTARTS&nbsp; AGE</span></div>
-      <div><span class="t-success">api-deployment-7d9f8b-xkv2p&nbsp;&nbsp; 1/1&nbsp;&nbsp;&nbsp;&nbsp; Running&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 2d</span></div>
-      <div><span class="t-err">worker-5c8b9d-mnp4q&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0/1&nbsp;&nbsp;&nbsp;&nbsp; CrashLoopBackOff&nbsp; 14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1h</span></div>
-      <div><span class="t-success">db-statefulset-0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 1/1&nbsp;&nbsp;&nbsp;&nbsp; Running&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5d</span></div>
-      <div>&nbsp;</div>
-      <div><span class="t-prompt">student@kubelab</span> <span class="t-cmd">$ kubectl describe pod worker-5c8b9d-mnp4q | grep -A5 Events</span></div>
-      <div><span class="t-comment"># OOMKilled · Memory limit: 128Mi · Usage: 512Mi</span></div>
-      <div><span class="t-comment"># Fix: increase resources.limits.memory or optimize app</span></div>
-      <div>&nbsp;</div>
-      <div><span class="t-prompt">student@kubelab</span> <span class="cursor"></span></div>
+    <div class="hero-terminal">
+      <div class="terminal-bar">
+        <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
+        <span class="terminal-title">kubelab ~ kubectl</span>
+      </div>
+      <div class="terminal-body">
+        <div><span class="t-prompt">student@kubelab</span> <span class="t-cmd">$ kubectl get pods</span></div>
+        <div><span class="t-err">worker-5c8b9d-mnp4q&nbsp;&nbsp; 0/1&nbsp;&nbsp; CrashLoopBackOff</span></div>
+        <div><span class="t-prompt">student@kubelab</span> <span class="cursor"></span></div>
+      </div>
     </div>
   </div>
 </div>
 
-<section class="free" id="homeFree" aria-labelledby="freeH">
+<section class="band band-l" id="homePaths" aria-labelledby="pathsH">
+  <div class="band-in">
+    <div class="band-head"><div class="u3-eyebrow">Pick your exam</div><h2 id="pathsH">One path for each certification</h2><p>Each path orders the lessons, labs, quiz and timed exam for you. Progress stays on this device.</p></div>
+    <div class="path-cards" id="pathCards"></div>
+    <p class="path-alt">Not sure where to start? <a href="#lab/s01-pending-cpu">Open the easiest lab</a>, or <a href="#learn">read the lessons first</a>.</p>
+  </div>
+</section>
+
+<section class="band band-d" id="homeHow" aria-labelledby="howH">
+  <div class="band-in">
+    <div class="band-head"><div class="u3-eyebrow">How it works</div><h2 id="howH">Learn by fixing real failures</h2><p>Every lab starts broken. You investigate with kubectl, fix it, and the checker tells you what still fails.</p></div>
+    <ol class="how-steps">
+      <li><b>1</b><h3>It breaks</h3><code>worker  0/1  CrashLoopBackOff</code><p>Each lab drops you into a cluster with a real-looking fault.</p></li>
+      <li><b>2</b><h3>You investigate</h3><code>$ kubectl describe pod worker</code><p>Read events and logs, form a theory, try a fix.</p></li>
+      <li><b>3</b><h3>The checker answers</h3><code>✓ 2 of 2 tasks pass</code><p>Auto-checks tell you exactly what still fails, then a debrief explains why.</p></li>
+    </ol>
+    <div class="feat-row">
+      <a class="feat" href="#lab/s03-oomkilled"><h3>Blast radius preview</h3><p>See what a risky command would change before it runs, in Learn mode.</p></a>
+      <a class="feat" href="#lab/s91-black-friday"><h3>Shadow expert</h3><p>After each lab, compare your steps with the reference path.</p></a>
+      <a class="feat" href="#break"><h3>Break-it challenge</h3><p>A random fault, a timer, and your own best time.</p></a>
+      <a class="feat" href="#learn"><h3><span data-fill="lessons">22</span> short lessons</h3><p>Why it exists, a mental model, commands you can run, then a quiz.</p></a>
+    </div>
+    <div id="mqSlot"></div>
+  </div>
+</section>
+
+<section class="band band-l" id="homeStats">
+  <div class="band-in">
+    <div class="stats4">
+      <div class="stat"><div class="stat-num" data-count="ilabs">96</div><div class="stat-label">Auto-checked labs</div></div>
+      <div class="stat"><div class="stat-num" data-count="lessons">22</div><div class="stat-label">Lessons</div></div>
+      <div class="stat"><div class="stat-num" data-count="quiz">314</div><div class="stat-label">Quiz questions</div></div>
+      <div class="stat"><div class="stat-num">$0</div><div class="stat-label">No ads · No signup</div></div>
+    </div>
+    <div class="band-head tools-head"><div class="u3-eyebrow">Also included</div><h2>Everything for the exam, offline</h2></div>
+    <div class="tools-grid">
+      <div class="tool-card" onclick="showPage('modules')"><div class="tool-icon ti-blue">📚</div><div class="tool-title"><span data-count="modules">19</span> Learning modules</div><div class="tool-desc">From cluster architecture to GKE, structured and filterable.</div></div>
+      <div class="tool-card" onclick="showPage('exam')"><div class="tool-icon ti-yellow">⏱</div><div class="tool-title">CKA / CKAD / CKS exam mode</div><div class="tool-desc">Timed hands-on exam on a simulated cluster with a score by domain.</div></div>
+      <div class="tool-card" onclick="showPage('tools')"><div class="tool-icon ti-green">🤖</div><div class="tool-title"><span data-count="tools">9</span> offline tools</div><div class="tool-desc">Troubleshooter, YAML generator, RBAC, PromQL and more. No network.</div></div>
+      <div class="tool-card" onclick="showPage('cheatsheet')"><div class="tool-icon ti-yellow">⌘</div><div class="tool-title">kubectl cheatsheet</div><div class="tool-desc">Searchable, click to copy, with exam tips.</div></div>
+      <div class="tool-card" onclick="showPage('errors')"><div class="tool-icon" style="background:rgba(248,113,113,0.12);">🔴</div><div class="tool-title">Error encyclopedia</div><div class="tool-desc">Causes, fixes and debug commands for common errors.</div></div>
+      <div class="tool-card" onclick="showPage('visualize')"><div class="tool-icon ti-purple">🎞</div><div class="tool-title">Animated explainers</div><div class="tool-desc">Pod lifecycle, service traffic, rolling updates and the apply flow.</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="free free-quiet" id="homeFree" aria-labelledby="freeH">
   <div class="free-top">
     <div>
-      <div class="u3-eyebrow">No paywall</div>
-      <h2 id="freeH">Practice Kubernetes. Skip the <s>payment gateway</s>.</h2>
-      <p class="lead">No card. No trial that expires. No account. Every lab is open from the start, and it all runs in your browser.</p>
-      <div class="free-ticks"><span><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span> No signup</span><span><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span> Works offline</span><span><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span> No tracking</span></div>
+      <div class="u3-eyebrow">Our promise</div>
+      <h2 id="freeH">Free, and it stays free.</h2>
+      <p class="lead">No card, no trial that expires, no account. Every lab is open from the start, and it all runs in your browser. No payment gateway to get past.</p>
       <p style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap"><a class="btn-secondary" href="#why">See how it compares →</a><a class="btn-secondary" href="#break">Try a break-it challenge →</a></p>
     </div>
     <div>
@@ -1076,10 +1198,7 @@ table.wg-t tr.hl td,table.wg-t td.hl{background:rgba(56,189,248,.12)}
     </div>
   </div>
   <div class="pledge">
-    <div class="u3-eyebrow">Our promise</div>
-    <div class="zero" style="margin-top:18px"><b id="zeroN">$0</b><span>to practise</span></div>
-    <h2 style="margin-top:22px">Every lab. Always open.</h2>
-    <p class="lead" style="margin:10px auto 0">KubeLab is built to stay free for learners. There is nothing to unlock.</p>
+    <div class="zero"><b id="zeroN">$0</b><span>to practise</span></div>
     <div class="pledge-grid">
       <div class="u3-card"><div class="ic"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div><b>Free</b><span>No plan, no trial clock.</span></div>
       <div class="u3-card"><div class="ic"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div><b>Offline</b><span>Install once, practise on a plane.</span></div>
@@ -1090,67 +1209,13 @@ table.wg-t tr.hl td,table.wg-t td.hl{background:rgba(56,189,248,.12)}
   </div>
 </section>
 
-<div class="stats">
-  <div class="stat"><div class="stat-num" data-count="modules">12</div><div class="stat-label">Modules</div></div>
-  <div class="stat"><div class="stat-num" data-count="ilabs">20</div><div class="stat-label">Auto-checked Labs</div></div>
-  <div class="stat"><div class="stat-num" data-count="labs">40</div><div class="stat-label">Total Labs</div></div>
-  <div class="stat"><div class="stat-num" data-count="quiz">300+</div><div class="stat-label">Quiz Q&amp;A</div></div>
-  <div class="stat"><div class="stat-num" data-count="cheat">100+</div><div class="stat-label">Commands</div></div>
-  <div class="stat"><div class="stat-num" data-count="tools">9</div><div class="stat-label">Offline Tools</div></div>
-  <div class="stat"><div class="stat-num" data-count="errors">46</div><div class="stat-label">Error Codes</div></div>
-  <div class="stat"><div class="stat-num">$0</div><div class="stat-label">No ads · No signup</div></div>
-</div>
-
-<!-- Quick nav cards -->
-<div class="section-wrap">
-  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;">
-    <div class="tool-card" onclick="showPage('modules')">
-      <div class="tool-icon ti-blue">📚</div>
-      <div class="tool-title"><span data-count="modules">12</span> Learning Modules</div>
-      <div class="tool-desc">From cluster architecture to GKE. Structured, filterable, with deep dives.</div>
-    </div>
-    <div class="tool-card" onclick="showPage('tools')">
-      <div class="tool-icon ti-green">🤖</div>
-      <div class="tool-title"><span data-count="tools">9</span> Tools — All 100% Offline</div>
-      <div class="tool-desc">Troubleshooter, YAML generator, RBAC, PromQL, Helm values, resource calc, Dockerfile linter — all run in-browser, no API keys, no network.</div>
-    </div>
-    <div class="tool-card" onclick="showPage('cheatsheet')">
-      <div class="tool-icon ti-yellow">⌘</div>
-      <div class="tool-title">kubectl Cheatsheet</div>
-      <div class="tool-desc">100+ commands, searchable, click to copy. CKA exam tips included.</div>
-    </div>
-    <div class="tool-card" onclick="showPage('quiz')">
-      <div class="tool-icon ti-purple">✦</div>
-      <div class="tool-title"><span data-count="quiz">300+</span> Q&amp;A Quiz</div>
-      <div class="tool-desc">CKA + CKAD + CKS questions: multiple choice, command completion, ordering. Wrong answers come back via spaced repetition.</div>
-    </div>
-    <div class="tool-card" onclick="showPage('labs')">
-      <div class="tool-icon ti-red">⚗</div>
-      <div class="tool-title"><span data-count="labs">40</span> Practice Labs</div>
-      <div class="tool-desc">Break-it-fix-it labs with a built-in kubectl simulator and a Check button. Or run the same labs on a local kind cluster.</div>
-    </div>
-    <div class="tool-card" onclick="showPage('errors')">
-      <div class="tool-icon" style="background:rgba(248,113,113,0.12);">🔴</div>
-      <div class="tool-title">Error Encyclopedia</div>
-      <div class="tool-desc">46 K8s error codes — cause, fix, and debug commands. Searchable.</div>
-    </div>
-    <div class="tool-card" onclick="showPage('exam')">
-      <div class="tool-icon ti-yellow">⏱</div>
-      <div class="tool-title">CKA / CKAD / CKS Exam Mode</div>
-      <div class="tool-desc">Timed 2-hour hands-on exam on a simulated cluster with a score report by domain. Unlimited attempts.</div>
-    </div>
-    <div class="tool-card" onclick="showPage('visualize')">
-      <div class="tool-icon ti-purple">🎞</div>
-      <div class="tool-title">Animated Explainers</div>
-      <div class="tool-desc">Pod lifecycle, service traffic &amp; NetworkPolicy, rolling updates, and the kubectl-apply control-plane flow.</div>
-    </div>
-    <div class="tool-card" onclick="showPage('path')">
-      <div class="tool-icon ti-green">🧭</div>
-      <div class="tool-title">Learning Paths</div>
-      <div class="tool-desc">CKA, CKAD and CKS roadmaps with progress saved privately in your browser.</div>
-    </div>
+<section class="band band-d band-cta" id="homeCta">
+  <div class="band-in">
+    <h2>Pick a broken cluster.<br>Start in 10 seconds.</h2>
+    <p>No signup. Nothing to install. Close the tab and your progress is still here.</p>
+    <div class="cta-row"><button class="btn-primary btn-lg" onclick="location.hash='#lab/s03-oomkilled'">Fix the broken pod</button><a class="btn-quiet" href="#labs">See all labs</a></div>
   </div>
-</div>
+</section>
 <footer>
   <div class="footer-logo"><span style="color:var(--accent2)">Kube</span><span style="background:linear-gradient(135deg,var(--green),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Lab</span></div>
   <div class="footer-sub">kubelab.eknathalabs.com</div>
@@ -9362,7 +9427,7 @@ js-yaml/dist/js-yaml.mjs:
     CKAD: { title: 'CKAD — Certified Kubernetes Application Developer', mods: [19, 3, 4, 7, 15, 16], labs: ['s02-imagepull', 's05-config-error', 's06-rollout-rollback', 's08-probes', 's09-jobs', 's10-sidecar', 's16-hpa', 's18-secret-env', 's19-ingress', 's25-kustomize', 's31-init-container', 's33-cm-volume', 's39-rollout-revision', 's40-cronjob-fix', 's55-image-pull-secret', 's60-canary-weights', 's66-imperative-speedrun'], quiz: 'CKAD' },
     CKS: { title: 'CKS — Certified Kubernetes Security Specialist', mods: [9, 17, 18], labs: ['s11-rbac-sa', 's12-netpol-isolate', 's21-psa-restricted', 's22-sa-token', 's26-multitenant', 's27-image-scan', 's49-clusterrole-nodes', 's50-rolebinding-wrong-role', 's51-netpol-egress', 's52-netpol-namespace', 's53-psa-baseline', 's54-hostpath-baseline'], quiz: 'CKS' }
   };
-  var pathTrack = 'CKA';
+  var pathTrack = 'CKA'; KL.PATHS = PATHS; KL.setPathTrack = function (t) { if (PATHS[t]) pathTrack = t; };
   function renderPath() {
     var root = $('pathRoot'); if (!root) return; var P = PATHS[pathTrack], mods = typeof MODULES !== 'undefined' ? MODULES : [];
     var steps = []; P.mods.forEach(function (n) { var m = mods[n - 1]; if (m) steps.push({ k: 'mod', id: n, t: m.title, sub: 'Module ' + m.num + ' · ' + m.level, done: store.moduleDone(n), a: function () { showPage('modules'); openModule(n - 1); } }); });
@@ -10109,7 +10174,7 @@ js-yaml/dist/js-yaml.mjs:
 
   // ── hero: live cluster + proof chips ──
   function hero() {
-    var h = document.querySelector('#page-home .hero'); if (!h || h.querySelector('.hero-live')) return;
+    var h = document.querySelector('#page-home .hero'); if (!h || h.querySelector('.hero-live') || h.querySelector('.hero-proof')) return;
     var dots = [[0, '#22c55e'], [60, '#22c55e'], [120, '#38bdf8'], [180, '#22c55e'], [240, '#ef4444'], [300, '#22c55e']].map(function (d) { return '<g transform="rotate(' + d[0] + ' 150 150)"><circle cx="150" cy="40" r="11" fill="#0f1a30" stroke="' + d[1] + '" stroke-width="2"/><circle cx="150" cy="40" r="4" fill="' + d[1] + '"' + (d[1] === '#ef4444' ? ' class="hl-bad"' : '') + '/></g>'; }).join('');
     var fig = document.createElement('figure'); fig.className = 'hero-live';
     fig.innerHTML = '<svg width="300" height="300" viewBox="0 0 300 300" role="img" aria-label="Animated ring of pods around a control plane; one pod is failing"><circle cx="150" cy="150" r="110" fill="none" stroke="rgba(148,163,184,.25)" stroke-dasharray="3 7"/><circle cx="150" cy="150" r="46" fill="rgba(56,189,248,.10)" stroke="#38bdf8" stroke-width="2"/><text x="150" y="147" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600">Control</text><text x="150" y="162" text-anchor="middle" fill="currentColor" font-size="12" font-weight="600">plane</text><g class="hl-orbit">' + dots + '</g></svg><figcaption>One pod is failing. Can you find out why?</figcaption>';
@@ -10217,12 +10282,12 @@ js-yaml/dist/js-yaml.mjs:
 
   // ───────── hero: command marquee; zero counter ─────────
   function heroExtras() {
-    var proof = document.querySelector('#page-home .hero-proof');
+    var proof = document.getElementById('mqSlot');
     if (proof && !document.querySelector('.hero-mq')) {
       var c = ['kubectl describe pod', 'kubectl rollout undo', 'kubectl top nodes', 'kubectl auth can-i', 'kubectl drain node', 'kubectl logs --previous', 'kubectl port-forward', 'kubectl get events'];
       var h = c.concat(c).map(function (x) { return '<span>' + x + '</span>'; }).join('');
       var d = document.createElement('div'); d.className = 'hero-mq'; d.setAttribute('aria-hidden', 'true'); d.innerHTML = '<div>' + h + '</div>';
-      proof.parentNode.insertBefore(d, proof.nextSibling);
+      proof.appendChild(d);
     }
     var z = $('zeroN');
     if (z && !z.dataset.u3) {
@@ -11031,7 +11096,7 @@ js-yaml/dist/js-yaml.mjs:
   // ───────── reveals, spotlight, count-up ─────────
   function reveals() {
     if (!motionOn() || !window.IntersectionObserver) return;
-    var els = [].filter.call(document.querySelectorAll('#page-home .stat, #page-home .tool-card, #page-home .section-header, #homeFree .u3-card, #homeFree .free-top>div'), function (e) { return !e.dataset.rv; }); if (!els.length) return;
+    var els = [].filter.call(document.querySelectorAll('#page-home .stat, #page-home .tool-card, #page-home .pc, #page-home .how-steps li, #page-home .feat, #page-home .band-head, #homeFree .u3-card'), function (e) { return !e.dataset.rv; }); if (!els.length) return;
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (x) { if (!x.isIntersecting) return; var e = x.target; io.unobserve(e); e.classList.add('in'); setTimeout(function () { e.classList.remove('rv', 'in'); e.style.removeProperty('--d'); }, 1100); });
     }, { threshold: .12 });
@@ -11047,7 +11112,26 @@ js-yaml/dist/js-yaml.mjs:
       });
     }, { threshold: .5 }); io.observe(st);
   }
-  var SPOT = '.tool-card,.stat,.u3-card,.ilab-card,.pledge-grid>div'; var sp = 0;
+  // ───────── landing: path cards + live counts ─────────
+  function pathCards(force) {
+    var root = $('pathCards'); if (!root || !KL.PATHS || !KL.Labs || (!force && root.children.length)) return; var st = KL.store, P = KL.PATHS, L = KL.lessons || [];
+    var nm = { CKA: 'Certified Kubernetes Administrator', CKAD: 'Certified Kubernetes Application Developer', CKS: 'Certified Kubernetes Security Specialist' };
+    root.innerHTML = Object.keys(P).map(function (t) {
+      var p = P[t], labs = p.labs.filter(function (id) { return KL.Labs.byId[id]; }), nl = L.filter(function (x) { return p.mods.indexOf(parseInt(x.mod, 10)) >= 0; }).length;
+      var done = 0; try { done = labs.filter(function (id) { return st.labDone(id); }).length; } catch (e) { /* ignore */ }
+      var pct = labs.length ? Math.round(100 * done / labs.length) : 0;
+      return '<div class="pc" data-t="' + t + '"><div class="pc-top"><div><h3>' + t + '</h3><div class="pc-name">' + nm[t] + '</div></div><div class="ring" style="--p:' + pct + '" role="img" aria-label="' + pct + ' percent of labs done"><span>' + pct + '%</span></div></div>' +
+        '<ul><li><b>' + labs.length + '</b> auto-checked labs</li><li><b>' + p.mods.length + '</b> modules' + (nl ? ' · <b>' + nl + '</b> lessons' : '') + '</li><li>Quiz round and timed exam</li></ul>' +
+        '<button type="button" class="btn-primary pc-go" data-t="' + t + '">' + (done ? 'Continue ' : 'Start ') + t + ' path</button></div>';
+    }).join('');
+    root.querySelectorAll('.pc-go').forEach(function (b) { b.onclick = function () { if (KL.setPathTrack) KL.setPathTrack(b.dataset.t); location.hash = '#path'; }; });
+  }
+  function fills() {
+    document.querySelectorAll('[data-fill=labs]').forEach(function (n) { if (KL.Labs && KL.Labs.list.length) n.textContent = KL.Labs.list.length; });
+    document.querySelectorAll('[data-fill=lessons],[data-count=lessons]').forEach(function (n) { if (KL.lessons && KL.lessons.length) n.textContent = KL.lessons.length; });
+  }
+  window.addEventListener('kl:store', function () { if (pageOn('home')) pathCards(true); });
+  var SPOT = '.tool-card,.stat,.u3-card,.ilab-card,.pledge-grid>div,.pc,.feat,.how-steps li'; var sp = 0;
   document.addEventListener('pointermove', function (e) {
     if (sp || !motionOn() || e.pointerType === 'touch') return; var t = e.target.closest && e.target.closest(SPOT); if (!t) return;
     sp = requestAnimationFrame(function () { sp = 0; var r = t.getBoundingClientRect(); t.classList.add('spot'); t.style.setProperty('--mx', (e.clientX - r.left) + 'px'); t.style.setProperty('--my', (e.clientY - r.top) + 'px'); });
@@ -11176,9 +11260,9 @@ js-yaml/dist/js-yaml.mjs:
   KL.route('lab', function () { closePop(); setTimeout(decorate, 150); setTimeout(decorate, 600); });
   window.addEventListener('kl:runner', function () { closePop(); setTimeout(decorate, 80); });
   window.addEventListener('kl:page', function (e) { if (e.detail.name !== 'lab') closePop(); });
-  function tick() { navMore(); heroDemo(); reveals(); countUp(); }
+  function tick() { navMore(); fills(); pathCards(); heroDemo(); reveals(); countUp(); }
   document.addEventListener('DOMContentLoaded', tick); tick();
-  setInterval(function () { if (pageOn('home')) { heroDemo(); reveals(); countUp(); } }, 1500);
+  setInterval(function () { if (pageOn('home')) { fills(); pathCards(); heroDemo(); reveals(); countUp(); } }, 1500);
 })();
 
 </script>
