@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: ResourceQuota blocks the rollout (s15-quota-limits)
+# KubeDrill lab pack: ResourceQuota blocks the rollout (s15-quota-limits)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: ResourceQuota blocks the rollout"
 kubectl create namespace team-a --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -16,8 +16,8 @@ spec:
     requests.memory: 2Gi
     pods: "10"
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -41,7 +41,7 @@ spec:
             cpu: 500m
             memory: 64Mi
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=team-a >/dev/null

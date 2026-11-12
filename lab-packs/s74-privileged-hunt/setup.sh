@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Hunt the privileged workloads (s74-privileged-hunt)
+# KubeDrill lab pack: Hunt the privileged workloads (s74-privileged-hunt)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Hunt the privileged workloads"
 kubectl create namespace payments --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Namespace
 metadata:
   name: payments
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -34,8 +34,8 @@ spec:
           privileged: true
 
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -57,8 +57,8 @@ spec:
         image: nginx:1.25
 
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -86,7 +86,7 @@ spec:
           path: /var/run/docker.sock
 
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=payments >/dev/null

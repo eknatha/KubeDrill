@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Ingress: host + path routing (s19-ingress)
+# KubeDrill lab pack: Ingress: host + path routing (s19-ingress)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Ingress: host + path routing"
 kubectl create namespace shop --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,8 +24,8 @@ spec:
       - name: web
         image: nginx:1.25
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Service
 metadata:
@@ -38,8 +38,8 @@ spec:
   - port: 80
     targetPort: 80
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -59,8 +59,8 @@ spec:
       - name: api
         image: nginx:1.25
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Service
 metadata:
@@ -73,7 +73,7 @@ spec:
   - port: 80
     targetPort: 80
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=shop >/dev/null
