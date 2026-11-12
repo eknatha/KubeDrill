@@ -34,7 +34,7 @@
   };
 
   // ── kubeconfig contexts ──
-  function ctxInit(s) { var f = F(s); if (!f.contexts) { f.contexts = [{ name: 'kubernetes-admin@kubelab', cluster: 'kubelab', user: 'kubernetes-admin', ns: s.ctxNs || 'default' }]; f.current = f.contexts[0].name; } return f; }
+  function ctxInit(s) { var f = F(s); if (!f.contexts) { f.contexts = [{ name: 'kubernetes-admin@kubedrill', cluster: 'kubedrill', user: 'kubernetes-admin', ns: s.ctxNs || 'default' }]; f.current = f.contexts[0].name; } return f; }
   var cfg0 = P.kConfig;
   P.kConfig = function (a) {
     var s = this, f = ctxInit(this), sub = a.pos[0], nm = a.pos[1], fl = a.flags || {}, cur = f.contexts.filter(function (c) { return c.name === f.current; })[0];
@@ -43,7 +43,7 @@
     if (sub === 'current-context') return f.current + '\n';
     if (sub === 'use-context') { var c = find(nm); if (!c) throw new KErr('error: no context exists with the name: "' + nm + '"'); if (cur) cur.ns = s.ctxNs; f.current = c.name; s.ctxNs = c.ns; return 'Switched to context "' + c.name + '".\n'; }
     if (sub === 'set-context') {
-      var t = fl.current ? cur : find(nm), made = false; if (!t) { t = { name: nm, cluster: fl.cluster || 'kubelab', user: fl.user || 'kubernetes-admin', ns: 'default' }; f.contexts.push(t); made = true; }
+      var t = fl.current ? cur : find(nm), made = false; if (!t) { t = { name: nm, cluster: fl.cluster || 'kubedrill', user: fl.user || 'kubernetes-admin', ns: 'default' }; f.contexts.push(t); made = true; }
       if (fl.n || fl.namespace) { t.ns = fl.n || fl.namespace; if (t === cur) s.ctxNs = t.ns; } if (fl.cluster) t.cluster = fl.cluster; if (fl.user) t.user = fl.user;
       return 'Context "' + t.name + '" ' + (made ? 'created' : 'modified') + '.\n';
     }

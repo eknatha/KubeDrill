@@ -15,7 +15,7 @@
   // ───────── palette entries ─────────
   KL.palExtra = [
     { k: 'PAGE', t: 'Settings and privacy', go: function () { location.hash = '#settings'; } },
-    { k: 'PAGE', t: 'Why KubeLab is free (comparison)', go: function () { location.hash = '#why'; } },
+    { k: 'PAGE', t: 'Why KubeDrill is free (comparison)', go: function () { location.hash = '#why'; } },
     { k: 'PAGE', t: 'Break-it challenge', go: function () { location.hash = '#break'; } }
   ];
 
@@ -66,16 +66,16 @@
       '<div class="set-actions"><button class="btn-primary" id="setBackup" type="button">Backup (JSON)</button><button class="btn-secondary" id="setRestore" type="button">Restore from file</button><input type="file" id="setFile" accept="application/json,.json" hidden></div>' +
       '<div class="set-actions"><button class="btn-secondary" id="setResetPrefs" type="button">Reset preferences</button><button class="btn-danger" id="setClear" type="button">Clear all progress</button></div>' +
       '</div></div>' +
-      '<p class="u3-warn" style="margin-top:16px">Never paste real kubeconfigs, tokens or private keys into a lab terminal. KubeLab blocks common secret formats on paste, but that is a guard, not a guarantee. Clearing your browser data also removes progress, so take a backup first.</p>';
+      '<p class="u3-warn" style="margin-top:16px">Never paste real kubeconfigs, tokens or private keys into a lab terminal. KubeDrill blocks common secret formats on paste, but that is a guard, not a guarantee. Clearing your browser data also removes progress, so take a backup first.</p>';
     function bindSeg(id, fn) { var g = $(id); g.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; g.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); fn(b.dataset.v); }; }
     bindSeg('setTheme', function (v) { if (v === 'system') { ls('kubelab:theme', null); document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; } else { ls('kubelab:theme', v); document.documentElement.dataset.theme = v; } });
     bindSeg('setMotion', function (v) { ls('kl.motion', v === 'system' ? null : v); applyMotionAttr(); });
     bindSeg('setMode', function (v) { ls('kl.labmode', v); });
     $('setSkin').onchange = function () { ls('kl.skin', this.value); };
     $('setFs').onchange = function () { ls('kl.tfs', this.value); };
-    $('setBackup').onclick = function () { dl('kubelab-progress-' + new Date().toISOString().slice(0, 10) + '.json', store.exportJSON()); ls('kubelab:lastExport', String(Date.now())); toast('Backup downloaded'); };
+    $('setBackup').onclick = function () { dl('kubedrill-progress-' + new Date().toISOString().slice(0, 10) + '.json', store.exportJSON()); ls('kubelab:lastExport', String(Date.now())); toast('Backup downloaded'); };
     $('setRestore').onclick = function () { $('setFile').click(); };
-    $('setFile').onchange = function () { var f = this.files[0]; if (!f) return; var rd = new FileReader(); rd.onload = function () { try { store.importJSON(String(rd.result)); toast('Progress restored'); renderSettings(); } catch (e) { toast('That file is not a KubeLab backup'); } }; rd.readAsText(f); };
+    $('setFile').onchange = function () { var f = this.files[0]; if (!f) return; var rd = new FileReader(); rd.onload = function () { try { store.importJSON(String(rd.result)); toast('Progress restored'); renderSettings(); } catch (e) { toast('That file is not a KubeDrill backup'); } }; rd.readAsText(f); };
     $('setResetPrefs').onclick = function () { if (!confirm('Reset theme, motion, terminal and lab-mode preferences? Your progress is kept.')) return; ['kubelab:theme', 'kl.motion', 'kl.skin', 'kl.tfs', 'kl.labmode', 'kl.layout', 'kl.labview', 'kl.cvs', 'kl.blast'].forEach(function (k) { ls(k, null); }); document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; applyMotionAttr(); toast('Preferences reset'); renderSettings(); };
     $('setClear').onclick = function () {
       if (!confirm('Delete ALL progress, saved lab sessions and challenge times from this browser? This cannot be undone. Tip: make a backup first.')) return;

@@ -28,7 +28,7 @@
     var term = document.querySelector('#page-home .hero-terminal'); if (!term || term.dataset.live || !KL.Sim || !KL.Labs) return;
     var body = term.querySelector('.terminal-body'), lab = KL.Labs.byId && KL.Labs.byId['s03-oomkilled']; if (!body || !lab) return; term.dataset.live = '1';
     var sim, token = 0, user = false, ns = lab.ns;
-    body.innerHTML = '<div id="hdOut" aria-live="polite"></div><div class="hd-in"><span class="t-prompt">student@kubelab</span><span class="hd-dim">$</span><input id="hdIn" aria-label="Try a kubectl command in the simulator" placeholder="try it: kubectl get pods -A" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200"><span class="hd-bar"><button id="hdReplay" type="button">Replay</button></span></div>';
+    body.innerHTML = '<div id="hdOut" aria-live="polite"></div><div class="hd-in"><span class="t-prompt">student@kubedrill</span><span class="hd-dim">$</span><input id="hdIn" aria-label="Try a kubectl command in the simulator" placeholder="try it: kubectl get pods -A" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200"><span class="hd-bar"><button id="hdReplay" type="button">Replay</button></span></div>';
     var out = $('hdOut'), inp = $('hdIn');
     function fresh() { sim = new KL.Sim(); KL.Labs.setup(sim, lab); }
     function color(t) { return esc(t).replace(/(CrashLoopBackOff|OOMKilled|ImagePullBackOff|Error|Pending)/g, '<span class="hd-bad">$1</span>').replace(/\b(Running|Completed)\b/g, '<span class="hd-ok">$1</span>'); }
@@ -40,7 +40,7 @@
     }
     function typed(cmd, tok) {
       return new Promise(function (res) {
-        var d = add('<span class="t-prompt">student@kubelab</span> <span class="t-cmd">$ <span class="ty"></span></span><span class="hd-cur"></span>'), t = d.querySelector('.ty'), i = 0;
+        var d = add('<span class="t-prompt">student@kubedrill</span> <span class="t-cmd">$ <span class="ty"></span></span><span class="hd-cur"></span>'), t = d.querySelector('.ty'), i = 0;
         (function step() { if (tok !== token) return res(false); if (!motionOn()) { t.textContent = cmd; var c0 = d.querySelector('.hd-cur'); if (c0) c0.remove(); return res(true); } t.textContent = cmd.slice(0, ++i); if (i < cmd.length) setTimeout(step, 26 + Math.random() * 30); else setTimeout(function () { var c = d.querySelector('.hd-cur'); if (c) c.remove(); res(true); }, 320); })();
       });
     }
@@ -61,7 +61,7 @@
     inp.addEventListener('keydown', function (e) {
       if (e.key !== 'Enter') { if (!user && e.key.length === 1) { user = true; token++; } return; }
       var c = inp.value.trim(); if (!c) return; user = true; token++; inp.value = ''; if (!sim) fresh();
-      add('<span class="t-prompt">student@kubelab</span> <span class="t-cmd">$ ' + esc(c) + '</span>'); if (c === 'clear') { out.innerHTML = ''; return; } run(c);
+      add('<span class="t-prompt">student@kubedrill</span> <span class="t-cmd">$ ' + esc(c) + '</span>'); if (c === 'clear') { out.innerHTML = ''; return; } run(c);
     });
     $('hdReplay').onclick = function () { play(); };
     play();
@@ -216,7 +216,7 @@
     if (mine.some(function (c) { return /rollout\s+undo/.test(c); })) went.push('Used a rollback, the safest fast option during an incident.');
     if (mine.some(function (c) { return /--dry-run/.test(c); })) went.push('Used --dry-run before applying.'); else improve.push('Try --dry-run=server before applying a change.');
     if (mine.length > (lab.solution || []).length * 2) improve.push('The reference path needs ' + (lab.solution || []).length + ' commands; look for a shorter route next time.');
-    return ['# Post-mortem: ' + strip(lab.title.replace(/^Incident:\s*/i, '')), '', '_Practice incident, drafted from my own session in KubeLab. Blameless format._', '', '- Severity: SEV' + sev, '- Duration: ' + (dur > 0 ? mmss(dur) : 'not recorded'), '- Environment: practice simulator, namespace `' + (lab.ns || 'default') + '`', '', '## Summary', story, '', '## Timeline', tl.join('\n') || '- (no commands recorded)', '', '## Root cause', strip(deb[0]), '', '## What fixed it', strip(deb[1]), '', '## How we would detect it sooner', strip(deb[2]), '', '## What went well', went.length ? went.map(function (x) { return '- ' + x; }).join('\n') : '- Service was restored.', '', '## What to improve', improve.length ? improve.map(function (x) { return '- ' + x; }).join('\n') : '- Nothing stands out; keep the habits above.', '', '## Action items', '- [ ] ' + strip(deb[3] || 'Add an alert for this failure mode'), '- [ ] Write a runbook entry for this symptom', '- [ ] Add a check to the deploy pipeline that would have caught it', ''].join('\n');
+    return ['# Post-mortem: ' + strip(lab.title.replace(/^Incident:\s*/i, '')), '', '_Practice incident, drafted from my own session in KubeDrill. Blameless format._', '', '- Severity: SEV' + sev, '- Duration: ' + (dur > 0 ? mmss(dur) : 'not recorded'), '- Environment: practice simulator, namespace `' + (lab.ns || 'default') + '`', '', '## Summary', story, '', '## Timeline', tl.join('\n') || '- (no commands recorded)', '', '## Root cause', strip(deb[0]), '', '## What fixed it', strip(deb[1]), '', '## How we would detect it sooner', strip(deb[2]), '', '## What went well', went.length ? went.map(function (x) { return '- ' + x; }).join('\n') : '- Service was restored.', '', '## What to improve', improve.length ? improve.map(function (x) { return '- ' + x; }).join('\n') : '- Nothing stands out; keep the habits above.', '', '## Action items', '- [ ] ' + strip(deb[3] || 'Add an alert for this failure mode'), '- [ ] Write a runbook entry for this symptom', '- [ ] Add a check to the deploy pipeline that would have caught it', ''].join('\n');
   }
   function postmortem(lab) {
     var bg = document.createElement('div'); bg.className = 'pm-bg'; var text = buildPM(lab);

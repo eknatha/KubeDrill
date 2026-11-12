@@ -1,7 +1,7 @@
 /* Tiny async key-value store on IndexedDB (falls back to localStorage). Used for lab sessions so a refresh never loses work. */
 (function () {
   'use strict';
-  var KL = window.KL = window.KL || {}, DB = 'kubelab', ST = 'sessions', dbp = null;
+  var KL = window.KL = window.KL || {}, DB = 'kubedrill', ST = 'sessions', dbp = null;
   function open() {
     if (dbp) return dbp;
     dbp = new Promise(function (res) {

@@ -1,9 +1,9 @@
-# KubeLab — free, offline Kubernetes practice
+# KubeDrill — free, offline Kubernetes practice
 
 > **Live:** [kubedrill.eknathalabs.com](https://kubedrill.eknathalabs.com) · Free · No ads · No signup · No tracking · Works offline
 > Part of [EknathaLabs](https://eknathalabs.com)
 
-Practise Kubernetes the way the exams test it: break things, read events, fix them with `kubectl`. KubeLab runs a **deterministic kubectl simulator in your browser** with auto-checked labs, a timed exam mode and a spaced-repetition quiz — and every lab is also exported as bash scripts for a **real kind cluster**.
+Practise Kubernetes the way the exams test it: break things, read events, fix them with `kubectl`. KubeDrill runs a **deterministic kubectl simulator in your browser** with auto-checked labs, a timed exam mode and a spaced-repetition quiz — and every lab is also exported as bash scripts for a **real kind cluster**.
 
 ## What's inside
 
@@ -42,17 +42,17 @@ Practise Kubernetes the way the exams test it: break things, read events, fix th
 * **Sessions survive reloads** — every lab's simulator state, files, terminal history and hint/solution usage are saved to IndexedDB after each command; a running exam (and its clock) is restored too. “Reset lab” starts over.
 * **Safe updates** — a new version never swaps in mid-lab: you get a “new version ready — Reload” toast and apply it when you choose.
 * **Storage** — the site requests persistent storage so browsers don't evict it; the *My progress* page shows the status, and nudges you to export a JSON backup every 2 weeks.
-* **Single file** — `node build.cjs` → `dist/kubelab-offline.html` (~1 MB, no server, no network). Works from `file://`.
+* **Single file** — `node build.cjs` → `dist/kubedrill-offline.html` (~1 MB, no server, no network). Works from `file://`.
 * No analytics, no counters, no third-party requests of any kind.
 
 ## Run on a real cluster (kind)
 
 ```bash
 cd lab-packs
-./kubelab.sh cluster                # needs Docker + kind
-./kubelab.sh setup s02-imagepull    # break it
+./kubedrill.sh cluster                # needs Docker + kind
+./kubedrill.sh setup s02-imagepull    # break it
 kubectl get pods -n shop            # fix it
-./kubelab.sh check s02-imagepull    # same assertions as the browser Check button
+./kubedrill.sh check s02-imagepull    # same assertions as the browser Check button
 ```
 
 Packs are generated from the same lab specs (`node tools/gen-packs.cjs`). They are syntax-checked but not every one has been run end-to-end on a real cluster — see `lab-packs/README.md`.

@@ -1,4 +1,4 @@
-/* KubeLab cluster simulator — core.
+/* KubeDrill cluster simulator — core.
    A small, deterministic, in-memory Kubernetes: object store, controllers (Deployment/ReplicaSet/
    StatefulSet/DaemonSet/Job/HPA), scheduler, kubelet pod lifecycle, endpoints, PVC binding,
    admission (quota, limitrange, pod security), NetworkPolicy and RBAC evaluation.

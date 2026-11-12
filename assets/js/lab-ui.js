@@ -308,8 +308,8 @@
   // terminal
   function say(text, cls) { var r = cur; r.out.push({ t: text, c: cls || '' }); if (r.out.length > 600) r.out.shift(); appendLine(text, cls); }
   function appendLine(text, cls) { var o = $('lrOut'); if (!o) return; var d = document.createElement('div'); d.className = 'lr-o ' + (cls || ''); d.textContent = text.replace(/\n$/, ''); o.appendChild(d); var t = $('lrTerm'); t.scrollTop = t.scrollHeight; }
-  function replay() { var r = cur; if (r.resumed) { appendLine('↻ Session restored (' + new Date(r.resumed).toLocaleString() + '). Everything you did is still here — use “Reset lab” to start over.', 'dim'); r.resumed = 0; } if (!r.out.length) { r.out.push({ t: 'KubeLab simulator · type `help` · Tab completes · ↑↓ history · `vi file` opens an editor', c: 'dim' }); } r.out.forEach(function (l) { appendLine(l.t, l.c); }); }
-  function prompt() { var r = cur, t = termSim(r); if (r.mode === 'real') return 'candidate@' + (r.ctxName || CTXS[0]) + ':' + t.cwd.replace(/^\/home\/student/, '~') + '$ '; return 'student@kubelab:' + t.cwd.replace(/^\/home\/student/, '~') + ' (' + t.ctxNs + ')$ '; }
+  function replay() { var r = cur; if (r.resumed) { appendLine('↻ Session restored (' + new Date(r.resumed).toLocaleString() + '). Everything you did is still here — use “Reset lab” to start over.', 'dim'); r.resumed = 0; } if (!r.out.length) { r.out.push({ t: 'KubeDrill simulator · type `help` · Tab completes · ↑↓ history · `vi file` opens an editor', c: 'dim' }); } r.out.forEach(function (l) { appendLine(l.t, l.c); }); }
+  function prompt() { var r = cur, t = termSim(r); if (r.mode === 'real') return 'candidate@' + (r.ctxName || CTXS[0]) + ':' + t.cwd.replace(/^\/home\/student/, '~') + '$ '; return 'student@kubedrill:' + t.cwd.replace(/^\/home\/student/, '~') + ' (' + t.ctxNs + ')$ '; }
   function bindTerm() {
     var inp = $('lrIn'), r = cur; $('lrPrompt').textContent = r.buf ? '> ' : prompt();
     $('lrTerm').onclick = function (e) { if (!window.getSelection().toString()) inp.focus(); };

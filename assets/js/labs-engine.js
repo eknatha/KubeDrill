@@ -1,4 +1,4 @@
-/* KubeLab labs engine — declarative lab specs, auto-check against the simulator,
+/* KubeDrill labs engine — declarative lab specs, auto-check against the simulator,
    and generation of equivalent bash (setup.sh / check.sh / reset.sh) for real kind clusters.
    One assertion DSL → two backends (JS for the simulator, bash for kubectl). */
 (function (root) {
@@ -89,11 +89,11 @@
     return 'false';
   };
   Labs.genPack = function (lab) {
-    var hdr = '#!/usr/bin/env bash\n# KubeLab lab pack: ' + lab.title + ' (' + lab.id + ')\n# Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).\nset -uo pipefail\n';
+    var hdr = '#!/usr/bin/env bash\n# KubeDrill lab pack: ' + lab.title + ' (' + lab.id + ')\n# Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).\nset -uo pipefail\n';
     var ns = lab.ns, nsList = lab.setupNs || [ns];
     var setup = hdr + 'echo "▶ Setting up lab: ' + lab.title.replace(/"/g, '') + '"\n' + nsList.map(function (n) { return 'kubectl create namespace ' + n + ' --dry-run=client -o yaml | kubectl apply -f -'; }).join('\n') + '\n' +
-      (lab.setup || []).map(function (y) { return "kubectl apply -f - <<'KUBELAB_EOF'\n" + y.replace(/^\n/, '') + "\nKUBELAB_EOF"; }).join('\n') + '\n' + (lab.setupCmds || []).join('\n') + '\n' +
-      (lab.files || []).map(function (f) { var p = f.path.replace(/^\/home\/student\//, ''); var d = p.indexOf('/') > 0 ? 'mkdir -p ' + q(p.replace(/\/[^\/]*$/, '')) + '\n' : ''; return d + "cat > " + q(p) + " <<'KUBELAB_EOF'\n" + f.content + "\nKUBELAB_EOF"; }).join('\n') + '\n' +
+      (lab.setup || []).map(function (y) { return "kubectl apply -f - <<'KUBEDRILL_EOF'\n" + y.replace(/^\n/, '') + "\nKUBEDRILL_EOF"; }).join('\n') + '\n' + (lab.setupCmds || []).join('\n') + '\n' +
+      (lab.files || []).map(function (f) { var p = f.path.replace(/^\/home\/student\//, ''); var d = p.indexOf('/') > 0 ? 'mkdir -p ' + q(p.replace(/\/[^\/]*$/, '')) + '\n' : ''; return d + "cat > " + q(p) + " <<'KUBEDRILL_EOF'\n" + f.content + "\nKUBEDRILL_EOF"; }).join('\n') + '\n' +
       'kubectl config set-context --current --namespace=' + ns + ' >/dev/null\necho "✔ Ready. Namespace: ' + ns + '. Read README.md, fix the cluster, then run ./check.sh"\n';
     var check = hdr + 'pass=0; fail=0\nchk() { # $1=task title, rest = condition\n  local title="$1"; shift\n  if eval "$@"; then echo "  ✔ $title"; pass=$((pass+1)); else echo "  ✘ $title"; fail=$((fail+1)); fi\n}\nsleep 1\n' +
       lab.tasks.map(function (t) { return 'echo ' + q('Task ' + t.id + ': ' + t.title) + '\nchk ' + q(t.title) + ' ' + q((t.assert || []).map(Labs.bashAssert).join(' && ')); }).join('\n') +

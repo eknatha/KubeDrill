@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KubeLab — Free Offline Kubernetes Practice Lab · CKA CKAD CKS</title>
+<title>KubeDrill — Free Offline Kubernetes Practice Lab · CKA CKAD CKS</title>
 <meta name="description" content="Free, offline-first Kubernetes practice lab: in-browser kubectl simulator with auto-checked labs, CKA/CKAD/CKS exam mode, 300+ quiz questions, error encyclopedia and 9 offline tools. No signup. No ads.">
 <meta name="theme-color" content="#090E1A">
 <link rel="canonical" href="https://kubedrill.eknathalabs.com/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="KubeLab — Free Offline Kubernetes Practice Lab">
+<meta property="og:title" content="KubeDrill — Free Offline Kubernetes Practice Lab">
 <meta property="og:description" content="kubectl simulator, auto-checked labs, CKA/CKAD/CKS exam mode. Free forever. No signup. No ads. Works offline.">
 <meta property="og:url" content="https://kubedrill.eknathalabs.com/">
 <meta property="og:image" content="https://kubedrill.eknathalabs.com/icons/og.png">
@@ -331,7 +331,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <!-- NAV -->
 <a class="skip-link" href="#main">Skip to content</a>
 <nav aria-label="Primary">
-  <a class="nav-logo" href="#home" aria-label="KubeLab home">
+  <a class="nav-logo" href="#home" aria-label="KubeDrill home">
     <div class="nav-logo-icon" aria-hidden="true">K8</div>
     <span class="nav-logo-text">Kube<span>Lab</span></span>
   </a>
@@ -382,12 +382,12 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
     <div class="hero-terminal">
       <div class="terminal-bar">
         <div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-        <span class="terminal-title">kubelab ~ kubectl</span>
+        <span class="terminal-title">kubedrill ~ kubectl</span>
       </div>
       <div class="terminal-body">
-        <div><span class="t-prompt">student@kubelab</span> <span class="t-cmd">$ kubectl get pods</span></div>
+        <div><span class="t-prompt">student@kubedrill</span> <span class="t-cmd">$ kubectl get pods</span></div>
         <div><span class="t-err">worker-5c8b9d-mnp4q&nbsp;&nbsp; 0/1&nbsp;&nbsp; CrashLoopBackOff</span></div>
-        <div><span class="t-prompt">student@kubelab</span> <span class="cursor"></span></div>
+        <div><span class="t-prompt">student@kubedrill</span> <span class="cursor"></span></div>
       </div>
     </div>
   </div>
@@ -481,7 +481,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
     <a href="#compare">Compare</a>
     <a href="#progress">Progress</a>
   </div>
-  <div class="footer-copy">© 2026 <a href="https://eknathalabs.com">EknathaLabs</a> · Free forever · No ads · No signup · Content reviewed against Kubernetes v1.34 (Nov 2026) · <a href="#compare">How KubeLab compares</a> · MIT licensed</div>
+  <div class="footer-copy">© 2026 <a href="https://eknathalabs.com">EknathaLabs</a> · Free forever · No ads · No signup · Content reviewed against Kubernetes v1.34 (Nov 2026) · <a href="#compare">How KubeDrill compares</a> · MIT licensed</div>
   <div style="font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:8px;">🔒 No tracking · No cookies · No third-party requests · MIT licensed</div>
 </footer>
 </div>
@@ -618,13 +618,13 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <div class="page" id="page-field" role="main"><div class="section-wrap" id="fieldRoot"></div></div>
 <div class="page" id="page-progress" role="main"><div class="section-wrap" id="progressRoot"></div></div>
 <div class="page" id="page-compare" role="main"><div class="section-wrap" id="compareRoot"></div></div>
-<div class="palette-overlay" id="palette" role="dialog" aria-modal="true" aria-label="Search KubeLab" hidden>
+<div class="palette-overlay" id="palette" role="dialog" aria-modal="true" aria-label="Search KubeDrill" hidden>
   <div class="palette-box"><input id="paletteInput" placeholder="Search modules, labs, errors, commands, pages…  (Esc to close)" autocomplete="off" aria-label="Search"><div id="paletteList" role="listbox"></div></div>
 </div>
 <div id="toastHost" aria-live="polite"></div>
 <div class="page" id="page-why" role="main"><div class="section-wrap">
-  <div class="section-header"><div class="section-tag">Why it matters</div><h2 class="section-title">Learning shouldn't wait on a checkout page</h2><p class="section-desc">KubeLab has no payment gateway because nothing in it is for sale.</p></div>
-  <div class="why-table"><div class="why-row"><div></div><div>A typical paid lab platform</div><div style="color:var(--accent2)">KubeLab</div></div><div class="why-row" style="animation-delay:0.00s"><div>Sign-up before you start</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Email and password</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>None</div></div><div class="why-row" style="animation-delay:0.12s"><div>Access to all labs</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Locked behind a plan</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Open from the start</div></div><div class="why-row" style="animation-delay:0.24s"><div>Card required</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Often, even for trials</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Never</div></div><div class="why-row" style="animation-delay:0.36s"><div>Works without internet</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Usually not</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Yes, after the first load</div></div><div class="why-row" style="animation-delay:0.48s"><div>Ads or upsell banners</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Common</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>None</div></div><div class="why-row" style="animation-delay:0.60s"><div>Where your progress lives</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>On their servers</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>On your device</div></div></div>
+  <div class="section-header"><div class="section-tag">Why it matters</div><h2 class="section-title">Learning shouldn't wait on a checkout page</h2><p class="section-desc">KubeDrill has no payment gateway because nothing in it is for sale.</p></div>
+  <div class="why-table"><div class="why-row"><div></div><div>A typical paid lab platform</div><div style="color:var(--accent2)">KubeDrill</div></div><div class="why-row" style="animation-delay:0.00s"><div>Sign-up before you start</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Email and password</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>None</div></div><div class="why-row" style="animation-delay:0.12s"><div>Access to all labs</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Locked behind a plan</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Open from the start</div></div><div class="why-row" style="animation-delay:0.24s"><div>Card required</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Often, even for trials</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Never</div></div><div class="why-row" style="animation-delay:0.36s"><div>Works without internet</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Usually not</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Yes, after the first load</div></div><div class="why-row" style="animation-delay:0.48s"><div>Ads or upsell banners</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Common</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>None</div></div><div class="why-row" style="animation-delay:0.60s"><div>Where your progress lives</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>On their servers</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>On your device</div></div></div>
   <p style="margin-top:14px;font-size:12.5px;color:var(--text2);line-height:1.5">The middle column describes a common pattern, not any one product. Check each provider's own terms before comparing by name.</p>
   <p style="margin-top:18px"><a class="btn-primary" href="#labs">Start a lab</a></p>
 </div></div>
@@ -1980,7 +1980,7 @@ ${labelsYaml}
     # pod-security.kubernetes.io/warn: restricted`;
   }
 
-  return yaml + hpaYaml + pdbYaml + `\n\n# Generated by KubeLab YAML Generator — kubedrill.eknathalabs.com`;
+  return yaml + hpaYaml + pdbYaml + `\n\n# Generated by KubeDrill YAML Generator — kubedrill.eknathalabs.com`;
 }
 
 function renderTools() {
@@ -2147,7 +2147,7 @@ PREVENTION
 ${match.prevent}
 
 ─────────────────────────────────────────────
-Generated offline by KubeLab — kubedrill.eknathalabs.com`;
+Generated offline by KubeDrill — kubedrill.eknathalabs.com`;
 
   // ── YAML EXPLAINER ──────────────────────────────────────────────────────────
   } else if(id==='yaml-explainer') {
@@ -2244,7 +2244,7 @@ IMPROVEMENTS
 ${improvLines}
 
 ─────────────────────────────────────────────
-Generated offline by KubeLab — kubedrill.eknathalabs.com`;
+Generated offline by KubeDrill — kubedrill.eknathalabs.com`;
 
   // ── NETWORK POLICY BUILDER ──────────────────────────────────────────────────
   } else if(id==='netpol') {
@@ -2347,7 +2347,7 @@ ${spec}
 # Test connectivity from a pod:
 # kubectl run test --image=busybox --rm -it -- wget -qO- http://${app}.${dstNs}:${port}
 
-# Generated by KubeLab — kubedrill.eknathalabs.com`;
+# Generated by KubeDrill — kubedrill.eknathalabs.com`;
 
   // ── RBAC GENERATOR ──────────────────────────────────────────────────────────
   } else if(id==='rbac') {
@@ -2423,7 +2423,7 @@ roleRef:
 # ── Verify ─────────────────────────────────────────────────────────────────
 ${selectedRes.map(r=>`# kubectl auth can-i ${verbs[0]} ${r} --as=system:serviceaccount:${ns}:${sa} -n ${ns}`).join('\n')}
 
-# Generated by KubeLab — kubedrill.eknathalabs.com`;
+# Generated by KubeDrill — kubedrill.eknathalabs.com`;
 
   // ── PROMQL BUILDER ──────────────────────────────────────────────────────────
   } else if(id==='promql') {
@@ -2530,7 +2530,7 @@ ${selectedRes.map(r=>`# kubectl auth can-i ${verbs[0]} ${r} --as=system:servicea
     outEl.textContent =
 `# PromQL Queries — ${t.title}
 # Time window: ${window_}${ns?' | Namespace: '+ns:''}
-# Generated offline by KubeLab
+# Generated offline by KubeDrill
 
 ${queryLines}
 
@@ -2538,7 +2538,7 @@ ${queryLines}
 # PROMETHEUS ALERT RULE (paste into alerting rules YAML)
 
 groups:
-- name: kubelab.${cat}.rules
+- name: kubedrill.${cat}.rules
   rules:
   - alert: ${t.alertName}
     expr: |
@@ -2555,7 +2555,7 @@ groups:
 # kubectl apply -f alert-${cat}.yaml
 # kubectl get prometheusrules -A
 
-# Generated by KubeLab — kubedrill.eknathalabs.com`;
+# Generated by KubeDrill — kubedrill.eknathalabs.com`;
 
   // ── HELM VALUES GENERATOR ───────────────────────────────────────────────────
   } else if(id==='helm-gen') {
@@ -2836,7 +2836,7 @@ securityContext:
 
     const yaml = helmTemplates[chart] || helmTemplates['generic'];
     const extraNote = extra ? `\n# Note: Additional requirements noted: ${extra}` : '';
-    outEl.textContent = yaml + extraNote + `\n\n# Generated offline by KubeLab — kubedrill.eknathalabs.com`;
+    outEl.textContent = yaml + extraNote + `\n\n# Generated offline by KubeDrill — kubedrill.eknathalabs.com`;
 
   // ── RESOURCE CALCULATOR ──────────────────────────────────────────────────────
   } else if(id==='resource-calc') {
@@ -2926,7 +2926,7 @@ spec:
         averageUtilization: 80
 
 ─────────────────────────────────────────────
-Generated offline by KubeLab — kubedrill.eknathalabs.com`;
+Generated offline by KubeDrill — kubedrill.eknathalabs.com`;
 
   // ── DOCKERFILE LINTER ───────────────────────────────────────────────────────
   } else if(id==='dockerfile-lint') {
@@ -2979,7 +2979,7 @@ Generated offline by KubeLab — kubedrill.eknathalabs.com`;
 
     // Generate improved version
     const fromLine = lines.find(l => /^FROM\s/i.test(l.trim())) || 'FROM node:20-alpine';
-    const improved = `# Improved Dockerfile — generated by KubeLab offline linter
+    const improved = `# Improved Dockerfile — generated by KubeDrill offline linter
 
 # ── Build stage ─────────────────────────────────────────────────────────────
 FROM ${fromLine.replace(/^FROM\s+/i,'').trim().replace(/:latest/,':stable')} AS builder
@@ -3030,7 +3030,7 @@ IMPROVED VERSION (template — adapt to your app):
 ${improved}
 
 ─────────────────────────────────────────────
-Generated offline by KubeLab — kubedrill.eknathalabs.com`;
+Generated offline by KubeDrill — kubedrill.eknathalabs.com`;
 
   // ── YAML GENERATOR ──────────────────────────────────────────────────────────
   } else if(id==='yaml-gen') {

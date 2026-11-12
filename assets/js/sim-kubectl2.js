@@ -1,4 +1,4 @@
-/* KubeLab simulator — kubectl part 2: describe, logs, exec, top, auth, wait, explain, config */
+/* KubeDrill simulator — kubectl part 2: describe, logs, exec, top, auth, wait, explain, config */
 (function (root) {
   'use strict';
   var Sim = root.KL ? root.KL.Sim : require('./sim.js');
@@ -226,10 +226,10 @@
   };
   P.kConfig = function (a) {
     var sub = a.pos[0];
-    if (sub === 'set-context') { if (a.flags.n || a.flags.namespace) this.ctxNs = a.flags.n || a.flags.namespace; return 'Context "kubernetes-admin@kubelab" modified.\n'; }
-    if (sub === 'current-context') return 'kubernetes-admin@kubelab\n';
-    if (sub === 'view') return 'apiVersion: v1\nclusters:\n- cluster:\n    server: https://192.168.49.2:6443\n  name: kubelab\ncontexts:\n- context:\n    cluster: kubelab\n    namespace: ' + this.ctxNs + '\n    user: kubernetes-admin\n  name: kubernetes-admin@kubelab\ncurrent-context: kubernetes-admin@kubelab\nkind: Config\n';
-    if (sub === 'get-contexts') return 'CURRENT   NAME                      CLUSTER   AUTHINFO           NAMESPACE\n*         kubernetes-admin@kubelab  kubelab   kubernetes-admin   ' + this.ctxNs + '\n';
+    if (sub === 'set-context') { if (a.flags.n || a.flags.namespace) this.ctxNs = a.flags.n || a.flags.namespace; return 'Context "kubernetes-admin@kubedrill" modified.\n'; }
+    if (sub === 'current-context') return 'kubernetes-admin@kubedrill\n';
+    if (sub === 'view') return 'apiVersion: v1\nclusters:\n- cluster:\n    server: https://192.168.49.2:6443\n  name: kubedrill\ncontexts:\n- context:\n    cluster: kubedrill\n    namespace: ' + this.ctxNs + '\n    user: kubernetes-admin\n  name: kubernetes-admin@kubedrill\ncurrent-context: kubernetes-admin@kubedrill\nkind: Config\n';
+    if (sub === 'get-contexts') return 'CURRENT   NAME                      CLUSTER   AUTHINFO           NAMESPACE\n*         kubernetes-admin@kubedrill  kubedrill   kubernetes-admin   ' + this.ctxNs + '\n';
     return '';
   };
 

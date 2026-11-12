@@ -1,4 +1,4 @@
-/* KubeLab simulator — tiny bash-like shell: pipes, redirects, heredocs, $VARS, $(...), && || ;
+/* KubeDrill simulator — tiny bash-like shell: pipes, redirects, heredocs, $VARS, $(...), && || ;
    plus a few coreutils. kubectl itself lives in sim-kubectl*.js */
 (function (root) {
   'use strict';
@@ -126,7 +126,7 @@
       case 'printf': return ok((a[0] || '').replace(/\\n/g, '\n').replace(/\\t/g, '\t'));
       case 'true': return ok(); case 'false': return { stdout: '', stderr: '', code: 1 };
       case 'pwd': return ok(this.cwd + '\n');
-      case 'whoami': return ok('student\n'); case 'hostname': return ok('kubelab-workstation\n'); case 'date': return ok(new Date().toUTCString().replace('GMT', 'UTC') + '\n');
+      case 'whoami': return ok('student\n'); case 'hostname': return ok('kubedrill-workstation\n'); case 'date': return ok(new Date().toUTCString().replace('GMT', 'UTC') + '\n');
       case 'clear': return { stdout: '', stderr: '', code: 0, clear: true };
       case 'exit': case 'logout': return ok();
       case 'export': a.forEach(function (x) { var mm = x.match(/^([^=]+)=(.*)$/); if (mm) self.env[mm[1]] = mm[2]; }); return ok();
@@ -232,7 +232,7 @@
     return { stdout: 'kubeadm is simulated read-only here (version, upgrade plan).\n', stderr: '', code: 0 };
   };
   P.helpText = function () {
-    return 'KubeLab simulator shell — a small bash + kubectl that runs entirely in your browser.\n\n' +
+    return 'KubeDrill simulator shell — a small bash + kubectl that runs entirely in your browser.\n\n' +
       '  kubectl (alias k)   get describe create apply delete run expose scale set rollout logs exec label annotate taint cordon drain top auth can-i patch edit wait explain api-resources ...\n' +
       '  shell               echo cat ls cd mkdir rm cp mv touch grep sed(s///) head tail wc sort uniq cut awk(print $N) base64 tr\n' +
       '  editing             vi/nano <file> opens the editor; or: cat > f.yaml <<EOF ... EOF\n' +

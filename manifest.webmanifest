@@ -1,6 +1,6 @@
 {
-  "name": "KubeLab — free offline Kubernetes practice",
-  "short_name": "KubeLab",
+  "name": "KubeDrill — free offline Kubernetes practice",
+  "short_name": "KubeDrill",
   "description": "Kubernetes simulator, auto-checked labs, exam mode and quizzes. Free, offline, no ads.",
   "start_url": "./#home",
   "scope": "./",

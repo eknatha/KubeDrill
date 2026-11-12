@@ -70,12 +70,12 @@
   function shareCard() {
     var c = counts(), cv = document.createElement('canvas'); cv.width = 1200; cv.height = 630; var x = cv.getContext('2d');
     x.fillStyle = '#0b1220'; x.fillRect(0, 0, 1200, 630); var gr = x.createRadialGradient(1040, 80, 20, 1040, 80, 420); gr.addColorStop(0, 'rgba(56,189,248,.25)'); gr.addColorStop(1, 'rgba(56,189,248,0)'); x.fillStyle = gr; x.fillRect(0, 0, 1200, 630);
-    x.fillStyle = '#eaf0fb'; x.font = '700 30px system-ui,sans-serif'; x.fillText('KubeLab', 64, 90); x.fillStyle = '#a9b6cc'; x.font = '20px system-ui,sans-serif'; x.textAlign = 'right'; x.fillText('kubedrill.eknathalabs.com', 1136, 90); x.textAlign = 'left';
+    x.fillStyle = '#eaf0fb'; x.font = '700 30px system-ui,sans-serif'; x.fillText('KubeDrill', 64, 90); x.fillStyle = '#a9b6cc'; x.font = '20px system-ui,sans-serif'; x.textAlign = 'right'; x.fillText('kubedrill.eknathalabs.com', 1136, 90); x.textAlign = 'left';
     x.fillStyle = '#7dd3fc'; x.font = '600 20px system-ui,sans-serif'; x.fillText('ACHIEVEMENT', 64, 250); x.fillStyle = '#eaf0fb'; x.font = '700 84px system-ui,sans-serif'; x.fillText(c.done + ' broken clusters fixed', 64, 345);
     x.fillStyle = '#b6c3d9'; x.font = '28px system-ui,sans-serif'; x.fillText('of ' + c.total + ' labs · ' + c.streak + '-day streak', 64, 405);
     x.font = '18px system-ui,sans-serif'; x.fillStyle = '#cbd5e1'; ['Free', 'Offline', 'No ads'].forEach(function (t, i) { var px = 64 + i * 150; x.strokeStyle = 'rgba(255,255,255,.25)'; x.strokeRect(px, 520, 130, 42); x.fillText(t, px + 26, 548); });
     x.fillStyle = '#8091ad'; x.font = '15px system-ui,sans-serif'; x.textAlign = 'right'; x.fillText('Generated in your browser. No account, no upload.', 1136, 548);
-    cv.toBlob(function (b) { var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'kubelab-progress.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000); });
+    cv.toBlob(function (b) { var a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'kubedrill-progress.png'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000); });
   }
 
   // ── mobile lab tabs ──

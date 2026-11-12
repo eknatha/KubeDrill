@@ -9,7 +9,7 @@ const srv = http.createServer((q, r) => { let p = q.url.split('?')[0]; if (p ===
   try {
     await pg.goto(base + '#lab/s01-pending-cpu'); await pg.evaluate(() => navigator.serviceWorker.ready); await pg.waitForTimeout(1500);
     const v1 = await pg.evaluate(() => KL.pwa.status().version);
-    fs.writeFileSync(swp, orig.replace(/kubelab-[0-9a-f]{10}/g, 'kubelab-0000000002').replace(/'[0-9a-f]{10}'/g, "'0000000002'") + '\n// changed\n');
+    fs.writeFileSync(swp, orig.replace(/kubedrill-[0-9a-f]{10}/g, 'kubedrill-0000000002').replace(/'[0-9a-f]{10}'/g, "'0000000002'") + '\n// changed\n');
     await pg.evaluate(() => navigator.serviceWorker.getRegistration().then(r => r.update())); await pg.waitForTimeout(2500);
     ok(await pg.isVisible('.toast .toast-btn'), 'update toast with Reload button appears');
     ok(await pg.evaluate(() => KL.pwa.status().version) === v1, 'old version still in control before click (no silent takeover)');

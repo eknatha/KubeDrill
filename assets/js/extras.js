@@ -51,7 +51,7 @@
   encLinks();
 
   // ── command palette ──
-  var PAGES = [['home', 'Home'], ['modules', 'Modules'], ['path', 'Learning path'], ['labs', 'Labs'], ['exam', 'Exam mode'], ['quiz', 'Quiz'], ['visualize', 'Visualize'], ['cheatsheet', 'Cheatsheet'], ['tools', 'Tools'], ['errors', 'Error encyclopedia'], ['progress', 'My progress'], ['compare', 'Compare KubeLab']];
+  var PAGES = [['home', 'Home'], ['modules', 'Modules'], ['path', 'Learning path'], ['labs', 'Labs'], ['exam', 'Exam mode'], ['quiz', 'Quiz'], ['visualize', 'Visualize'], ['cheatsheet', 'Cheatsheet'], ['tools', 'Tools'], ['errors', 'Error encyclopedia'], ['progress', 'My progress'], ['compare', 'Compare KubeDrill']];
   var pal = { items: [], sel: 0 };
   function palItems() {
     var it = PAGES.map(function (p) { return { t: p[1], k: 'Page', h: '#' + p[0] }; });
@@ -111,7 +111,7 @@
       '<div class="pg-actions"><button class="btn-secondary" id="pgExp">⬇ Export progress (JSON)</button><label class="btn-secondary" style="cursor:pointer">⬆ Import<input type="file" id="pgImp" accept="application/json" hidden></label><button class="btn-secondary" id="pgRst">Reset all</button></div><p class="ex-note" id="pgMsg">' + (store.persistent() ? '' : '⚠ Browser storage is blocked (private mode?) — progress will be lost when you close the tab. Use Export.') + '</p>';
     if (navigator.storage && navigator.storage.estimate) Promise.all([navigator.storage.estimate(), navigator.storage.persisted ? navigator.storage.persisted() : false, KL.sessions ? KL.sessions.keys() : []]).then(function (r) { var el = $('pgStore'); if (el) el.textContent = 'Storage: ' + (r[1] ? '🔒 persistent (the browser will not clear it automatically)' : '⚠ not marked persistent — the browser may clear it if the device is low on space; export a backup') + ' · using ' + Math.round((r[0].usage || 0) / 1024 / 1024 * 10) / 10 + ' MB · ' + r[2].length + ' saved lab session(s)'; }).catch(function () { /* ignore */ });
     if ($('pgDue')) $('pgDue').onclick = function () { showPage('quiz'); startQuiz({ mode: 'due' }); };
-    $('pgExp').onclick = function () { try { localStorage.setItem('kubelab:lastExport', String(Date.now())); } catch (e) { /* ignore */ } var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([store.exportJSON()], { type: 'application/json' })); a.download = 'kubelab-progress-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000); };
+    $('pgExp').onclick = function () { try { localStorage.setItem('kubelab:lastExport', String(Date.now())); } catch (e) { /* ignore */ } var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([store.exportJSON()], { type: 'application/json' })); a.download = 'kubedrill-progress-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000); };
     $('pgImp').onchange = function () { var f = this.files[0]; if (!f) return; var rd = new FileReader(); rd.onload = function () { try { store.importJSON(rd.result); $('pgMsg').textContent = '✓ Progress imported.'; renderProgress(); } catch (e) { $('pgMsg').textContent = '✗ ' + e.message; } }; rd.readAsText(f); };
     $('pgRst').onclick = function () { if (confirm('Delete ALL saved progress in this browser?')) { store.reset(); renderProgress(); } };
   }
@@ -121,7 +121,7 @@
   function renderCompare() {
     var root = $('compareRoot'); if (!root) return;
     var rows = [['Price', 'Free', 'Free tier + paid', 'Paid', 'Paid sessions', 'Free'], ['Ads / tracking', 'None / none', 'Varies', 'Varies', 'Varies', 'Varies'], ['Works offline', 'Yes (PWA + single file)', 'No', 'No', 'No', 'No'], ['Needs account', 'No', 'Yes', 'Yes', 'Yes', 'No'], ['Real clusters', 'Optional: kind lab packs (you run)', 'Yes (cloud VMs)', 'Yes (cloud)', 'Yes (exam-like)', 'Simulated'], ['In-browser simulator', 'Yes (teaching model)', 'No', 'No', 'No', 'Yes'], ['Auto-checked labs', 'Yes', 'Yes', 'Yes', 'Scored', 'Partly'], ['Timed exam mode', 'Yes (simulated)', 'Partly', 'Mock exams', 'Yes (the real thing)', 'Partly'], ['Open source', 'Yes (MIT)', 'Partly', 'No', 'No', 'Varies']];
-    root.innerHTML = '<div class="section-header"><div class="section-tag">Honest comparison</div><h2 class="section-title">Where KubeLab fits</h2><p class="section-desc">KubeLab is a free, offline-first <b>practice companion</b>. It is not a replacement for a real cluster or for the paid exam simulators — it is the cheap, instant, no-signup way to drill commands and failure modes before you use them.</p></div><div class="cmp-wrap"><table class="cmp"><thead><tr><th></th><th class="me">KubeLab</th><th>iximiuz Labs</th><th>KodeKloud</th><th>Killer.sh</th><th>Browser simulators</th></tr></thead><tbody>' + rows.map(function (r) { return '<tr>' + r.map(function (c, i) { return (i ? '<td' + (i === 1 ? ' class="me"' : '') + '>' : '<th scope="row">') + esc(c) + (i ? '</td>' : '</th>'); }).join('') + '</tr>'; }).join('') + '</tbody></table></div><p class="ex-note">Competitor details are summarised from public information and may change — check each site. Use paid exam simulators (e.g. killer.sh, included with the CKA/CKAD/CKS purchase) for the final week.</p><div class="cmp-notes"><div><h4>Use KubeLab for</h4><p>Daily drills, error triage practice, kubectl muscle memory, quizzes, a plane/train/no-wifi study session.</p></div><div><h4>Use a real cluster for</h4><p>Networking/CNI behaviour, upgrades, etcd restore, node-level work. The <code>lab-packs/</code> folder gives you the same scenarios on kind.</p></div></div>';
+    root.innerHTML = '<div class="section-header"><div class="section-tag">Honest comparison</div><h2 class="section-title">Where KubeDrill fits</h2><p class="section-desc">KubeDrill is a free, offline-first <b>practice companion</b>. It is not a replacement for a real cluster or for the paid exam simulators — it is the cheap, instant, no-signup way to drill commands and failure modes before you use them.</p></div><div class="cmp-wrap"><table class="cmp"><thead><tr><th></th><th class="me">KubeDrill</th><th>iximiuz Labs</th><th>KodeKloud</th><th>Killer.sh</th><th>Browser simulators</th></tr></thead><tbody>' + rows.map(function (r) { return '<tr>' + r.map(function (c, i) { return (i ? '<td' + (i === 1 ? ' class="me"' : '') + '>' : '<th scope="row">') + esc(c) + (i ? '</td>' : '</th>'); }).join('') + '</tr>'; }).join('') + '</tbody></table></div><p class="ex-note">Competitor details are summarised from public information and may change — check each site. Use paid exam simulators (e.g. killer.sh, included with the CKA/CKAD/CKS purchase) for the final week.</p><div class="cmp-notes"><div><h4>Use KubeDrill for</h4><p>Daily drills, error triage practice, kubectl muscle memory, quizzes, a plane/train/no-wifi study session.</p></div><div><h4>Use a real cluster for</h4><p>Networking/CNI behaviour, upgrades, etcd restore, node-level work. The <code>lab-packs/</code> folder gives you the same scenarios on kind.</p></div></div>';
   }
   KL.route('compare', renderCompare);
 
@@ -132,7 +132,7 @@
   // ── PWA: offline status badge, install, safe updates, storage persistence, backup reminder ──
   (function pwa() {
     var nr = document.querySelector('.nav-right'), badge = document.createElement('span'), inst = document.createElement('button'), st = { done: 0, total: 0, ready: false }, reg = null, wantReload = false;
-    badge.id = 'offBadge'; badge.className = 'off-badge'; badge.setAttribute('role', 'status'); badge.hidden = true; inst.id = 'installBtn'; inst.className = 'nav-icon-btn'; inst.textContent = '⬇ Install'; inst.hidden = true; inst.title = 'Install KubeLab as an app (works offline)';
+    badge.id = 'offBadge'; badge.className = 'off-badge'; badge.setAttribute('role', 'status'); badge.hidden = true; inst.id = 'installBtn'; inst.className = 'nav-icon-btn'; inst.textContent = '⬇ Install'; inst.hidden = true; inst.title = 'Install KubeDrill as an app (works offline)';
     if (nr) { nr.insertBefore(badge, nr.firstChild); nr.insertBefore(inst, nr.firstChild); }
     function paint() {
       var on = navigator.onLine; badge.hidden = false;
@@ -145,7 +145,7 @@
     KL.pwa = { status: function () { return { ready: st.ready, done: st.done, total: st.total, version: st.version }; } };
     window.addEventListener('online', paint); window.addEventListener('offline', paint);
     var deferred = null; window.addEventListener('beforeinstallprompt', function (e) { e.preventDefault(); deferred = e; inst.hidden = false; });
-    window.addEventListener('appinstalled', function () { inst.hidden = true; deferred = null; KL.toast && KL.toast('KubeLab installed ✓'); });
+    window.addEventListener('appinstalled', function () { inst.hidden = true; deferred = null; KL.toast && KL.toast('KubeDrill installed ✓'); });
     var ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !navigator.standalone && !(window.matchMedia && matchMedia('(display-mode: standalone)').matches);
     if (ios) { inst.hidden = false; inst.textContent = '⬇ Add to Home Screen'; }
     inst.onclick = function () { if (deferred) { deferred.prompt(); deferred.userChoice.finally(function () { deferred = null; inst.hidden = true; }); } else if (ios) KL.toast && KL.toast('Tap Share, then “Add to Home Screen” to install.', { sticky: true }); };
@@ -165,7 +165,7 @@
         }).catch(function () { /* unsupported */ });
       });
     } else paint();
-    function offerUpdate(w) { KL.toast && KL.toast('A new version of KubeLab is ready (your labs are saved).', { sticky: true, action: { label: 'Reload', fn: function () { wantReload = true; w.postMessage('SKIP_WAITING'); } } }); }
+    function offerUpdate(w) { KL.toast && KL.toast('A new version of KubeDrill is ready (your labs are saved).', { sticky: true, action: { label: 'Reload', fn: function () { wantReload = true; w.postMessage('SKIP_WAITING'); } } }); }
     paint();
   })();
   (function backupReminder() {

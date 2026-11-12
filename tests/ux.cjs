@@ -84,7 +84,7 @@ ok(pg.url().endsWith('#field'),'palette navigates');ok(await pg.locator('.pal').
 await pg.keyboard.press('Control+k');await pg.fill('#palIn','s84');await pg.keyboard.press('Enter');await pg.waitForTimeout(500);ok(/#lab\/s84/.test(pg.url()),'palette opens a lab');
 await pg.goto(BASE+'#labs');await pg.waitForTimeout(600);ok(await pg.locator('.ilab-tag.inc').count()>=1,'incident tag on labs');
 await pg.goto(BASE+'#progress');await pg.waitForTimeout(500);ok(await pg.locator('.pg-ring').count()===1,'progress ring');
-const [dl]=await Promise.all([pg.waitForEvent('download'),pg.click('#pgShare')]);ok(dl.suggestedFilename()==='kubelab-progress.png','share card downloads');
+const [dl]=await Promise.all([pg.waitForEvent('download'),pg.click('#pgShare')]);ok(dl.suggestedFilename()==='kubedrill-progress.png','share card downloads');
 await pg.setViewportSize({width:390,height:800});await pg.goto(BASE+'#lab/s84-service-ladder');await pg.waitForSelector('.lr-mtabs');await pg.waitForTimeout(500);
 ok(await pg.locator('.lr-mtabs').isVisible(),'mobile tabs visible');ok(await pg.locator('.lr-left').isVisible(),'mobile tasks shown first');
 await pg.click('.lr-mtabs [data-m="term"]');ok(!(await pg.locator('.lr-left').isVisible())&&await pg.locator('#lrTerm').isVisible(),'mobile terminal tab');

@@ -1,4 +1,4 @@
-/* KubeLab simulator — kubectl part 3: create/apply/delete/run/expose/scale/set/label/taint/drain/rollout/patch/kustomize */
+/* KubeDrill simulator — kubectl part 3: create/apply/delete/run/expose/scale/set/label/taint/drain/rollout/patch/kustomize */
 (function (root) {
   'use strict';
   var Sim = root.KL ? root.KL.Sim : require('./sim.js');

@@ -25,7 +25,7 @@ await pg.click('#setMotion [data-v="off"]');ok(await pg.evaluate(()=>document.do
 await pg.click('#setMotion [data-v="on"]');ok(await pg.evaluate(()=>document.documentElement.getAttribute('data-motion'))==='on','motion -> on');
 await pg.selectOption('#setSkin','matrix');ok(await pg.evaluate(()=>localStorage.getItem('kl.skin'))==='matrix','skin saved');
 await pg.selectOption('#setSkin','default');
-const [dl]=await Promise.all([pg.waitForEvent('download'),pg.click('#setBackup')]);ok(/kubelab-progress-.*\.json/.test(dl.suggestedFilename()),'backup downloads json');
+const [dl]=await Promise.all([pg.waitForEvent('download'),pg.click('#setBackup')]);ok(/kubedrill-progress-.*\.json/.test(dl.suggestedFilename()),'backup downloads json');
 await pg.evaluate(()=>KL.store.markLab('s01-pending-cpu',true));await pg.goto(BASE+'#settings');await pg.waitForTimeout(200);
 pg.once('dialog',d=>d.accept());await pg.click('#setClear');await pg.waitForTimeout(200);ok(await pg.evaluate(()=>KL.store.labDone('s01-pending-cpu'))===false,'clear progress works');
 ok((await pg.locator('#page-settings').innerText()).includes('Never paste real kubeconfigs'),'credential caution shown');

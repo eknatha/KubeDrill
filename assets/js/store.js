@@ -1,4 +1,4 @@
-/* KubeLab progress store — 100% local (localStorage). No accounts, no network.
+/* KubeDrill progress store — 100% local (localStorage). No accounts, no network.
    Falls back to in-memory if storage is blocked. Exportable/importable as JSON. */
 (function (root) {
   'use strict';
@@ -55,7 +55,7 @@
     exportJSON: function () { return JSON.stringify(data, null, 2); },
     importJSON: function (txt) {
       var d = JSON.parse(txt);
-      if (!d || typeof d !== 'object' || d.v !== 1) throw new Error('Not a KubeLab progress file');
+      if (!d || typeof d !== 'object' || d.v !== 1) throw new Error('Not a KubeDrill progress file');
       data = Object.assign(blank(), d); save();
     },
     reset: function () { data = blank(); save(); },

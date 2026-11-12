@@ -1,4 +1,4 @@
-/* KubeLab simulator — kubectl part 1: argument parsing, get/describe/logs/exec/top/auth/wait/explain, printers, jsonpath */
+/* KubeDrill simulator — kubectl part 1: argument parsing, get/describe/logs/exec/top/auth/wait/explain, printers, jsonpath */
 (function (root) {
   'use strict';
   var Sim = root.KL ? root.KL.Sim : require('./sim.js');
