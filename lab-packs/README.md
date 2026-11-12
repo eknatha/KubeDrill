@@ -17,7 +17,7 @@ Notes
 - Check scripts assert the same end state as the in-browser Check button. Real clusters converge slower: re-run `check.sh` after a few seconds.
 - These packs are generated, and have been syntax-checked (`bash -n`) but **not every lab has been run end-to-end against a real cluster** — please open an issue if one misbehaves.
 
-## Labs (81)
+## Labs (99)
 
 | Lab | Level | Tracks | Time |
 |---|---|---|---|
@@ -102,3 +102,21 @@ Notes
 | [S92 Incident: the silent database](s92-silent-database/README.md) | Advanced | CKA, CKAD | 20 min |
 | [S93 Incident: the release that never finishes](s93-release-gone-wrong/README.md) | Advanced | CKAD, CKA | 18 min |
 | [S94 Incident: capacity crunch](s94-capacity-crunch/README.md) | Advanced | CKA | 18 min |
+| [S97 Storage: keep the data, allow expansion](s97-pv-retain/README.md) | Intermediate | CKA | 12 min |
+| [S98 Drain a node that holds a bare pod](s98-drain-bare-pod/README.md) | Advanced | CKA | 12 min |
+| [S99 NoExecute taint: evict, but spare the critical pod](s99-noexecute-eviction/README.md) | Advanced | CKA | 14 min |
+| [S100 HPA shows <unknown>: no CPU requests](s100-hpa-unknown/README.md) | Intermediate | CKA, CKAD | 12 min |
+| [S101 RBAC: one ClusterRole, bound per namespace](s101-clusterrole-reuse/README.md) | Intermediate | CKA, CKS | 12 min |
+| [S102 Gateway API: the route attaches to nothing](s102-httproute-fix/README.md) | Advanced | CKA | 14 min |
+| [S103 Job: completions, parallelism and a deadline](s103-job-parallel/README.md) | Intermediate | CKAD | 12 min |
+| [S104 CronJob: no overlap, tidy history](s104-cronjob-policy/README.md) | Intermediate | CKAD | 10 min |
+| [S105 Slow starter: add a startup probe](s105-startup-probe/README.md) | Advanced | CKAD | 12 min |
+| [S106 Inject config: envFrom and a read-only Secret volume](s106-config-injection/README.md) | Intermediate | CKAD | 14 min |
+| [S107 Rollout strategy: never lose capacity](s107-rolling-strategy/README.md) | Intermediate | CKAD | 10 min |
+| [S108 Fix a manifest that uses a removed API version](s108-old-apiversion/README.md) | Intermediate | CKAD | 10 min |
+| [S109 System hardening: seccomp RuntimeDefault](s109-seccomp-default/README.md) | Advanced | CKS | 12 min |
+| [S110 Default-deny, then allow only what is needed](s110-default-deny/README.md) | Advanced | CKS, CKA | 16 min |
+| [S111 Stop leaking secrets through env vars](s111-secret-volume/README.md) | Intermediate | CKS, CKAD | 12 min |
+| [S112 Read the audit log: who touched the secret?](s112-audit-hunt/README.md) | Advanced | CKS | 14 min |
+| [S113 Hardening: an over-broad binding and the default ServiceAccount](s113-open-binding/README.md) | Advanced | CKS | 14 min |
+| [S114 Pod Security: warn and audit before you enforce](s114-psa-rollout/README.md) | Advanced | CKS | 12 min |
