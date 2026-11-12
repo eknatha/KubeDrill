@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Bind a PVC to a pre-created PersistentVolume (s44-static-pv)
+# KubeDrill lab pack: Bind a PVC to a pre-created PersistentVolume (s44-static-pv)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Bind a PVC to a pre-created PersistentVolume"
 kubectl create namespace pvs --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -17,7 +17,7 @@ spec:
   hostPath:
     path: /mnt/archive
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=pvs >/dev/null

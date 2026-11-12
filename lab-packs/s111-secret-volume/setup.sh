@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Stop leaking secrets through env vars (s111-secret-volume)
+# KubeDrill lab pack: Stop leaking secrets through env vars (s111-secret-volume)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Stop leaking secrets through env vars"
 kubectl create namespace vault --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Namespace
 metadata:
   name: vault
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Secret
 metadata:
@@ -20,8 +20,8 @@ metadata:
 stringData:
   password: change-me
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -47,7 +47,7 @@ spec:
               name: db-pass
               key: password
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=vault >/dev/null

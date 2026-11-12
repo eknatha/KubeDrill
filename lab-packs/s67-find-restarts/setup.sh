@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Find the pod that keeps restarting (s67-find-restarts)
+# KubeDrill lab pack: Find the pod that keeps restarting (s67-find-restarts)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Find the pod that keeps restarting"
 kubectl create namespace rs --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Pod
 metadata:
@@ -17,8 +17,8 @@ spec:
   - name: steady
     image: nginx:1.25
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Pod
 metadata:
@@ -32,8 +32,8 @@ spec:
     image: busybox:1.36
     command: ["sh", "-c", "exit 1"]
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Pod
 metadata:
@@ -46,7 +46,7 @@ spec:
   - name: calm
     image: nginx:1.25
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=rs >/dev/null

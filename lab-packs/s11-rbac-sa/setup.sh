@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: RBAC: least-privilege deployer (s11-rbac-sa)
+# KubeDrill lab pack: RBAC: least-privilege deployer (s11-rbac-sa)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: RBAC: least-privilege deployer"
 kubectl create namespace ci --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: deployer
   namespace: ci
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=ci >/dev/null
