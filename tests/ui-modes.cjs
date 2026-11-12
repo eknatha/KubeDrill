@@ -9,7 +9,7 @@ ok(await pg.locator('.dia-node').count()>=3,'nodes drawn');
 ok(await pg.locator('#lrDia').isVisible(),'diagram visible by default');
 await pg.screenshot({path:'/tmp/s01-before.png'});
 // fix via terminal
-for(const c of ['kubectl set resources deployment/api --requests=cpu=100m -n payments','kubectl rollout status deployment/api -n payments']){await pg.fill('#lrIn',c);await pg.press('#lrIn','Enter');await pg.waitForTimeout(500);}
+for(const c of ['kubectl set resources deployment/api --requests=cpu=100m -n payments','kubectl rollout status deployment/api -n payments']){await pg.fill('#lrIn',c);await pg.press('#lrIn','Enter');await pg.waitForTimeout(150);if(await pg.locator('.br-pop').count())await pg.keyboard.press('Enter');await pg.waitForTimeout(500);}
 await pg.waitForTimeout(2500);
 ok(await pg.locator('.dia-pod.st-ok').count()>=2,'pods turn green after fix: '+await pg.locator('.dia-pod.st-ok').count());
 await pg.click('#lrCheck');await pg.waitForSelector('.lr-debrief');

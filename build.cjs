@@ -8,6 +8,7 @@ html = html.replace('<link rel="stylesheet" href="fonts/fonts.css">', () => '<st
 html = html.replace('<link rel="stylesheet" href="assets/css/extra.css">', () => '<style>' + rd('assets/css/extra.css') + '</style>');
 html = html.replace('<link rel="stylesheet" href="assets/css/ui2.css">', () => '<style>' + rd('assets/css/ui2.css') + '</style>');
 html = html.replace('<link rel="stylesheet" href="assets/css/ui3.css">', () => '<style>' + rd('assets/css/ui3.css') + '</style>');
+html = html.replace('<link rel="stylesheet" href="assets/css/ui4.css">', () => '<style>' + rd('assets/css/ui4.css') + '</style>');
 html = html.replace(/<script src="([^"]+)"><\/script>/g, (m, src) => '<script>/* ' + src + ' */\n' + safeJs(rd(src).toString()) + '\n</script>');
 html = html.replace(/<link rel="manifest"[^>]*>\n?/, '').replace(/<link rel="apple-touch-icon"[^>]*>\n?/, '').replace(/<link rel="icon"[^>]*>/, () => '<link rel="icon" href="data:image/svg+xml;base64,' + rd('icons/icon.svg').toString('base64') + '">');
 html = html.replace('<body>', '<body data-build="offline-single-file">');

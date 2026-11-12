@@ -18,7 +18,7 @@ const srv = http.createServer((q, r) => { let p = decodeURIComponent(q.url.split
   ok(await pg.evaluate(() => document.querySelectorAll('.ilab-card').length) === 96, '96 lab cards');
   // runner
   await pg.goto(base + '#lab/s02-imagepull'); await pg.waitForTimeout(300);
-  const run = async c => { await pg.fill('#lrIn', c); await pg.press('#lrIn', 'Enter'); await pg.waitForTimeout(80); };
+  const run = async c => { await pg.fill('#lrIn', c); await pg.press('#lrIn', 'Enter'); await pg.waitForTimeout(150); if (await pg.locator('.br-pop').count()) await pg.keyboard.press('Enter'); await pg.waitForTimeout(80); };
   await run('kubectl get pods'); ok((await pg.innerText('#lrOut')).includes('ImagePullBackOff') || (await pg.innerText('#lrOut')).includes('ErrImagePull'), 'runner shows broken pods');
   await pg.click('#lrCheck'); ok((await pg.innerText('#lrFeedback')).includes('Still failing'), 'check fails before fix');
   await run('kubectl set image deployment/web web=nginx:1.25'); await pg.click('#lrWait'); await pg.waitForTimeout(100); await pg.click('#lrCheck');

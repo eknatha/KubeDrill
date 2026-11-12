@@ -321,6 +321,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <link rel="stylesheet" href="assets/css/extra.css">
 <link rel="stylesheet" href="assets/css/ui2.css">
 <link rel="stylesheet" href="assets/css/ui3.css">
+<link rel="stylesheet" href="assets/css/ui4.css">
 </head>
 <body>
 <div id="main" tabindex="-1"></div>
@@ -339,11 +340,15 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
     <li><a href="#exam" data-page="exam">Exam</a></li>
     <li><a href="#quiz" data-page="quiz">Quiz</a></li>
     <li><a href="#visualize" data-page="visualize">Visualize</a></li>
-    <li><a href="#field" data-page="field">Field Guide</a></li>
-    <li><a href="#cheatsheet" data-page="cheatsheet">Cheatsheet</a></li>
-    <li><a href="#tools" data-page="tools">Tools</a></li>
-    <li><a href="#errors" data-page="errors">Errors</a></li>
-    <li><a href="#progress" data-page="progress">Progress</a></li>
+    <li class="nav-more"><button type="button" class="nav-more-btn" id="navMore" aria-haspopup="true" aria-expanded="false" aria-controls="navMenu">More <span aria-hidden="true">▾</span></button>
+      <ul class="nav-menu" id="navMenu">
+        <li><a href="#learn" data-page="learn">Lessons</a></li>
+        <li><a href="#field" data-page="field">Field Guide</a></li>
+        <li><a href="#cheatsheet" data-page="cheatsheet">Cheatsheet</a></li>
+        <li><a href="#tools" data-page="tools">Tools</a></li>
+        <li><a href="#errors" data-page="errors">Errors</a></li>
+        <li><a href="#progress" data-page="progress">Progress</a></li>
+      </ul></li>
   </ul>
   <div class="nav-right">
     <button class="nav-icon-btn" id="paletteBtn" aria-label="Search (Ctrl+K)" title="Search · Ctrl+K">⌕ <kbd>Ctrl K</kbd></button>
@@ -364,10 +369,10 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   <h1><span class="kube">Kube</span><span class="lab">Lab</span><br>Master Kubernetes.<br>Ship with Confidence.</h1>
   <p class="hero-sub">A structured, hands-on Kubernetes learning lab — concepts, an in-browser kubectl simulator with auto-checked labs, CKA/CKAD/CKS exam mode, 300+ quiz questions and offline tools. Free forever. No signup. No ads. Works offline.</p>
   <div class="hero-ctas">
-    <button class="btn-primary" onclick="showPage('labs')">▶ Start a Lab</button>
-    <button class="btn-secondary" onclick="showPage('exam')">⏱ Exam Mode</button>
-    <button class="btn-secondary" onclick="showPage('modules')">📚 Modules</button>
-    <button class="btn-secondary" onclick="showPage('quiz')">✦ Take Quiz</button>
+    <button class="btn-primary btn-lg" onclick="showPage('labs')">Start a lab</button>
+    <a class="btn-quiet" href="#exam">Exam mode</a>
+    <a class="btn-quiet" href="#learn">Lessons</a>
+    <a class="btn-quiet" href="#quiz">Take a quiz</a>
   </div>
   <div class="hero-terminal">
     <div class="terminal-bar">
@@ -637,6 +642,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   <p style="margin-top:14px;font-size:12.5px;color:var(--text2);line-height:1.5">The middle column describes a common pattern, not any one product. Check each provider's own terms before comparing by name.</p>
   <p style="margin-top:18px"><a class="btn-primary" href="#labs">Start a lab</a></p>
 </div></div>
+<div class="page" id="page-learn" role="main"><div class="section-wrap" id="learnRoot"></div></div>
 <div class="page" id="page-settings" role="main"><div class="section-wrap" id="settingsRoot"></div></div>
 <div class="page" id="page-break" role="main"><div class="section-wrap" id="breakRoot"></div></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
@@ -3764,6 +3770,10 @@ renderEnc();
 <script src="assets/js/motion.js"></script>
 <script src="assets/js/ui2.js"></script>
 <script src="assets/js/ui3.js"></script>
+<script src="assets/js/data/lessons-a.js"></script>
+<script src="assets/js/data/lessons-b.js"></script>
+<script src="assets/js/lessons.js"></script>
+<script src="assets/js/ui4.js"></script>
 <script>routeFromHash();</script>
 </body>
 </html>

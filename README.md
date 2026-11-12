@@ -103,3 +103,9 @@ MIT — see [LICENSE](LICENSE). Bundled: js-yaml (MIT), Inter, Syne, JetBrains M
 - **Cluster canvas**: a "Canvas" tab in the lab cluster panel draws nodes, pods and request dots from the simulator state. It respects the Motion setting.
 - Ctrl+K now opens a single palette (pages, modules, errors, commands, labs, flowcharts, outages, settings).
 - Fixed: light theme no longer inherits the dark UI2 surface colours.
+
+## UI4 + Lessons
+- Home: live hero demo (real simulator, s03-oomkilled), 6-link nav + More menu, staggered reveals, cursor spotlight cards, calmer headline.
+- Labs (Learn mode): **blast-radius preview** before risky commands (toggle `Preview` in the lab bar, key `kl.blast`), **shadow expert** after a lab, **draft post-mortem** after incident labs.
+- `#learn`: 22 lessons covering all 19 modules, one shape each (why, mental model, anatomy, do it, myths, spot the bug, check, teach back, remember, exam trap, production). Widgets: step player, rollout calculator, QoS checker, matrix, decision tree, runbook. Glossary tooltips. Progress is local (`kl.lessons`).
+- Add lessons in `assets/js/data/lessons-a.js` / `lessons-b.js`; `node tests/lessons.test.js` runs every lesson command in the simulator and checks links, quiz answers and field docs.

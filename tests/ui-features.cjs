@@ -4,7 +4,7 @@ const ctx=await b.newContext({viewport:{width:1300,height:850}});const pg=await 
 pg.on('dialog',d=>d.accept());
 let bad=0;const ok=(c,m)=>{if(!c)bad++;console.log(c?'✔':'✘',m)};
 const T=ms=>pg.waitForTimeout(ms);
-const run=async c=>{await pg.fill('#lrIn',c);await pg.press('#lrIn','Enter');await T(300)};
+const run=async c=>{await pg.fill('#lrIn',c);await pg.press('#lrIn','Enter');await T(150);if(await pg.locator('.br-pop').count())await pg.keyboard.press('Enter');await T(300)};
 // ---- predict
 await pg.goto(BASE+'#lab/s34-nodeselector');await pg.waitForSelector('#lrIn');await T(500);
 ok(await pg.locator('.lr-opt').count()===4,'predict: 4 options');
