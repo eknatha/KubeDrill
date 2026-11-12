@@ -17,7 +17,8 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="stylesheet" href="fonts/fonts.css">
-<script>try{var t=localStorage.getItem("kubelab:theme");if(!t)t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t;}catch(e){}</script>
+<script>try{var L=localStorage,ks=[],i,k;for(i=0;i<L.length;i++){k=L.key(i);if(k.indexOf("kubelab:")===0)ks.push(k);}ks.forEach(function(k){var n="kubedrill:"+k.slice(8);if(L.getItem(n)===null)L.setItem(n,L.getItem(k));L.removeItem(k);});}catch(e){}</script>
+<script>try{var t=localStorage.getItem("kubedrill:theme");if(!t)t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";document.documentElement.dataset.theme=t;}catch(e){}</script>
 <style>
 :root {
   --bg:#090E1A;--bg2:#0D1525;--bg3:#111d35;--surface:#0f1d35;--surface2:#152240;
@@ -333,7 +334,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <nav aria-label="Primary">
   <a class="nav-logo" href="#home" aria-label="KubeDrill home">
     <div class="nav-logo-icon" aria-hidden="true">K8</div>
-    <span class="nav-logo-text">Kube<span>Lab</span></span>
+    <span class="nav-logo-text">Kube<span>Drill</span></span>
   </a>
   <ul class="nav-links" id="navLinks">
     <li><a href="#modules" data-page="modules">Modules</a></li>
@@ -474,7 +475,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   </div>
 </section>
 <footer>
-  <div class="footer-logo"><span style="color:var(--accent2)">Kube</span><span style="background:linear-gradient(135deg,var(--green),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Lab</span></div>
+  <div class="footer-logo"><span style="color:var(--accent2)">Kube</span><span style="background:linear-gradient(135deg,var(--green),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">Drill</span></div>
   <div class="footer-sub">kubedrill.eknathalabs.com</div>
   <div class="footer-links">
     <a href="https://eknathalabs.com" target="_blank" rel="noopener">eknathalabs.com</a>

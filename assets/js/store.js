@@ -2,7 +2,7 @@
    Falls back to in-memory if storage is blocked. Exportable/importable as JSON. */
 (function (root) {
   'use strict';
-  var KEY = 'kubelab:v1';
+  var KEY = 'kubedrill:v1';
   var mem = null;
   var INTERVALS = [0, 1, 3, 7, 21]; // Leitner boxes, in days
 
@@ -59,7 +59,7 @@
       data = Object.assign(blank(), d); save();
     },
     reset: function () { data = blank(); save(); },
-    persistent: function () { try { root.localStorage.setItem('kubelab:probe', '1'); root.localStorage.removeItem('kubelab:probe'); return true; } catch (e) { return false; } }
+    persistent: function () { try { root.localStorage.setItem('kubedrill:probe', '1'); root.localStorage.removeItem('kubedrill:probe'); return true; } catch (e) { return false; } }
   };
 
   root.KL = root.KL || {};

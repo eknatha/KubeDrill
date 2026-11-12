@@ -68,7 +68,7 @@
       if (location.hash === '#exam') render(); else location.hash = 'exam';
     });
   };
-  var AK = 'kubelab:exam-active';
+  var AK = 'kubedrill:exam-active';
   function saveActive() { try { if (S.active) localStorage.setItem(AK, JSON.stringify(S.active)); else localStorage.removeItem(AK); } catch (e) { /* ignore */ } }
   S.save = saveActive;
   function restoreActive() { if (S.active) return false; try { var a = JSON.parse(localStorage.getItem(AK)); if (a && a.ids && a.ids.every(function (id) { return Labs.byId[id]; })) { S.active = a; return true; } } catch (e) { /* ignore */ } return false; }

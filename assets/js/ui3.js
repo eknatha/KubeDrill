@@ -47,7 +47,7 @@
   function dl(name, text, type) { var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: type || 'application/json' })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000); }
   function renderSettings() {
     var root = $('settingsRoot'); if (!root) return;
-    var theme = ls('kubelab:theme') || 'system', motion = ls('kl.motion') || 'system', skin = ls('kl.skin') || 'default', fs = ls('kl.tfs') || '13', mode = ls('kl.labmode') || 'learn';
+    var theme = ls('kubedrill:theme') || 'system', motion = ls('kl.motion') || 'system', skin = ls('kl.skin') || 'default', fs = ls('kl.tfs') || '13', mode = ls('kl.labmode') || 'learn';
     var d = store.data(), done = labsList().filter(function (l) { return store.labDone(l.id); }).length, kb = Math.max(1, Math.round(store.exportJSON().length / 1024));
     var skins = [['default', 'Default'], ['matrix', 'Green phosphor'], ['amber', 'Amber'], ['solar', 'Solarized dark'], ['paper', 'Paper (light)'], ['contrast', 'High contrast']];
     root.innerHTML =
@@ -68,18 +68,18 @@
       '</div></div>' +
       '<p class="u3-warn" style="margin-top:16px">Never paste real kubeconfigs, tokens or private keys into a lab terminal. KubeDrill blocks common secret formats on paste, but that is a guard, not a guarantee. Clearing your browser data also removes progress, so take a backup first.</p>';
     function bindSeg(id, fn) { var g = $(id); g.onclick = function (e) { var b = e.target.closest('button'); if (!b) return; g.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); }); fn(b.dataset.v); }; }
-    bindSeg('setTheme', function (v) { if (v === 'system') { ls('kubelab:theme', null); document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; } else { ls('kubelab:theme', v); document.documentElement.dataset.theme = v; } });
+    bindSeg('setTheme', function (v) { if (v === 'system') { ls('kubedrill:theme', null); document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; } else { ls('kubedrill:theme', v); document.documentElement.dataset.theme = v; } });
     bindSeg('setMotion', function (v) { ls('kl.motion', v === 'system' ? null : v); applyMotionAttr(); });
     bindSeg('setMode', function (v) { ls('kl.labmode', v); });
     $('setSkin').onchange = function () { ls('kl.skin', this.value); };
     $('setFs').onchange = function () { ls('kl.tfs', this.value); };
-    $('setBackup').onclick = function () { dl('kubedrill-progress-' + new Date().toISOString().slice(0, 10) + '.json', store.exportJSON()); ls('kubelab:lastExport', String(Date.now())); toast('Backup downloaded'); };
+    $('setBackup').onclick = function () { dl('kubedrill-progress-' + new Date().toISOString().slice(0, 10) + '.json', store.exportJSON()); ls('kubedrill:lastExport', String(Date.now())); toast('Backup downloaded'); };
     $('setRestore').onclick = function () { $('setFile').click(); };
     $('setFile').onchange = function () { var f = this.files[0]; if (!f) return; var rd = new FileReader(); rd.onload = function () { try { store.importJSON(String(rd.result)); toast('Progress restored'); renderSettings(); } catch (e) { toast('That file is not a KubeDrill backup'); } }; rd.readAsText(f); };
-    $('setResetPrefs').onclick = function () { if (!confirm('Reset theme, motion, terminal and lab-mode preferences? Your progress is kept.')) return; ['kubelab:theme', 'kl.motion', 'kl.skin', 'kl.tfs', 'kl.labmode', 'kl.layout', 'kl.labview', 'kl.cvs', 'kl.blast'].forEach(function (k) { ls(k, null); }); document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; applyMotionAttr(); toast('Preferences reset'); renderSettings(); };
+    $('setResetPrefs').onclick = function () { if (!confirm('Reset theme, motion, terminal and lab-mode preferences? Your progress is kept.')) return; ['kubedrill:theme', 'kl.motion', 'kl.skin', 'kl.tfs', 'kl.labmode', 'kl.layout', 'kl.labview', 'kl.cvs', 'kl.blast'].forEach(function (k) { ls(k, null); }); document.documentElement.dataset.theme = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'; applyMotionAttr(); toast('Preferences reset'); renderSettings(); };
     $('setClear').onclick = function () {
       if (!confirm('Delete ALL progress, saved lab sessions and challenge times from this browser? This cannot be undone. Tip: make a backup first.')) return;
-      store.reset(); try { Object.keys(localStorage).filter(function (k) { return /^kubelab:sess:/.test(k) || k === 'kl.break' || k === 'kl.daily'; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (e) { /* ignore */ }
+      store.reset(); try { Object.keys(localStorage).filter(function (k) { return /^kubedrill:sess:/.test(k) || k === 'kl.break' || k === 'kl.daily'; }).forEach(function (k) { localStorage.removeItem(k); }); } catch (e) { /* ignore */ }
       toast('All progress cleared'); renderSettings();
     };
   }
@@ -119,7 +119,7 @@
   function startChallenge(seed, lab, lim) {
     var h0 = 0; try { h0 = store.hintsUsed(lab.id); } catch (e) { /* none */ }
     actSet({ seed: seed, id: lab.id, start: Date.now(), limit: lim, h0: h0, over: 0 });
-    ls('kubelab:sess:' + lab.id, null); location.hash = '#lab/' + lab.id;
+    ls('kubedrill:sess:' + lab.id, null); location.hash = '#lab/' + lab.id;
     var tries = 0, iv = setInterval(function () {
       tries++; var b = $('lrReset');
       if (b && document.querySelector('#labRunner .lr-title')) { clearInterval(iv); var oc = window.confirm; window.confirm = function () { return true; }; try { b.click(); } finally { window.confirm = oc; } }

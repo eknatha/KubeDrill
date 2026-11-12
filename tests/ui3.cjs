@@ -68,13 +68,13 @@ ok(await pg.locator('#lrCvs .cvs-key').count()===1,'canvas legend');
 await pg.evaluate(()=>{localStorage.setItem('kl.motion','off');document.documentElement.setAttribute('data-motion','off')});await pg.waitForTimeout(1500);
 ok(await pg.locator('#lrCvs animateMotion').count()===0,'motion off: no travelling dots');
 // light theme must stay readable (regression: dark surface under dark text)
-await pg.evaluate(()=>{localStorage.setItem('kubelab:theme','light');document.documentElement.dataset.theme='light'});
+await pg.evaluate(()=>{localStorage.setItem('kubedrill:theme','light');document.documentElement.dataset.theme='light'});
 const ratio=(sel)=>pg.evaluate((sel)=>{const f=v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4)};const L=c=>{const m=c.match(/[\d.]+/g).map(Number);return .2126*f(m[0])+.7152*f(m[1])+.0722*f(m[2])};
  const e=document.querySelector(sel);let n=e,bg='rgba(0, 0, 0, 0)';while(n&&bg==='rgba(0, 0, 0, 0)'){bg=getComputedStyle(n).backgroundColor;n=n.parentElement}
  const a=L(getComputedStyle(e).color),b=L(bg);return (Math.max(a,b)+.05)/(Math.min(a,b)+.05)},sel);
 for(const h of ['#labs','#settings','#why','#break/0003']){await pg.goto(BASE+h);await pg.waitForTimeout(900);const r=await ratio('.page.active .section-title');ok(r>=4.5,'light theme contrast '+h+': '+r.toFixed(1))}
 await pg.goto(BASE+'#lab/s01-pending-cpu');await pg.waitForSelector('#lrIn');await pg.waitForTimeout(800);
 {const r=await ratio('.lr-story');ok(r>=4.5,'light theme contrast in lab story: '+r.toFixed(1))}
-await pg.evaluate(()=>{localStorage.removeItem('kubelab:theme');document.documentElement.dataset.theme='dark'});
+await pg.evaluate(()=>{localStorage.removeItem('kubedrill:theme');document.documentElement.dataset.theme='dark'});
 console.log('errors:',errs.length,errs.slice(0,3));if(errs.length)bad++;
 await b.close();console.log(bad?'FAILED '+bad:'ALL OK');process.exit(bad?1:0)})();

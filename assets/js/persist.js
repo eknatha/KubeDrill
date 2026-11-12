@@ -11,7 +11,7 @@
     return dbp;
   }
   function tx(mode, fn) { return open().then(function (db) { return new Promise(function (res, rej) { if (!db) return rej(new Error('nodb')); var t = db.transaction(ST, mode), st = t.objectStore(ST), rq = fn(st); t.oncomplete = function () { res(rq && rq.result); }; t.onerror = t.onabort = function () { rej(t.error); }; }); }); }
-  var LS = 'kubelab:sess:';
+  var LS = 'kubedrill:sess:';
   KL.sessions = {
     save: function (k, v) { return tx('readwrite', function (s) { return s.put(v, k); }).catch(function () { try { localStorage.setItem(LS + k, JSON.stringify(v)); } catch (e) { /* quota */ } }); },
     load: function (k) { return tx('readonly', function (s) { return s.get(k); }).then(function (v) { return v || null; }).catch(function () { try { return JSON.parse(localStorage.getItem(LS + k)); } catch (e) { return null; } }); },

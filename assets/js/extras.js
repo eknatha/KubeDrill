@@ -29,7 +29,7 @@
   if (KL.quizInit) KL.quizInit(); counts();
 
   // ── theme ──
-  function setTheme(t) { document.documentElement.dataset.theme = t; try { localStorage.setItem('kubelab:theme', t); } catch (e) { /* ignore */ } var b = $('themeBtn'); if (b) b.setAttribute('aria-pressed', String(t === 'light')); }
+  function setTheme(t) { document.documentElement.dataset.theme = t; try { localStorage.setItem('kubedrill:theme', t); } catch (e) { /* ignore */ } var b = $('themeBtn'); if (b) b.setAttribute('aria-pressed', String(t === 'light')); }
   if ($('themeBtn')) $('themeBtn').onclick = function () { setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'); };
 
   // ── a11y: make [onclick] non-buttons keyboard operable; Esc closes modal ──
@@ -111,7 +111,7 @@
       '<div class="pg-actions"><button class="btn-secondary" id="pgExp">⬇ Export progress (JSON)</button><label class="btn-secondary" style="cursor:pointer">⬆ Import<input type="file" id="pgImp" accept="application/json" hidden></label><button class="btn-secondary" id="pgRst">Reset all</button></div><p class="ex-note" id="pgMsg">' + (store.persistent() ? '' : '⚠ Browser storage is blocked (private mode?) — progress will be lost when you close the tab. Use Export.') + '</p>';
     if (navigator.storage && navigator.storage.estimate) Promise.all([navigator.storage.estimate(), navigator.storage.persisted ? navigator.storage.persisted() : false, KL.sessions ? KL.sessions.keys() : []]).then(function (r) { var el = $('pgStore'); if (el) el.textContent = 'Storage: ' + (r[1] ? '🔒 persistent (the browser will not clear it automatically)' : '⚠ not marked persistent — the browser may clear it if the device is low on space; export a backup') + ' · using ' + Math.round((r[0].usage || 0) / 1024 / 1024 * 10) / 10 + ' MB · ' + r[2].length + ' saved lab session(s)'; }).catch(function () { /* ignore */ });
     if ($('pgDue')) $('pgDue').onclick = function () { showPage('quiz'); startQuiz({ mode: 'due' }); };
-    $('pgExp').onclick = function () { try { localStorage.setItem('kubelab:lastExport', String(Date.now())); } catch (e) { /* ignore */ } var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([store.exportJSON()], { type: 'application/json' })); a.download = 'kubedrill-progress-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000); };
+    $('pgExp').onclick = function () { try { localStorage.setItem('kubedrill:lastExport', String(Date.now())); } catch (e) { /* ignore */ } var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([store.exportJSON()], { type: 'application/json' })); a.download = 'kubedrill-progress-' + new Date().toISOString().slice(0, 10) + '.json'; a.click(); setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000); };
     $('pgImp').onchange = function () { var f = this.files[0]; if (!f) return; var rd = new FileReader(); rd.onload = function () { try { store.importJSON(rd.result); $('pgMsg').textContent = '✓ Progress imported.'; renderProgress(); } catch (e) { $('pgMsg').textContent = '✗ ' + e.message; } }; rd.readAsText(f); };
     $('pgRst').onclick = function () { if (confirm('Delete ALL saved progress in this browser?')) { store.reset(); renderProgress(); } };
   }
@@ -170,8 +170,8 @@
   })();
   (function backupReminder() {
     try {
-      var d = store.data(), active = Object.keys(d.labs).length + d.exams.length + Object.keys(d.quiz).length > 8, last = +localStorage.getItem('kubelab:lastExport') || 0, asked = +localStorage.getItem('kubelab:remind') || 0, now = Date.now();
-      if (active && now - last > 14 * 864e5 && now - asked > 7 * 864e5) setTimeout(function () { localStorage.setItem('kubelab:remind', String(now)); KL.toast && KL.toast('Back up your progress — it only lives in this browser.', { sticky: true, action: { label: 'Export', fn: function () { location.hash = 'progress'; } } }); }, 4000);
+      var d = store.data(), active = Object.keys(d.labs).length + d.exams.length + Object.keys(d.quiz).length > 8, last = +localStorage.getItem('kubedrill:lastExport') || 0, asked = +localStorage.getItem('kubedrill:remind') || 0, now = Date.now();
+      if (active && now - last > 14 * 864e5 && now - asked > 7 * 864e5) setTimeout(function () { localStorage.setItem('kubedrill:remind', String(now)); KL.toast && KL.toast('Back up your progress — it only lives in this browser.', { sticky: true, action: { label: 'Export', fn: function () { location.hash = 'progress'; } } }); }, 4000);
     } catch (e) { /* ignore */ }
   })();
   // initial route handlers for pages already visible when scripts ran are called by routeFromHash() in index.html

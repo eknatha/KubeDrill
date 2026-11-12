@@ -16,7 +16,7 @@ self.addEventListener('install', e => {
     for (const a of ASSETS) { await c.add(new Request(a, { cache: 'reload' })); done++; if (done % 3 === 0 || done === total) await say({ type: 'precache', done, total, version: '${ver}' }); }
   })());
 });
-self.addEventListener('activate', e => { e.waitUntil((async () => { const ks = await caches.keys(); await Promise.all(ks.filter(k => k.startsWith('kubedrill-') && k !== CACHE).map(k => caches.delete(k))); await self.clients.claim(); await say({ type: 'ready', version: '${ver}' }); })()); });
+self.addEventListener('activate', e => { e.waitUntil((async () => { const ks = await caches.keys(); await Promise.all(ks.filter(k => (k.startsWith('kubedrill-') || k.startsWith('kubelab-')) && k !== CACHE).map(k => caches.delete(k))); await self.clients.claim(); await say({ type: 'ready', version: '${ver}' }); })()); });
 self.addEventListener('message', e => { if (e.data === 'SKIP_WAITING') self.skipWaiting(); else if (e.data === 'VERSION') e.source && e.source.postMessage({ type: 'version', version: '${ver}' }); });
 self.addEventListener('fetch', e => {
   if (e.request.method !== 'GET') return;
