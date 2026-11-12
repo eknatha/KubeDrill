@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: High availability: PDB + topology spread (s20-pdb-spread)
+# KubeDrill lab pack: High availability: PDB + topology spread (s20-pdb-spread)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "Removing lab namespaces…"

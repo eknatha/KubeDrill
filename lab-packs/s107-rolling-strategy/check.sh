@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Rollout strategy: never lose capacity (s107-rolling-strategy)
+# KubeDrill lab pack: Rollout strategy: never lose capacity (s107-rolling-strategy)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 pass=0; fail=0

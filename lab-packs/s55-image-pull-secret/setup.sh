@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: ImagePullBackOff from a private registry (s55-image-pull-secret)
+# KubeDrill lab pack: ImagePullBackOff from a private registry (s55-image-pull-secret)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: ImagePullBackOff from a private registry"
 kubectl create namespace priv --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,7 +24,7 @@ spec:
       - name: billing
         image: private.registry.io/billing:1.0
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=priv >/dev/null

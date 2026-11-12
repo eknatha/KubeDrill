@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Pod Security (baseline) rejects a privileged pod (s53-psa-baseline)
+# KubeDrill lab pack: Pod Security (baseline) rejects a privileged pod (s53-psa-baseline)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "Removing lab namespaces…"

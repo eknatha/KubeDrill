@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: HPA shows <unknown>: no CPU requests (s100-hpa-unknown)
+# KubeDrill lab pack: HPA shows <unknown>: no CPU requests (s100-hpa-unknown)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: HPA shows <unknown>: no CPU requests"
 kubectl create namespace scale --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Namespace
 metadata:
   name: scale
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,8 +31,8 @@ spec:
       - name: web
         image: nginx:1.25
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
@@ -53,7 +53,7 @@ spec:
         type: Utilization
         averageUtilization: 50
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=scale >/dev/null
