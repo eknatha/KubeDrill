@@ -319,6 +319,8 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 }
 </style>
 <link rel="stylesheet" href="assets/css/extra.css">
+<link rel="stylesheet" href="assets/css/ui2.css">
+<link rel="stylesheet" href="assets/css/ui3.css">
 </head>
 <body>
 <div id="main" tabindex="-1"></div>
@@ -345,6 +347,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   </ul>
   <div class="nav-right">
     <button class="nav-icon-btn" id="paletteBtn" aria-label="Search (Ctrl+K)" title="Search · Ctrl+K">⌕ <kbd>Ctrl K</kbd></button>
+    <button class="nav-icon-btn" id="setBtn" aria-label="Settings and privacy" title="Settings and privacy" onclick="showPage('settings')">⚙</button>
     <button class="nav-icon-btn" id="themeBtn" aria-label="Toggle light/dark theme" title="Toggle theme">◐</button>
     <button class="hamburger" onclick="toggleNav()" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
   </div>
@@ -356,6 +359,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <div class="page active" id="page-home" role="main">
 <div class="hero">
   <div class="hero-glow"></div>
+  <div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
   <div class="hero-tag">kubelab.eknathalabs.com · Free · No ads · No signup · Works offline</div>
   <h1><span class="kube">Kube</span><span class="lab">Lab</span><br>Master Kubernetes.<br>Ship with Confidence.</h1>
   <p class="hero-sub">A structured, hands-on Kubernetes learning lab — concepts, an in-browser kubectl simulator with auto-checked labs, CKA/CKAD/CKS exam mode, 300+ quiz questions and offline tools. Free forever. No signup. No ads. Works offline.</p>
@@ -385,6 +389,37 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
     </div>
   </div>
 </div>
+
+<section class="free" id="homeFree" aria-labelledby="freeH">
+  <div class="free-top">
+    <div>
+      <div class="u3-eyebrow">No paywall</div>
+      <h2 id="freeH">Practice Kubernetes. Skip the <s>payment gateway</s>.</h2>
+      <p class="lead">No card. No trial that expires. No account. Every lab is open from the start, and it all runs in your browser.</p>
+      <div class="free-ticks"><span><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span> No signup</span><span><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span> Works offline</span><span><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span> No tracking</span></div>
+      <p style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap"><a class="btn-secondary" href="#why">See how it compares →</a><a class="btn-secondary" href="#break">Try a break-it challenge →</a></p>
+    </div>
+    <div>
+      <div class="gate" aria-hidden="true">
+        <div class="g1"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><b>Continue with a paid plan</b><small>Lab 4 of 96 is locked. Add a card to keep going.</small><div class="fake">•••• •••• •••• ••••</div><div class="fakebtn">Pay to unlock</div></div>
+        <div class="g2"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg><b>Lab 4 is ready</b><small>Every lab is open from the start. Pick any one.</small><div class="cmd"><span style="color:var(--accent2)">$</span> kubectl get pods</div><div class="gobtn">Start</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="pledge">
+    <div class="u3-eyebrow">Our promise</div>
+    <div class="zero" style="margin-top:18px"><b id="zeroN">$0</b><span>to practise</span></div>
+    <h2 style="margin-top:22px">Every lab. Always open.</h2>
+    <p class="lead" style="margin:10px auto 0">KubeLab is built to stay free for learners. There is nothing to unlock.</p>
+    <div class="pledge-grid">
+      <div class="u3-card"><div class="ic"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div><b>Free</b><span>No plan, no trial clock.</span></div>
+      <div class="u3-card"><div class="ic"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div><b>Offline</b><span>Install once, practise on a plane.</span></div>
+      <div class="u3-card"><div class="ic"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div><b>Private</b><span>Progress stays on your device.</span></div>
+      <div class="u3-card"><div class="ic"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></div><b>Ad-free</b><span>No banners, no pop-ups.</span></div>
+    </div>
+    <p class="u3-warn free-note">Free does not mean production-ready. Labs run in a simulator; test real changes in a safe environment first.</p>
+  </div>
+</section>
 
 <div class="stats">
   <div class="stat"><div class="stat-num" data-count="modules">12</div><div class="stat-label">Modules</div></div>
@@ -596,6 +631,14 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
   <div class="palette-box"><input id="paletteInput" placeholder="Search modules, labs, errors, commands, pages…  (Esc to close)" autocomplete="off" aria-label="Search"><div id="paletteList" role="listbox"></div></div>
 </div>
 <div id="toastHost" aria-live="polite"></div>
+<div class="page" id="page-why" role="main"><div class="section-wrap">
+  <div class="section-header"><div class="section-tag">Why it matters</div><h2 class="section-title">Learning shouldn't wait on a checkout page</h2><p class="section-desc">KubeLab has no payment gateway because nothing in it is for sale.</p></div>
+  <div class="why-table"><div class="why-row"><div></div><div>A typical paid lab platform</div><div style="color:var(--accent2)">KubeLab</div></div><div class="why-row" style="animation-delay:0.00s"><div>Sign-up before you start</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Email and password</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>None</div></div><div class="why-row" style="animation-delay:0.12s"><div>Access to all labs</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Locked behind a plan</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Open from the start</div></div><div class="why-row" style="animation-delay:0.24s"><div>Card required</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Often, even for trials</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Never</div></div><div class="why-row" style="animation-delay:0.36s"><div>Works without internet</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Usually not</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>Yes, after the first load</div></div><div class="why-row" style="animation-delay:0.48s"><div>Ads or upsell banners</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Common</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>None</div></div><div class="why-row" style="animation-delay:0.60s"><div>Where your progress lives</div><div class="no"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f87171" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></span>On their servers</div><div class="yes"><span class="u3-tick"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>On your device</div></div></div>
+  <p style="margin-top:14px;font-size:12.5px;color:var(--text2);line-height:1.5">The middle column describes a common pattern, not any one product. Check each provider's own terms before comparing by name.</p>
+  <p style="margin-top:18px"><a class="btn-primary" href="#labs">Start a lab</a></p>
+</div></div>
+<div class="page" id="page-settings" role="main"><div class="section-wrap" id="settingsRoot"></div></div>
+<div class="page" id="page-break" role="main"><div class="section-wrap" id="breakRoot"></div></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
 
 <!-- ════════════════════════════════════════════
@@ -3718,6 +3761,9 @@ renderEnc();
 <script src="assets/js/ux.js"></script>
 <script src="assets/js/data/flow.js"></script>
 <script src="assets/js/more.js"></script>
+<script src="assets/js/motion.js"></script>
+<script src="assets/js/ui2.js"></script>
+<script src="assets/js/ui3.js"></script>
 <script>routeFromHash();</script>
 </body>
 </html>

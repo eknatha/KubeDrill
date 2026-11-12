@@ -42,7 +42,7 @@
     var box = document.createElement('span'); box.id = 'lrSkinBox'; box.className = 'lr-skinbox';
     box.innerHTML = '<label class="sr-only" for="lrSkin">Terminal skin</label><select id="lrSkin" title="Terminal skin">' + SKINS.map(function (s) { return '<option value="' + s[0] + '">' + s[1] + '</option>'; }).join('') + '</select><button type="button" class="btn-secondary" id="lrFsM" aria-label="Smaller terminal text">A−</button><button type="button" class="btn-secondary" id="lrFsP" aria-label="Larger terminal text">A+</button>';
     var timer = $('lrTimer'); bar.insertBefore(box, timer || null);
-    $('lrSkin').onchange = function () { ls('kl.skin', this.value); applySkin(); };
+    $('lrSkin').onchange = function () { ls('kl.skin', this.value); applySkin(); var tt = $('lrTerm'); if (tt && /^(matrix|amber)$/.test(this.value)) { tt.classList.remove('crt-flick'); void tt.offsetWidth; tt.classList.add('crt-flick'); } };
     function fs(d) { var v = Math.max(10, Math.min(22, +(ls('kl.tfs') || 13) + d)); ls('kl.tfs', String(v)); applySkin(); }
     $('lrFsM').onclick = function () { fs(-1); }; $('lrFsP').onclick = function () { fs(1); };
     applySkin();
@@ -50,30 +50,8 @@
 
   // ── diagram: traffic lines, ingress trace, why-Pending popover ──
   function simNow() { var lab = curLab(); if (!lab || !KL.labRun) return Promise.resolve(null); return KL.labRun(lab.id).then(function (r) { return r && r.sim; }); }
+  KL._m = { simNow: function () { return simNow(); }, curLab: curLab };
   function clearTrace() { var o = document.querySelector('.dia-lines'); if (o) o.remove(); var t = document.querySelector('.dia-trace'); if (t) t.remove(); }
-  function drawLines(svcEl) {
-    clearTrace(); var root = $('lrDia'); if (!root || !svcEl) return;
-    setTimeout(function () {
-      var pods = root.querySelectorAll('.dia-pod.hl'), rb = root.getBoundingClientRect(), sb = svcEl.getBoundingClientRect(); if (!pods.length) return;
-      var ns = 'http://www.w3.org/2000/svg', svg = document.createElementNS(ns, 'svg'); svg.setAttribute('class', 'dia-lines'); svg.setAttribute('width', root.scrollWidth); svg.setAttribute('height', root.scrollHeight); svg.setAttribute('aria-hidden', 'true');
-      var x1 = sb.left - rb.left + sb.width / 2 + root.scrollLeft, y1 = sb.top - rb.top + sb.height + root.scrollTop;
-      pods.forEach(function (p) { var pb = p.getBoundingClientRect(), x2 = pb.left - rb.left + pb.width / 2 + root.scrollLeft, y2 = pb.top - rb.top + root.scrollTop, path = document.createElementNS(ns, 'path'); path.setAttribute('d', 'M' + x1 + ',' + y1 + ' C' + x1 + ',' + (y1 + 40) + ' ' + x2 + ',' + (y2 - 40) + ' ' + x2 + ',' + y2); svg.appendChild(path); });
-      root.appendChild(svg);
-    }, 30);
-    var key = (svcEl.dataset.svc || '').split('/'); simNow().then(function (s) {
-      if (!s || key.length < 2 || !root.contains(svcEl)) return;
-      try {
-        var ings = s.list('Ingress', key[0]).filter(function (g) { return JSON.stringify(g.spec || {}).indexOf('"name":"' + key[1] + '"') >= 0; }), n = s.endpointsFor(s.get('Service', key[0], key[1])).length;
-        var tr = document.createElement('div'); tr.className = 'dia-trace';
-        tr.innerHTML = (ings.length ? '🌐 Ingress <b>' + esc(ings[0].metadata.name) + '</b> → ' : '') + 'Service <b>' + esc(key[1]) + '</b> → <b>' + n + '</b> ready pod' + (n === 1 ? '' : 's') + (n ? '' : ' <em>(no traffic can flow)</em>');
-        root.insertBefore(tr, root.firstChild);
-      } catch (e) {}
-    });
-  }
-  document.addEventListener('mouseover', function (e) { var sv = e.target.closest && e.target.closest('#lrDia .dia-svc'); if (sv) drawLines(sv); });
-  document.addEventListener('focusin', function (e) { var sv = e.target.closest && e.target.closest('#lrDia .dia-svc'); if (sv) drawLines(sv); });
-  document.addEventListener('mouseout', function (e) { if (e.target.closest && e.target.closest('#lrDia .dia-svc')) clearTrace(); });
-  document.addEventListener('focusout', function (e) { if (e.target.closest && e.target.closest('#lrDia .dia-svc')) clearTrace(); });
   document.addEventListener('click', function (e) {
     var old = document.querySelector('.dia-why'); if (old) old.remove();
     var p = e.target.closest && e.target.closest('#lrDia .dia-pod.st-wait'); if (!p) return; var k = (p.dataset.k || '').split('/');
@@ -98,6 +76,7 @@
     }
     return h + '<div class="fl-nav">' + (fs.path.length ? '<button type="button" class="btn-secondary" id="flBack">← Back</button>' : '') + (fs.path.length ? '<button type="button" class="btn-secondary" id="flRestart">↺ Start over</button>' : '') + '</div></div>';
   }
+  KL.flowSel = function (i) { fs.flow = i; fs.path = []; };
   KL.renderFlows = function (root) {
     function draw() {
       root.innerHTML = flowHtml();

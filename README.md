@@ -90,3 +90,16 @@ MIT — see [LICENSE](LICENSE). Bundled: js-yaml (MIT), Inter, Syne, JetBrains M
 - **Field Guide → Flowcharts**: Pending, crash loops, Service unreachable, NotReady node, "autoscaling is not scaling" (incl. Cluster Autoscaler), each ending in a lab.
 - **Terminal skins** and text size (saved in your browser). **Diagram**: hover a Service to see animated traffic lines and the Ingress→Service→Pod trace; click a Pending pod for the scheduler's reason.
 - **Cautions**: every new lab has a "before you try this on a real cluster" note; risky commands (delete --all, force delete, drain, kubeadm reset, rm -rf, finalizer removal, apply from URL…) show a warning; pasting tokens/private keys into the terminal is blocked. These are guidance, not security controls. Session data lives unencrypted in your browser; use placeholder values only. Only run kind packs on throwaway clusters and check `kubectl config current-context` first.
+- **Animated diagram**: pod birth ring, terminating fade, crash shake, controller-chain pulse (kubectl → API → controllers → scheduler → kubelet), scheduler arc when a Pending pod is placed, slide animation when pods move (drain/reschedule), "no fit" shake, per-Service endpoint dots, and traffic dots with blocked ✕ for matching-but-not-Ready pods. A Motion on/off toggle respects your OS setting.
+- **Ghost typing**: click any command in a hint, the story or a task and it types itself into the terminal. The token you are typing is highlighted under the terminal.
+- **Guided tour**: 🧭 Tour in the lab bar (auto-offered once) and a Guided UI tour in the Field Guide. Skins flicker briefly when switching to green or amber.
+- **Unified UI**: refreshed dark tokens, a live cluster hero with proof chips, **Ctrl+K command palette** (labs, flowcharts, outages, pages), Incident/New tags on lab cards, progress ring with a locally generated **share card (PNG)**, task-timeline ticks, and **mobile lab tabs** (Tasks / Terminal / Cluster) on narrow screens.
+
+## UI3 additions
+- **Home**: aurora background, scrolling command strip, a "no payment gateway" section with an animated locked/open card, and a "Our promise" strip. `#why` has a generic paywall vs open comparison (no products are named).
+- **Settings and privacy** (`#settings`, gear icon): theme, motion, terminal skin and size, default lab mode, backup / restore / clear progress, reset preferences. Everything stays in localStorage.
+- **Break-it challenge** (`#break/<seed>`): the seed picks a lab deterministically; countdown, +30 s per hint, best times stored locally, share link carries only the seed.
+- **Incident war room**: labs flagged `incident` get a SEV banner, a runbook that ticks as you work, and live service health bars.
+- **Cluster canvas**: a "Canvas" tab in the lab cluster panel draws nodes, pods and request dots from the simulator state. It respects the Motion setting.
+- Ctrl+K now opens a single palette (pages, modules, errors, commands, labs, flowcharts, outages, settings).
+- Fixed: light theme no longer inherits the dark UI2 surface colours.

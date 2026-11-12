@@ -35,7 +35,7 @@ const srv = http.createServer((q, r) => { let p = decodeURIComponent(q.url.split
   // visualize
   await pg.goto(base + '#visualize'); await pg.waitForTimeout(300); for (const t of ['life', 'ru', 'np', 'cp']) { await pg.click('.an-tab[data-t=' + t + ']'); await pg.click('#anNext'); await pg.waitForTimeout(80); } ok(true, 'animations step');
   // palette
-  await pg.goto(base); await pg.keyboard.press('Control+k'); await pg.fill('#paletteInput', 'oomkilled'); await pg.waitForTimeout(100); ok((await pg.innerText('#paletteList')).toLowerCase().includes('oom'), 'palette finds OOMKilled'); await pg.keyboard.press('Escape');
+  await pg.goto(base); await pg.keyboard.press('Control+k'); await pg.fill('#palIn', 'oomkilled'); await pg.waitForTimeout(100); ok((await pg.innerText('#palList')).toLowerCase().includes('oom'), 'palette finds OOMKilled'); await pg.keyboard.press('Escape');
   // theme + progress
   const th0 = await pg.evaluate(() => document.documentElement.dataset.theme); await pg.click('#themeBtn'); ok(await pg.evaluate(() => document.documentElement.dataset.theme) !== th0, 'theme toggles');
   await pg.goto(base + '#progress'); await pg.waitForTimeout(200); ok((await pg.innerText('#progressRoot')).includes('interactive labs'), 'progress shows stats');

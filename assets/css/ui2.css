@@ -1,0 +1,40 @@
+/* ── Unified UI layer: tokens, hero, palette, lab states, mobile tabs, progress extras ── */
+:root:not([data-theme=light]){--bg:#0b1220;--surface:#0f1a30;--border:#1f2a44;--accent2:#38bdf8;--ok:#22c55e;--warn:#f59e0b;--bad:#ef4444}
+[data-theme=light]{--ok:#15803d;--warn:#b45309;--bad:#b91c1c}
+.nav-k{background:var(--surface);border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:5px 10px;font-family:var(--mono);font-size:12px;cursor:pointer}.nav-k:hover{border-color:var(--accent2);color:var(--text)}
+/* hero */
+.hero-proof{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:18px 0 6px}
+.hero-proof span{display:inline-flex;gap:7px;align-items:center;font-size:13.5px;border:1px solid var(--border);border-radius:999px;padding:6px 13px;color:var(--text2)}
+.hero-proof span::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.hero-live{max-width:520px;margin:22px auto 10px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:0 0 60px rgba(56,189,248,.08)}
+.hero-live svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.hero-live figcaption{text-align:center;font-size:12.5px;color:var(--text2);margin-top:4px}
+@keyframes hl-orbit{to{transform:rotate(360deg)}}@keyframes hl-blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hl-orbit{animation:hl-orbit 30s linear infinite;transform-origin:150px 150px}.hl-bad{animation:hl-blink 2.2s ease-in-out infinite}
+/* palette */
+.pal-bg{position:fixed;inset:0;background:rgba(2,6,23,.65);z-index:9990;display:flex;justify-content:center;align-items:flex-start;padding-top:12vh}
+.pal{width:min(620px,calc(100vw - 24px));background:var(--surface);border:1px solid var(--border2,#2a3a5c);border-radius:14px;box-shadow:0 24px 70px rgba(0,0,0,.55);overflow:hidden;animation:palIn .18s ease-out}
+@keyframes palIn{from{opacity:0;transform:translateY(-8px) scale(.98)}}
+.pal input{width:100%;box-sizing:border-box;background:transparent;border:0;border-bottom:1px solid var(--border);color:var(--text);font-size:16px;padding:14px 16px;outline:none}
+.pal ul{list-style:none;margin:0;padding:6px;max-height:50vh;overflow:auto}
+.pal li{display:flex;gap:10px;align-items:center;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:14px;color:var(--text2)}
+.pal li b{font-size:11px;letter-spacing:.8px;width:74px;flex:0 0 auto;color:var(--accent2)}
+.pal li.sel{background:rgba(56,189,248,.16);color:var(--text)}.pal .pal-empty{padding:16px;color:var(--text2);font-size:14px}
+/* labs: states + ring */
+.ilab-card{border-radius:14px}.ilab-card.done{border-color:rgba(34,197,94,.45)}.ilab-card.inc{border-color:rgba(245,158,11,.55)}
+.ilab-tag{font-size:11px;font-weight:600;border-radius:999px;padding:2px 8px;margin-left:6px;border:1px solid}
+.ilab-tag.inc{color:var(--warn);border-color:rgba(245,158,11,.5)}.ilab-tag.new{color:var(--accent2);border-color:rgba(56,189,248,.5)}
+.pg-ring{display:flex;align-items:center;gap:16px;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:16px 20px;margin:0 0 16px}
+.pg-ring svg circle.fg{transition:stroke-dashoffset 1s ease}.pg-ring b{font-size:26px}.pg-ring span{display:block;color:var(--text2);font-size:13px}
+/* task timeline */
+.lr-tasks{position:relative}.lr-task{position:relative}.lr-task .lr-tick{display:inline-flex;width:22px;height:22px;border-radius:50%;border:2px solid var(--border2,#2a3a5c);align-items:center;justify-content:center;font-size:12px;margin-right:8px;transition:background .3s,border-color .3s}
+.lr-task.ok .lr-tick{background:var(--ok);border-color:var(--ok);color:#04210f}
+/* mobile lab tabs */
+.lr-mtabs{display:none}
+@media (max-width:760px){
+ .lr-mtabs{display:flex;gap:6px;padding:8px 0;position:sticky;top:0;z-index:5;background:var(--bg)}
+ .lr-mtabs button{flex:1;padding:9px 6px;border-radius:9px;border:1px solid var(--border);background:var(--surface);color:var(--text2);font-weight:600;font-size:13px;min-height:40px}
+ .lr-mtabs button[aria-selected=true]{background:rgba(56,189,248,.18);border-color:var(--accent2);color:var(--text)}
+ .lr-split[data-mtab=tasks] .lr-right,.lr-split[data-mtab=term] .lr-left,.lr-split[data-mtab=term] .lr-state,.lr-split[data-mtab=dia] .lr-left,.lr-split[data-mtab=dia] .lr-term{display:none}
+ .lr-split{display:block}
+}

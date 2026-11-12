@@ -184,7 +184,7 @@
     if (r.over) { showResult(); }
     else $('lrFeedback').innerHTML = exam ? '<div class="lr-fail"><b>' + res.passed + ' / ' + res.total + ' tasks done.</b> Keep going — details are hidden in exam mode.</div>' : '<div class="lr-fail"><b>' + res.passed + ' / ' + res.total + ' tasks done.</b> Still failing:<ul>' + fb.slice(0, 6).join('') + '</ul></div>';
     if (res.ok && KL.daily) KL.daily.record(r.lab.id, Math.floor((Date.now() - r.start) / 1000));
-    if (res.ok) { store.markLab(r.lab.id, true); if (KL.fx) KL.fx.confetti(); var n = $('lrNext'); if (n) n.hidden = false; toast('Lab ' + r.lab.num + ' complete ✓'); }
+    if (res.ok) { store.markLab(r.lab.id, true); try { window.dispatchEvent(new CustomEvent('kl:labdone', { detail: { lab: r.lab, mode: r.mode } })); } catch (e) {} if (KL.fx) KL.fx.confetti(); var n = $('lrNext'); if (n) n.hidden = false; toast('Lab ' + r.lab.num + ' complete ✓'); }
     else if (r.over) toast('Time is up — ' + res.passed + ' / ' + res.total + ' tasks');
   }
   // result + debrief card (shown when the lab is finished, or the exam timer ran out)

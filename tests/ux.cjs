@@ -58,6 +58,38 @@ await pg.selectOption('#lrSkin','matrix');ok(await pg.getAttribute('#lrTerm','da
 await pg.click('#lrFsP');ok((await pg.evaluate(()=>document.getElementById('lrTerm').style.fontSize))==='14px','font size up');
 await pg.reload();await pg.waitForSelector('#lrIn');await pg.waitForTimeout(700);ok(await pg.getAttribute('#lrTerm','data-skin')==='matrix','skin persists');
 await pg.goto(BASE+'#lab/s84-service-ladder');await pg.waitForSelector('.dia-svc');await pg.waitForTimeout(500);await pg.dispatchEvent('.dia-svc >> nth=0','mouseover');await pg.waitForTimeout(200);ok(await pg.locator('.dia-trace').count()===1,'service trace shown');
+
+// animations, ghost typing, tour
+await pg.goto(BASE+'#lab/s84-service-ladder');await pg.waitForSelector('.dia-svc');await pg.waitForTimeout(800);
+ok(await pg.locator('.dia-chain').count()===1,'controller chain strip');
+ok(await pg.locator('.dia-svc .dia-epbar').count()>=1,'endpoint bar on service');
+await pg.fill('#lrIn','kubectl scale deploy --replicas=2 x');await pg.press('#lrIn','Enter');await pg.waitForTimeout(150);
+ok(await pg.locator('.dia-chain span.on').count()>=1,'chain pulses on mutating command');
+await pg.evaluate(()=>window.KL.ghostType('kubectl get pods -A'));await pg.waitForTimeout(1200);
+ok((await pg.inputValue('#lrIn'))==='kubectl get pods -A','ghost typing types the command');
+await pg.press('#lrIn','Enter');await pg.waitForTimeout(200);
+await pg.dispatchEvent('.dia-svc >> nth=0','mouseover');await pg.waitForTimeout(250);ok(await pg.locator('.dia-trace').count()===1&&await pg.locator('.dia-lines').count()===1,'service trace + traffic layer');
+await pg.click('#lrTourBtn');await pg.waitForSelector('.tour-card');ok(await pg.locator('.tour-hole').count()===1,'tour spotlight');
+const t1=await pg.locator('.tour-card h4').innerText();await pg.click('#tourNext');await pg.waitForTimeout(450);ok((await pg.locator('.tour-card h4').innerText())!==t1,'tour advances');
+await pg.keyboard.press('Escape');await pg.waitForTimeout(100);ok(await pg.locator('.tour-card').count()===0,'tour closes on Esc');
+await pg.click('#lrMotion');ok(await pg.getAttribute('html','data-motion')==='off','motion toggle off');await pg.click('#lrMotion');
+await pg.goto(BASE+'#field');await pg.waitForTimeout(1200);ok(await pg.locator('#fgUiTour').count()===1,'field guide UI tour button');
+
+// unified UI: hero, palette, labs states, progress, mobile tabs
+await pg.setViewportSize({width:1280,height:800});await pg.goto(BASE+'#home');await pg.waitForTimeout(500);
+ok(await pg.locator('.hero-live svg').count()===1,'live hero');ok(await pg.locator('.hero-proof span').count()===4,'proof chips');
+await pg.keyboard.press('Control+k');await pg.waitForSelector('#palIn');await pg.fill('#palIn','monzo');await pg.waitForTimeout(100);
+ok((await pg.locator('.pal li').count())===1,'palette filters outages');await pg.keyboard.press('Enter');await pg.waitForTimeout(500);
+ok(pg.url().endsWith('#field'),'palette navigates');ok(await pg.locator('.pal').count()===0,'palette closes');
+await pg.keyboard.press('Control+k');await pg.fill('#palIn','s84');await pg.keyboard.press('Enter');await pg.waitForTimeout(500);ok(/#lab\/s84/.test(pg.url()),'palette opens a lab');
+await pg.goto(BASE+'#labs');await pg.waitForTimeout(600);ok(await pg.locator('.ilab-tag.inc').count()>=1,'incident tag on labs');
+await pg.goto(BASE+'#progress');await pg.waitForTimeout(500);ok(await pg.locator('.pg-ring').count()===1,'progress ring');
+const [dl]=await Promise.all([pg.waitForEvent('download'),pg.click('#pgShare')]);ok(dl.suggestedFilename()==='kubelab-progress.png','share card downloads');
+await pg.setViewportSize({width:390,height:800});await pg.goto(BASE+'#lab/s84-service-ladder');await pg.waitForSelector('.lr-mtabs');await pg.waitForTimeout(500);
+ok(await pg.locator('.lr-mtabs').isVisible(),'mobile tabs visible');ok(await pg.locator('.lr-left').isVisible(),'mobile tasks shown first');
+await pg.click('.lr-mtabs [data-m="term"]');ok(!(await pg.locator('.lr-left').isVisible())&&await pg.locator('#lrTerm').isVisible(),'mobile terminal tab');
+await pg.click('.lr-mtabs [data-m="dia"]');ok(await pg.locator('.lr-state').isVisible(),'mobile cluster tab');
+await pg.setViewportSize({width:1280,height:800});
 await pg.setViewportSize({width:390,height:800});await pg.goto(BASE+'#field');await pg.waitForTimeout(300);
 ok(await pg.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth+1),'field guide no overflow on mobile');
 await pg.screenshot({path:'/tmp/field-mobile.png'});

@@ -6,6 +6,8 @@ const safeJs = s => s.replace(/<\/script/gi, '<\\/script');
 let fonts = rd('fonts/fonts.css').toString().replace(/url\((['"]?)([^)'"]+\.woff2)\1\)/g, (m, q, u) => 'url(data:font/woff2;base64,' + rd(path.join('fonts', u)).toString('base64') + ')');
 html = html.replace('<link rel="stylesheet" href="fonts/fonts.css">', () => '<style>' + fonts + '</style>');
 html = html.replace('<link rel="stylesheet" href="assets/css/extra.css">', () => '<style>' + rd('assets/css/extra.css') + '</style>');
+html = html.replace('<link rel="stylesheet" href="assets/css/ui2.css">', () => '<style>' + rd('assets/css/ui2.css') + '</style>');
+html = html.replace('<link rel="stylesheet" href="assets/css/ui3.css">', () => '<style>' + rd('assets/css/ui3.css') + '</style>');
 html = html.replace(/<script src="([^"]+)"><\/script>/g, (m, src) => '<script>/* ' + src + ' */\n' + safeJs(rd(src).toString()) + '\n</script>');
 html = html.replace(/<link rel="manifest"[^>]*>\n?/, '').replace(/<link rel="apple-touch-icon"[^>]*>\n?/, '').replace(/<link rel="icon"[^>]*>/, () => '<link rel="icon" href="data:image/svg+xml;base64,' + rd('icons/icon.svg').toString('base64') + '">');
 html = html.replace('<body>', '<body data-build="offline-single-file">');
