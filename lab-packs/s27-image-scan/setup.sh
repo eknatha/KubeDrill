@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Scan images and replace the vulnerable ones (s27-image-scan)
+# KubeDrill lab pack: Scan images and replace the vulnerable ones (s27-image-scan)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Scan images and replace the vulnerable ones"
 kubectl create namespace scan --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,8 +24,8 @@ spec:
       - name: web
         image: nginx:1.19
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -45,7 +45,7 @@ spec:
       - name: cache
         image: redis:6.0
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=scan >/dev/null

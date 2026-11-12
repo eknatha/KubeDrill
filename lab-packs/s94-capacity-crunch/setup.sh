@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Incident: capacity crunch (s94-capacity-crunch)
+# KubeDrill lab pack: Incident: capacity crunch (s94-capacity-crunch)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Incident: capacity crunch"
 kubectl create namespace prod --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Namespace
 metadata:
   name: prod
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,7 +37,7 @@ spec:
             memory: 64Mi
 
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 kubectl cordon worker1
 
 kubectl config set-context --current --namespace=prod >/dev/null

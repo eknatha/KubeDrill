@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: NoExecute taint: evict, but spare the critical pod (s99-noexecute-eviction)
+# KubeDrill lab pack: NoExecute taint: evict, but spare the critical pod (s99-noexecute-eviction)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: NoExecute taint: evict, but spare the critical pod"
 kubectl create namespace edge --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Namespace
 metadata:
   name: edge
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,8 +31,8 @@ spec:
       - name: payments
         image: nginx:1.25
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,7 +52,7 @@ spec:
       - name: batch
         image: nginx:1.25
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=edge >/dev/null

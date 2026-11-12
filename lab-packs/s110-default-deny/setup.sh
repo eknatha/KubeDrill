@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Default-deny, then allow only what is needed (s110-default-deny)
+# KubeDrill lab pack: Default-deny, then allow only what is needed (s110-default-deny)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Default-deny, then allow only what is needed"
 kubectl create namespace zt --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Namespace
 metadata:
   name: zt
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,8 +31,8 @@ spec:
       - name: db
         image: nginx:1.25
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Service
 metadata:
@@ -45,8 +45,8 @@ spec:
   - port: 80
     targetPort: 80
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Pod
 metadata:
@@ -60,8 +60,8 @@ spec:
     image: busybox:1.36
     command: ["sleep", "3600"]
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Pod
 metadata:
@@ -75,7 +75,7 @@ spec:
     image: busybox:1.36
     command: ["sleep", "3600"]
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=zt >/dev/null
