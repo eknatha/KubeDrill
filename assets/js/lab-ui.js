@@ -28,7 +28,7 @@
     var shown = Labs.list.filter(function (l) { return labMatch(l, 'sim'); });
     list.innerHTML = shown.map(function (l) {
       var done = store.labDone(l.id), tasks = store.labTasks(l.id), n = Object.keys(tasks).filter(function (k) { return tasks[k]; }).length;
-      return '<a class="ilab-card' + (done ? ' done' : '') + '" href="#lab/' + l.id + '" data-id="' + l.id + '"><div class="ilab-top"><span class="ilab-num">' + l.num + '</span><span class="lab-diff ' + diffCls(l.diff) + '">' + l.diff + '</span>' + (done ? '<span class="ilab-done" aria-label="completed">✓</span>' : '') + '</div><div class="ilab-title">' + esc(l.title) + '</div><div class="ilab-meta"><span>⏱ ' + l.time + '</span><span>' + esc(l.domain || '') + '</span></div><div class="ilab-tracks">' + l.track.map(function (t) { return '<span class="tag tag-blue">' + t + '</span>'; }).join('') + '</div><div class="ilab-prog"><i style="width:' + (done ? 100 : Math.round(n / l.tasks.length * 100)) + '%"></i></div></a>';
+      return '<a class="ilab-card' + (done ? ' done' : '') + '" href="#lab/' + l.id + '" data-id="' + l.id + '"><div class="ilab-top"><span class="ilab-num">' + l.num + '</span><span class="lab-diff ' + diffCls(l.diff) + '">' + l.diff + '</span>' + (done ? '<span class="ilab-done" aria-label="completed">✓</span>' : '') + '</div><div class="ilab-title">' + esc(l.title) + '</div><div class="ilab-meta"><span>⏱ ' + l.time + '</span><span>' + esc(l.domain || '') + '</span></div><div class="ilab-tracks">' + l.track.map(function (t) { return '<span class="tag tag-blue">' + t + '</span>'; }).join('') + (KL.fid ? KL.fid.badge(l) : '') + '</div><div class="ilab-prog"><i style="width:' + (done ? 100 : Math.round(n / l.tasks.length * 100)) + '%"></i></div></a>';
     }).join('');
     $('ilabsHead').style.display = filt.mode === 'walk' ? 'none' : '';
     list.style.display = filt.mode === 'walk' ? 'none' : '';
@@ -339,10 +339,16 @@
     r.buf = ''; $('lrPrompt').textContent = prompt(); if (text.trim()) { r.hist.push(text.split('\n')[0]); r.hi = r.hist.length; }
     var t = text.trim(); if (t === 'clear') { r.out = []; $('lrOut').innerHTML = ''; return; }
     if (r.mode === 'real' && /^(k|kubectl)\s+config\s+(use-context|current-context|get-contexts)\b/.test(t)) { ctxCmd(t); return; }
-    var res; try { res = sim.exec(text); } catch (e) { res = { stdout: '', stderr: 'simulator error: ' + e.message + '\n', code: 1 }; }
-    if (res.stdout) say(res.stdout, ''); if (res.stderr) say(res.stderr, 'err');
-    if (res.edit) openEditor(res.edit, res.applyOnSave);
-    sim.settle(3); $('lrPrompt').textContent = prompt(); refreshState(); saveRun(r);
+    var go = function () {
+      var res; try { res = sim.exec(text); } catch (e) { res = { stdout: '', stderr: 'simulator error: ' + e.message + '\n', code: 1 }; }
+      if (res.stdout) say(res.stdout, ''); if (res.stderr) say(res.stderr, 'err');
+      if (res.edit) openEditor(res.edit, res.applyOnSave);
+      sim.settle(3); $('lrPrompt').textContent = prompt(); refreshState(); saveRun(r);
+      try { window.dispatchEvent(new CustomEvent('kl:cmd', { detail: { run: r, line: text, res: res } })); } catch (e) { /* ignore */ }
+    };
+    // optional gate (predict-the-output asks a question first, then calls go)
+    if (KL.gate && r.mode === 'learn' && KL.gate(r, text, go)) return;
+    go();
   }
   function ctxCmd(t) {
     var r = cur, a = t.split(/\s+/), sub = a[2];
@@ -369,6 +375,7 @@
     s.ctxNs = sv; el.textContent = txt;
     try { refreshDiagram(); } catch (e) { var d = $('lrDia'); if (d) d.textContent = 'diagram error: ' + e.message; }
   }
+  KL.runner = { cur: function () { return cur; }, say: say, run: runCmd, refresh: refreshState, save: saveRun, tasks: renderTasks, prompt: prompt };
   window.addEventListener('pagehide', function () { if (cur) saveRun(cur, true); });
   document.addEventListener('visibilitychange', function () { if (document.hidden && cur) saveRun(cur, true); });
   function boot() { renderIlabs(); bindFilters(); enhanceWalk(); }

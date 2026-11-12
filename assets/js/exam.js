@@ -16,6 +16,27 @@
   // ── curated mock-exam bundles (deterministic, weighted, domain report) ──
   var WT = { Beginner: 4, Intermediate: 6, Advanced: 9 };
   function weightsFor(ids) { var tot = 0, w = {}; ids.forEach(function (id) { tot += WT[Labs.byId[id].diff] || 6; }); ids.forEach(function (id) { w[id] = Math.round((WT[Labs.byId[id].diff] || 6) / tot * 1000) / 10; }); return w; }
+  // official CNCF curriculum domains and weights (public, from the exam pages) mapped onto our lab domains
+  var CURR = {
+    CKA: [['Troubleshooting', 30], ['Cluster Architecture, Installation and Configuration', 25], ['Services and Networking', 20], ['Workloads and Scheduling', 15], ['Storage', 10]],
+    CKAD: [['Application Environment, Configuration and Security', 25], ['Application Design and Build', 20], ['Application Deployment', 20], ['Services and Networking', 20], ['Application Observability and Maintenance', 15]],
+    CKS: [['Supply Chain Security', 20], ['Minimize Microservice Vulnerabilities', 20], ['Monitoring, Logging and Runtime Security', 20], ['Cluster Hardening', 15], ['System Hardening', 15], ['Cluster Setup', 10]]
+  };
+  S.CURR = CURR;
+  function bucket(track, lab) {
+    var d = lab.domain || '', t = (lab.title + ' ' + lab.id).toLowerCase();
+    if (track === 'CKA') return /troubl|incident/i.test(d + t) ? CURR.CKA[0][0] : /storage|pvc|volume/i.test(d + t) ? CURR.CKA[4][0] : /network|service|dns|ingress|gateway|netpol/i.test(d + t) ? CURR.CKA[2][0] : /schedul|workload|deploy|taint|affinity|hpa|scale/i.test(d + t) ? CURR.CKA[3][0] : CURR.CKA[1][0];
+    if (track === 'CKAD') return /observ|probe|log|debug|monitor/i.test(d + t) ? CURR.CKAD[4][0] : /network|service|ingress|netpol|dns/i.test(d + t) ? CURR.CKAD[3][0] : /deploy|rollout|rolling|helm|kustom/i.test(d + t) ? CURR.CKAD[2][0] : /config|secret|security|rbac|serviceaccount|quota|limit/i.test(d + t) ? CURR.CKAD[0][0] : CURR.CKAD[1][0];
+    return /image|scan|supply|registry|trivy/i.test(t) ? CURR.CKS[0][0] : /netpol|psa|pod security|secret|multitenant|sandbox|mtls|default-deny/i.test(t) ? CURR.CKS[1][0] : /audit|falco|runtime|log|monitor/i.test(t) ? CURR.CKS[2][0] : /rbac|sa-token|serviceaccount|binding|cluster-admin|api/i.test(t) ? CURR.CKS[3][0] : /seccomp|apparmor|hardening|sys|kernel|privileg/i.test(t) ? CURR.CKS[4][0] : CURR.CKS[5][0];
+  }
+  S.bucket = bucket;
+  function currIds(track, n) {
+    var pool = Labs.list.filter(function (l) { return l.track.indexOf(track) >= 0; }), by = {}, ids = [];
+    pool.forEach(function (l) { (by[bucket(track, l)] = by[bucket(track, l)] || []).push(l); });
+    CURR[track].forEach(function (d) { var want = Math.max(1, Math.round(d[1] / 100 * n)), arr = (by[d[0]] || []).slice(0, want); arr.forEach(function (l) { ids.push(l.id); }); });
+    pool.forEach(function (l) { if (ids.length < n && ids.indexOf(l.id) < 0) ids.push(l.id); });
+    return ids.slice(0, n);
+  }
   S.bundles = function () {
     var out = [];
     ['CKA', 'CKAD', 'CKS'].forEach(function (tr) {
@@ -26,12 +47,17 @@
         out.push({ id: tr.toLowerCase() + '-mock-' + (b + 1), name: tr + ' Mock ' + (b + 1), track: tr, ids: ids, mins: Math.max(45, Math.min(120, Math.round(sum * 0.8 / 5) * 5)) });
       }
     });
+    ['CKA', 'CKAD', 'CKS'].forEach(function (tr) {
+      var ids = currIds(tr, 12); if (ids.length < 4) return;
+      var sum = ids.reduce(function (a, id) { return a + (parseInt(Labs.byId[id].time, 10) || 10); }, 0);
+      out.push({ id: tr.toLowerCase() + '-curr', name: tr + ' Curriculum-weighted', track: tr, ids: ids, mins: Math.max(60, Math.min(120, Math.round(sum * 0.8 / 5) * 5)), curr: true });
+    });
     return out;
   };
   S.startBundle = function (bid, env) {
     var b = S.bundles().filter(function (x) { return x.id === bid; })[0]; if (!b) return;
     Promise.all(b.ids.map(function (id) { return KL.labRun(id, true); })).then(function () {
-      S.result = null; S.active = { track: b.track, ids: b.ids, start: Date.now(), end: Date.now() + b.mins * 60000, mins: b.mins, flags: {}, w: weightsFor(b.ids), env: !!env, name: b.name }; saveActive();
+      S.result = null; S.active = { track: b.track, ids: b.ids, start: Date.now(), end: Date.now() + b.mins * 60000, mins: b.mins, flags: {}, w: weightsFor(b.ids), env: !!env, name: b.name, curr: !!b.curr }; saveActive();
       if (location.hash === '#exam') render(); else location.hash = 'exam';
     });
   };
@@ -50,14 +76,30 @@
     var a = S.active; if (!a) return; clearInterval(timer); S.active = null; saveActive();
     Promise.all(a.ids.map(function (id) { return KL.labRun(id); })).then(function (runs) { finishWith(a, runs); });
   };
+  // speed coach: reads the command history of each task and points out slow habits (no spoilers, no grading)
+  function coach(runs, rows) {
+    var tips = [], all = []; runs.forEach(function (r) { all = all.concat(r.hist || []); });
+    var full = all.filter(function (c) { return /^kubectl\s/.test(c); }).length, kshort = all.filter(function (c) { return /^k\s/.test(c); }).length;
+    var ed = all.filter(function (c) { return /^(vi|vim|nano)\s/.test(c); }).length, edit = all.filter(function (c) { return /^(k|kubectl)\s+edit\b/.test(c); }).length;
+    var dry = all.filter(function (c) { return /--dry-run|\$do\b/.test(c); }).length, expl = all.filter(function (c) { return /^(k|kubectl)\s+explain\b/.test(c); }).length;
+    var imp = all.filter(function (c) { return /^(k|kubectl)\s+(set|scale|patch|label|annotate|taint|expose|create|run)\b/.test(c); }).length;
+    var untouched = rows.filter(function (x, i) { return !(runs[i].hist || []).length; });
+    if (full >= 8 && kshort < full / 4) tips.push('You typed <code>kubectl</code> ' + full + ' times. In the exam <code>k</code> is already an alias, which saves about ' + full * 6 + ' keystrokes. Practise with <code>k</code>.');
+    if (ed >= 3 && !dry) tips.push('You opened an editor ' + ed + ' times but never generated YAML. Try <code>k create deploy x --image=nginx $do > x.yaml</code>, then edit only the lines you need.');
+    if (edit >= 3 && imp === 0) tips.push('You used <code>kubectl edit</code> ' + edit + ' times. One-line <code>k set image</code>, <code>k scale</code>, <code>k patch</code> or <code>k label</code> is usually faster and easier to repeat.');
+    if (!expl && ed >= 2) tips.push('You never ran <code>kubectl explain</code>. It is the fastest way to find a field name without leaving the terminal.');
+    if (untouched.length) tips.push(untouched.length + ' task' + (untouched.length > 1 ? 's were' : ' was') + ' never attempted. Real exams give partial credit per task, so a first quick pass over every task usually beats finishing a few perfectly.');
+    if (!tips.length) tips.push('No slow habits stood out. Keep timing yourself: the real exam is mostly about speed on tasks you already know.');
+    return tips;
+  }
   function finishWith(a, runs) {
     var w = a.w || weightsFor(a.ids), dom = {};
     var rows = a.ids.map(function (id, i) { var lab = Labs.byId[id], res = Labs.check(runs[i].sim, lab); return { lab: lab, res: res, w: w[id] || 0 }; });
-    var got = 0, tot = 0, score = 0, wt = 0; rows.forEach(function (r) { got += r.res.passed; tot += r.res.total; var f = r.res.total ? r.res.passed / r.res.total : 0; score += r.w * f; wt += r.w; var d = dom[r.lab.domain] = dom[r.lab.domain] || { got: 0, w: 0 }; d.got += r.w * f; d.w += r.w; });
+    var got = 0, tot = 0, score = 0, wt = 0; rows.forEach(function (r) { got += r.res.passed; tot += r.res.total; var f = r.res.total ? r.res.passed / r.res.total : 0; score += r.w * f; wt += r.w; var dn = a.curr && CURR[a.track] ? bucket(a.track, r.lab) : r.lab.domain, d = dom[dn] = dom[dn] || { got: 0, w: 0 }; d.got += r.w * f; d.w += r.w; });
     var pct = wt ? Math.round(score / wt * 100) : 0, secs = Math.min(Math.round((Date.now() - a.start) / 1000), a.mins * 60);
     store.addExam({ date: Date.now(), track: a.name || a.track, pct: pct, got: got, tot: tot, secs: secs, n: a.ids.length });
-    var domains = Object.keys(dom).map(function (k) { return { name: k, pct: Math.round(dom[k].got / dom[k].w * 100), w: Math.round(dom[k].w) }; }).sort(function (x, y) { return x.pct - y.pct; });
-    S.result = { rows: rows, pct: pct, got: got, tot: tot, secs: secs, track: a.name || a.track, domains: domains, weighted: true };
+    var domains = Object.keys(dom).map(function (k) { var off = a.curr && CURR[a.track] ? (CURR[a.track].filter(function (c) { return c[0] === k; })[0] || [0, 0])[1] : 0; return { name: k, pct: Math.round(dom[k].got / dom[k].w * 100), w: Math.round(dom[k].w), off: off }; }).sort(function (x, y) { return x.pct - y.pct; });
+    S.result = { rows: rows, pct: pct, got: got, tot: tot, secs: secs, track: a.name || a.track, domains: domains, weighted: true, coach: coach(runs, rows) };
     render(); if (pct >= 66 && KL.fx) KL.fx.confetti();
   }
   function render() {
@@ -72,8 +114,8 @@
     }
     if (S.result) {
       var r = S.result, pass = r.pct >= 66;
-      h += '<div class="ex-result ' + (pass ? 'pass' : 'fail') + '"><div class="ex-score">' + r.pct + '%</div><div class="ex-verdict">' + (pass ? '🏆 PASS — you cleared 66%' : '📚 Not yet — you need 66%') + '</div><div class="ex-sub">' + r.got + ' / ' + r.tot + ' checks · ' + fmt(r.secs) + ' used · ' + r.track + (r.weighted ? ' · weighted' : '') + '</div></div>' + (r.domains ? '<div class="ex-dom"><h3>Score by domain</h3>' + r.domains.map(function (d) { return '<div class="ex-dr"><span>' + esc(d.name) + '</span><div class="ex-db"><div class="' + (d.pct >= 66 ? 'ok' : 'no') + '" style="width:' + d.pct + '%"></div></div><b>' + d.pct + '%</b></div>'; }).join('') + '<p class="ex-note">Weakest area: <b>' + esc(r.domains[0].name) + '</b> — retry its tasks below in practice mode.</p></div>' : '') +
-        '<div class="ex-list">' + r.rows.map(function (x) { return '<div class="ex-q ' + (x.res.ok ? 'okq' : 'badq') + '"><span class="ex-n">' + (x.res.ok ? '✓' : '✗') + '</span><span class="ex-t">' + esc(x.lab.title) + '</span><span class="ex-w">' + (x.w ? x.w + '% · ' : '') + x.res.passed + '/' + x.res.total + '</span><a href="#lab/' + x.lab.id + '" onclick="KL.labRun(\'' + x.lab.id + '\',true)">retry in practice mode</a></div>'; }).join('') + '</div><button class="btn-primary" id="exAgain" style="margin-top:1.5rem">New exam</button>';
+      h += '<div class="ex-result ' + (pass ? 'pass' : 'fail') + '"><div class="ex-score">' + r.pct + '%</div><div class="ex-verdict">' + (pass ? '🏆 PASS — you cleared 66%' : '📚 Not yet — you need 66%') + '</div><div class="ex-sub">' + r.got + ' / ' + r.tot + ' checks · ' + fmt(r.secs) + ' used · ' + r.track + (r.weighted ? ' · weighted' : '') + '</div></div>' + (r.domains ? '<div class="ex-dom"><h3>Score by domain</h3>' + r.domains.map(function (d) { return '<div class="ex-dr"><span>' + esc(d.name) + (d.off ? ' <small>(exam weight ' + d.off + '%)</small>' : '') + '</span><div class="ex-db"><div class="' + (d.pct >= 66 ? 'ok' : 'no') + '" style="width:' + d.pct + '%"></div></div><b>' + d.pct + '%</b></div>'; }).join('') + '<p class="ex-note">Weakest area: <b>' + esc(r.domains[0].name) + '</b> — retry its tasks below in practice mode.</p></div>' : '') +
+        (r.coach ? '<div class="ex-coach"><h3>⚡ Speed coach</h3><ul>' + r.coach.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>' : '') + '<div class="ex-list">' + r.rows.map(function (x) { return '<div class="ex-q ' + (x.res.ok ? 'okq' : 'badq') + '"><span class="ex-n">' + (x.res.ok ? '✓' : '✗') + '</span><span class="ex-t">' + esc(x.lab.title) + '</span><span class="ex-w">' + (x.w ? x.w + '% · ' : '') + x.res.passed + '/' + x.res.total + '</span><a href="#lab/' + x.lab.id + '" onclick="KL.labRun(\'' + x.lab.id + '\',true)">retry in practice mode</a></div>'; }).join('') + '</div><button class="btn-primary" id="exAgain" style="margin-top:1.5rem">New exam</button>';
       root.innerHTML = h; $('exAgain').onclick = function () { S.result = null; render(); }; return;
     }
     var hist = store.data().exams.slice(-8).reverse();
@@ -94,6 +136,14 @@
     var rs = $('lrReset'); if (rs) rs.remove();
     ['.lr-hints', '.lr-sol', '.lr-pack', '.lr-feedback', '.lr-mode', '#lrPredict', '.lr-exam-note'].forEach(function (q) { document.querySelectorAll(q).forEach(function (n) { n.remove(); }); });
     var back = bar.querySelector('.lr-back'); back.textContent = '← Exam overview'; back.href = '#exam';
+    // question navigator: previous / next and a status strip (attempted, flagged)
+    if (!bar.querySelector('.ex-nav')) {
+      var i0 = a.ids.indexOf(e.detail.lab.id), nav = document.createElement('div'); nav.className = 'ex-nav'; nav.setAttribute('aria-label', 'Exam questions');
+      Promise.all(a.ids.map(function (id) { return KL.labRun(id); })).then(function (runs) {
+        nav.innerHTML = (i0 > 0 ? '<a class="ex-np" href="#lab/' + a.ids[i0 - 1] + '" aria-label="Previous question">‹</a>' : '') + a.ids.map(function (id, i) { var tried = (runs[i].hist || []).length > 0; return '<a href="#lab/' + id + '" class="' + (i === i0 ? 'cur ' : '') + (tried ? 'tried ' : '') + (a.flags[id] ? 'flag' : '') + '" title="' + esc(Labs.byId[id].title) + '">' + (i + 1) + '</a>'; }).join('') + (i0 < a.ids.length - 1 ? '<a class="ex-np" href="#lab/' + a.ids[i0 + 1] + '" aria-label="Next question">›</a>' : '');
+      });
+      bar.insertBefore(nav, $('lrTimer'));
+    }
     var t = $('lrTimer'), iv = setInterval(function () { if (!document.body.contains(t) || !S.active) return clearInterval(iv); t.textContent = '⏳ ' + fmt((a.end - Date.now()) / 1000); }, 1000);
   });
 })();

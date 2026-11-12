@@ -112,3 +112,16 @@ MIT — see [LICENSE](LICENSE). Bundled: js-yaml (MIT), Inter, Syne, JetBrains M
 
 ## Landing page redesign
 Split hero (copy + live terminal), three exam path cards (CKA/CKAD/CKS, with progress rings), "how it works" dark band, four stats, tools grid, quieter free-promise band, closing call to action. Styles in `assets/css/home.css`; dark bands use local tokens so they stay dark in the light theme.
+
+## Exam-curriculum labs (S97–S114)
+18 new labs (6 CKA, 6 CKAD, 6 CKS; 114 total) filling gaps against the current public CNCF curricula: PV reclaim/expansion, draining unmanaged pods, NoExecute + tolerationSeconds, HPA requests, ClusterRole reuse, Gateway API HTTPRoute, Job/CronJob policy, startup probes, envFrom/Secret volumes, rollout strategy, deprecated apiVersions, seccomp/securityContext, default-deny NetworkPolicy, secrets as files, audit-log hunting, over-broad RBAC, Pod Security staged rollout. They are original scenarios built from the official competency lists — not exam questions. Checks are state-based (the simulator has no CSR, RuntimeClass, static pods, or Falco/audit-policy files).
+
+## Pro layer: time machine, explainers, exam realism, terminal
+New files: `assets/js/pro-term.js`, `pro-explain.js`, `pro-fidelity.js`, `assets/css/pro.css`, `tests/pro.cjs`.
+- **Cluster time machine** (Learn mode): every state-changing command snapshots the whole simulated cluster and your files. Scrub the timeline, preview what a rewind would bring back, remove or revert, rewind, and return. `Ctrl-Z` undoes the last change. After finishing a lab, compare your command path with the reference solution.
+- **Explain** (Learn mode): *Why is it Pending?* shows the scheduler filter funnel per node (name, cordon, selector/affinity, taints, CPU, memory, anti-affinity), the winner, and the fixes. *Can A reach B?* traces DNS, Service port, endpoints, egress and ingress NetworkPolicy and names the policy that blocks.
+- **Alert-first labs**: incident and fault labs open on a pager card (firing alerts, 5xx graph, availability, live logs and events, acknowledge, time to resolve). The story is collapsed behind it.
+- **Predict-the-output**: toggle 🔮 Predict; before a state-changing command you guess how many pods will be Ready 30 s later, then see the real result and why.
+- **Terminal**: Tab completes verbs, kinds, object names, namespaces, flags and `-o` values from the live cluster; Ctrl-R history search; Ctrl-U/W/K/A/E line editing; `$do` and `$now` like the exam image; unquoted `$var` now word-splits like bash. A touch key bar (Tab, arrows, `|`, `~`, `/`, Ctrl-C/R/Z, Enter) appears on phones.
+- **Exam realism**: curriculum-weighted mocks (official CNCF domain weights), question navigator with attempted/flagged status, domain report with exam weights, and a speed coach (alias `k`, `$do`, imperative commands, `explain`, unattempted tasks). The time machine, explainers and alerts are disabled during exams.
+- **Fidelity**: every lab shows Exact / Modelled / Scripted; `#fidelity` lists what the simulator covers and what it does not model.

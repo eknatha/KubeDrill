@@ -41,7 +41,13 @@
       if (ch === "'" || ch === '"') { q = ch; has = true; i++; continue; }
       if (ch === '\\') { if (line[i + 1] === '\n') { i += 2; continue; } cur += line[i + 1] || ''; has = true; i += 2; continue; }
       if (ch === '#' && !has) break;
-      if (ch === '$') { var r2 = expandVar(line, i); cur += r2[0]; has = true; i = r2[1]; continue; }
+      if (ch === '$') { // unquoted expansion undergoes word splitting, like bash ($do, $(kubectl get ... -o name))
+        var r2 = expandVar(line, i), val = r2[0]; i = r2[1];
+        if (/\s/.test(val)) val.split(/(\s+)/).forEach(function (part) { if (/^\s+$/.test(part)) push(); else if (part) { cur += part; has = true; } });
+        else if (val !== '') { cur += val; has = true; }
+        else if (r2[0] === '' && line[i - 1] !== '$') { /* empty expansion vanishes */ }
+        continue;
+      }
       if (ch === '~' && !has && (line[i + 1] === '/' || line[i + 1] === undefined || line[i + 1] === ' ')) { cur += '/home/student'; has = true; i++; continue; }
       if (/\s/.test(ch)) { push(); i++; continue; }
       var two = line.substr(i, 2);

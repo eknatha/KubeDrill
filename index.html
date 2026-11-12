@@ -322,6 +322,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <link rel="stylesheet" href="assets/css/ui2.css">
 <link rel="stylesheet" href="assets/css/ui3.css">
 <link rel="stylesheet" href="assets/css/ui4.css">
+<link rel="stylesheet" href="assets/css/pro.css">
 <link rel="stylesheet" href="assets/css/home.css">
 </head>
 <body>
@@ -348,6 +349,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
         <li><a href="#cheatsheet" data-page="cheatsheet">Cheatsheet</a></li>
         <li><a href="#tools" data-page="tools">Tools</a></li>
         <li><a href="#errors" data-page="errors">Errors</a></li>
+        <li><a href="#fidelity" data-page="fidelity">Fidelity</a></li>
         <li><a href="#progress" data-page="progress">Progress</a></li>
       </ul></li>
   </ul>
@@ -369,7 +371,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
     <div class="hero-copy">
       <div class="hero-tag">Free · No ads · No signup · Works offline</div>
       <h1>Break a cluster.<br>Fix it.<br><span class="h1-free">Free.</span></h1>
-      <p class="hero-sub"><span data-fill="labs">96</span> auto-checked Kubernetes labs with a kubectl simulator that runs in your browser. Practise for CKA, CKAD and CKS, then check your work.</p>
+      <p class="hero-sub"><span data-fill="labs">114</span> auto-checked Kubernetes labs with a kubectl simulator that runs in your browser. Practise for CKA, CKAD and CKS, then check your work.</p>
       <div class="hero-ctas">
         <button class="btn-primary btn-lg" onclick="location.hash='#lab/s03-oomkilled'">Fix the broken pod</button>
         <a class="btn-quiet" href="#labs">Browse all labs</a>
@@ -420,7 +422,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 <section class="band band-l" id="homeStats">
   <div class="band-in">
     <div class="stats4">
-      <div class="stat"><div class="stat-num" data-count="ilabs">96</div><div class="stat-label">Auto-checked labs</div></div>
+      <div class="stat"><div class="stat-num" data-count="ilabs">114</div><div class="stat-label">Auto-checked labs</div></div>
       <div class="stat"><div class="stat-num" data-count="lessons">22</div><div class="stat-label">Lessons</div></div>
       <div class="stat"><div class="stat-num" data-count="quiz">314</div><div class="stat-label">Quiz questions</div></div>
       <div class="stat"><div class="stat-num">$0</div><div class="stat-label">No ads · No signup</div></div>
@@ -628,6 +630,7 @@ footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:2.
 </div></div>
 <div class="page" id="page-learn" role="main"><div class="section-wrap" id="learnRoot"></div></div>
 <div class="page" id="page-settings" role="main"><div class="section-wrap" id="settingsRoot"></div></div>
+<div class="page" id="page-fidelity" role="main"><div class="section-wrap" id="fidRoot"></div></div>
 <div class="page" id="page-break" role="main"><div class="section-wrap" id="breakRoot"></div></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
 
@@ -3735,7 +3738,9 @@ renderEnc();
 <script src="assets/js/data/labs-sim-g.js"></script>
 <script src="assets/js/data/labs-sim-h.js"></script>
 <script src="assets/js/data/labs-sim-i.js"></script>
+<script src="assets/js/data/labs-sim-j.js"></script>
 <script src="assets/js/data/debrief.js"></script>
+<script src="assets/js/data/debrief-j.js"></script>
 <script src="assets/js/data/docs-peek.js"></script>
 <script src="assets/js/data/modules-extra.js"></script>
 <script src="assets/js/data/quiz-extra.js"></script>
@@ -3758,6 +3763,9 @@ renderEnc();
 <script src="assets/js/data/lessons-b.js"></script>
 <script src="assets/js/lessons.js"></script>
 <script src="assets/js/ui4.js"></script>
+<script src="assets/js/pro-fidelity.js"></script>
+<script src="assets/js/pro-term.js"></script>
+<script src="assets/js/pro-explain.js"></script>
 <script>routeFromHash();</script>
 </body>
 </html>

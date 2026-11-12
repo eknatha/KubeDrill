@@ -986,6 +986,153 @@ table.wg-t tr.hl td,table.wg-t td.hl{background:rgba(56,189,248,.12)}
 .mod-lessons a:hover{border-color:var(--accent2)}
 .lr-right{position:relative}
 </style>
+<style>/* Pro layer: terminal toolbar, time machine, explainers, pager card, fidelity, exam coach. Uses the existing design tokens only. */
+.pro-tools{display:inline-flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pro-badge{display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;border-radius:9px;background:var(--accent);color:#fff;font:600 10px/16px var(--mono);text-align:center}
+#proExBtn.pulse{border-color:var(--yellow);color:var(--yellow)}
+#proExBtn.pulse .pro-badge{background:var(--yellow);color:#111}
+#proPredBtn[aria-pressed="true"]{border-color:var(--green);color:var(--green)}
+.pro-dim{color:var(--text3);font-size:12px}
+.pro-note{color:var(--text2);font-size:13px;margin:8px 0}
+.pro-note kbd{font:11px var(--mono);border:1px solid var(--border2);border-radius:4px;padding:1px 5px}
+
+/* mobile key bar: shown on touch / narrow screens */
+.pro-keys{display:none;gap:6px;overflow-x:auto;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);border-top:0;border-radius:0 0 10px 10px;position:sticky;bottom:0;z-index:5;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pro-keys::-webkit-scrollbar{display:none}
+.pk{flex:0 0 auto;min-width:40px;height:38px;padding:0 10px;border-radius:8px;border:1px solid var(--border2);background:var(--surface);color:var(--text);font:600 14px var(--mono);touch-action:manipulation;cursor:pointer}
+.pk.fn{color:var(--accent2)}.pk.wide{color:var(--green)}
+.pk:active{background:var(--accent);color:#fff;transform:scale(.96)}
+@media (max-width:820px),(pointer:coarse){.pro-keys{display:flex}}
+
+/* Ctrl-R search line */
+.pro-rs{font:12px var(--mono);color:var(--text2);padding:4px 0;border-top:1px dashed var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:baseline}
+.pro-rs code{color:var(--green)}.pro-rs mark{background:rgba(251,191,36,.25);color:var(--yellow);border-radius:3px}.pro-rs em{margin-left:auto;color:var(--text3);font-style:normal;font-size:11px}
+
+/* drawers */
+.pro-drawer{position:fixed;top:60px;right:0;bottom:0;width:min(420px,94vw);z-index:61;background:var(--bg);border-left:1px solid var(--border);box-shadow:-8px 0 28px rgba(0,0,0,.35);padding:12px 14px 24px;overflow:auto;animation:proIn .28s cubic-bezier(.2,.8,.2,1)}
+.pro-drawer.wide{width:min(760px,96vw)}
+@keyframes proIn{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+.pro-dh{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.pro-dh b{font:700 15px var(--display)}.pro-dh button{background:none;border:0;color:var(--text2);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:6px}
+.pro-dh button:hover{background:var(--surface)}
+.pro-tabs{display:flex;gap:4px;margin-bottom:10px;border-bottom:1px solid var(--border)}
+.pro-tabs button{background:none;border:0;border-bottom:2px solid transparent;color:var(--text2);padding:7px 10px;font:600 12.5px var(--body);cursor:pointer}
+.pro-tabs button.on{color:var(--text);border-bottom-color:var(--accent2)}
+
+/* time machine */
+.pro-scrub{display:flex;gap:10px;align-items:center;margin:8px 0}.pro-scrub input{flex:1;accent-color:var(--accent2)}.pro-scrub span{font:12px var(--mono);color:var(--text2)}
+.pro-steps{list-style:none;margin:6px 0 10px;max-height:240px;overflow:auto;border:1px solid var(--border);border-radius:10px}
+.pro-steps li{display:flex;gap:8px;align-items:center;padding:7px 10px;cursor:pointer;border-bottom:1px solid var(--border);font-size:12px}
+.pro-steps li:last-child{border-bottom:0}.pro-steps li:hover,.pro-steps li:focus{background:var(--surface);outline:0}
+.pro-steps li.sel{background:var(--surface2);box-shadow:inset 3px 0 0 var(--accent2)}
+.pro-steps i{font:600 11px var(--mono);color:var(--text3);width:22px;font-style:normal}.pro-steps code{flex:1;font-size:12px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pro-steps em{color:var(--text3);font-style:normal;font-size:11px}
+.pro-steps li.now em{color:var(--green)}
+.pro-diff{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 12px;font-size:12.5px}
+.pro-diff ul{margin:4px 0 6px 18px}.pro-diff .g{color:var(--green)}.pro-diff .r{color:var(--red)}.pro-diff .y{color:var(--yellow)}.pro-diff li{color:var(--text2)}.pro-diff .more{color:var(--text3)}
+.pro-diff .btn-primary{margin-top:8px}
+.pro-branch{margin-top:10px;font-size:12.5px;color:var(--text2)}
+.pro-cmp{display:grid;grid-template-columns:1fr 1fr;gap:10px}.pro-cmp ol{margin:6px 0 0 18px;font-size:12px}
+.pro-cmp li{margin:3px 0;animation:proRow .4s ease both;animation-delay:var(--d,0ms)}.pro-cmp code{font-size:11.5px;color:var(--text2);word-break:break-all}
+@keyframes proRow{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.pro-eff{display:flex;align-items:center;gap:10px;margin:12px 0 4px;font-size:12px;color:var(--text2)}.pro-eff div{flex:1;height:8px;border-radius:5px;background:var(--surface2);overflow:hidden}.pro-eff i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--green));transition:width .6s}
+
+/* predict */
+.pro-pq{margin:8px 0 0;padding:12px 14px;border:1px solid var(--accent2);border-radius:10px;background:var(--surface);animation:proRow .25s ease}
+.pro-pq b{display:block;margin-bottom:4px}.pro-pq code{display:block;font-size:12px;color:var(--green);margin-bottom:6px;overflow-wrap:anywhere}.pro-pq p{font-size:13px;color:var(--text2);margin:4px 0 8px}
+.pro-pqo{display:flex;gap:8px;flex-wrap:wrap}.pro-pqo button{padding:8px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--bg2);color:var(--text);font:600 13px var(--mono);cursor:pointer}
+.pro-pqo button:hover,.pro-pqo button:focus{border-color:var(--accent2);outline:0}
+.pro-skip{margin-top:8px;background:none;border:0;color:var(--text3);font-size:12px;cursor:pointer;text-decoration:underline}
+
+/* scheduler explainer */
+.pro-netf{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-bottom:10px}
+.pro-netf label{display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.04em}
+.pro-netf select,.pro-netf input{background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;font:12.5px var(--mono);min-width:200px}
+.pro-sh{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}.pro-sh b{font:600 13px var(--mono)}
+.pro-pill{font:600 11px var(--mono);padding:2px 8px;border-radius:10px}.pro-pill.g{background:rgba(34,211,165,.15);color:var(--green)}.pro-pill.y{background:rgba(251,191,36,.15);color:var(--yellow)}.pro-pill.r{background:rgba(248,113,113,.15);color:var(--red)}
+.pro-funnel{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin:6px 0 12px}
+.pro-funnel div{display:flex;flex-direction:column;align-items:center;min-width:64px;padding:6px 8px;border-radius:8px;background:var(--surface);border:1px solid var(--border);animation:proRow .4s ease both;animation-delay:var(--d)}
+.pro-funnel b{font:700 16px var(--mono);color:var(--accent2)}.pro-funnel span{font-size:10px;color:var(--text3);text-align:center}.pro-funnel i{color:var(--text3);font-style:normal}
+.pro-tw{overflow-x:auto}.pro-tab{border-collapse:collapse;width:100%;font-size:12px}
+.pro-tab th,.pro-tab td{padding:7px 9px;border-bottom:1px solid var(--border);text-align:center;white-space:nowrap}
+.pro-tab thead th{color:var(--text3);font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.03em}
+.pro-tab tbody th{text-align:left;font:600 12px var(--mono);color:var(--text)}.pro-tab td:last-child{text-align:left;color:var(--text2)}
+.pro-tab td.ok{color:var(--green)}.pro-tab td.no{color:var(--red);font-weight:700}
+.pro-tab tbody tr{animation:proRow .45s ease both;animation-delay:var(--d)}
+.pro-tab tr.win{background:rgba(34,211,165,.08)}.pro-tab tr.out{opacity:.92}
+.pro-v{margin:12px 0;padding:10px 12px;border-radius:10px;font-size:13px;border:1px solid var(--border)}
+.pro-v.ok{background:rgba(34,211,165,.08);border-color:rgba(34,211,165,.35)}.pro-v.bad{background:rgba(248,113,113,.08);border-color:rgba(248,113,113,.4)}
+.pro-v code{display:block;margin-top:6px;font-size:12px;color:var(--yellow);overflow-wrap:anywhere}
+.pro-fixes{font-size:12.5px}.pro-fixes>div{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px dashed var(--border)}.pro-fixes span{color:var(--text2)}.pro-fixes .btn-secondary{flex:none;padding:4px 10px;font-size:11.5px}
+
+/* network tracer */
+.pro-track{display:flex;align-items:center;margin:8px 0 14px;position:relative;padding:8px 4px;overflow-x:auto}
+.pro-track .pk-n{font:600 11px var(--mono);padding:5px 9px;border-radius:8px;background:var(--surface);border:1px solid var(--border2);white-space:nowrap}
+.pro-track u{flex:1;min-width:24px;height:2px;background:var(--border2);position:relative;overflow:hidden}
+.pro-track u::after{content:'';position:absolute;inset:0;background:var(--green);transform:scaleX(0);transform-origin:left;animation:proLine .35s ease forwards;animation-delay:var(--d)}
+.pro-track i{font-style:normal;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-size:11px;opacity:0;animation:proPop .3s ease forwards;animation-delay:var(--d)}
+.pro-track i.ok{background:rgba(34,211,165,.2);color:var(--green)}.pro-track i.no{background:rgba(248,113,113,.22);color:var(--red)}
+.pk-dot{display:none}
+@keyframes proLine{to{transform:scaleX(1)}}@keyframes proPop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:none}}
+.pro-hops{list-style:none;display:grid;gap:8px}
+.pro-hops li{display:flex;gap:10px;padding:9px 11px;border-radius:10px;border:1px solid var(--border);background:var(--surface);opacity:0;animation:proRow .4s ease forwards;animation-delay:var(--d)}
+.pro-hops li.no{border-color:rgba(248,113,113,.5);background:rgba(248,113,113,.07)}
+.pro-hops li>span{font-weight:700;width:18px;flex:none}.pro-hops li.ok>span{color:var(--green)}.pro-hops li.no>span{color:var(--red)}
+.pro-hops b{font-size:13px}.pro-hops p{font-size:12.5px;color:var(--text2);margin:2px 0}.pro-hops small{display:block;color:var(--text3);font-size:11.5px;margin:3px 0}
+.pro-hops .btn-secondary{padding:3px 9px;font-size:11px}
+
+/* pager */
+.pager{margin:12px 0;border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden}
+.pager.critical{border-color:rgba(248,113,113,.55);box-shadow:0 0 0 1px rgba(248,113,113,.12),0 8px 24px rgba(248,113,113,.08)}
+.pager.warning{border-color:rgba(251,191,36,.5)}.pager.ok{border-color:rgba(34,211,165,.5)}
+.pg-h{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--bg2);font-size:13px}
+.pg-h.critical .pg-st{color:var(--red);animation:pgPulse 1.4s ease-in-out infinite}.pg-h.warning .pg-st{color:var(--yellow)}.pg-h.ok .pg-st{color:var(--green)}
+.pg-st{font:700 11px var(--mono);letter-spacing:.06em}.pg-clk{margin-left:auto;font:600 12px var(--mono);color:var(--text2)}
+@keyframes pgPulse{50%{opacity:.45}}
+.pg-grid{display:grid;grid-template-columns:1fr 120px;gap:10px;padding:10px 12px}
+.pg-chart svg{width:100%;height:64px;display:block;background:linear-gradient(var(--bg2),var(--bg2));border-radius:8px}
+.pg-ct{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-bottom:4px}.pg-ct em{font:700 12px var(--mono);font-style:normal;color:var(--text)}
+.pg-line{fill:none;stroke-width:1.6;vector-effect:non-scaling-stroke}.pg-line.bad{stroke:var(--red)}.pg-line.ok{stroke:var(--green)}.pg-fill{fill:rgba(248,113,113,.1);stroke:none}
+.pg-tiles{display:grid;gap:6px}.pg-tiles div{background:var(--bg2);border-radius:8px;padding:6px 8px;text-align:center}.pg-tiles b{display:block;font:700 15px var(--mono)}.pg-tiles b.bad{color:var(--red)}.pg-tiles b.ok{color:var(--green)}.pg-tiles span{font-size:10px;color:var(--text3)}
+.pg-al{list-style:none;padding:0 12px;display:grid;gap:5px}
+.pg-al li{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;font-size:12px;padding:6px 9px;border-radius:8px;background:var(--bg2);border-left:3px solid var(--border2)}
+.pg-al li.critical{border-left-color:var(--red)}.pg-al li.warning{border-left-color:var(--yellow)}.pg-al li.ok{border-left-color:var(--green)}
+.pg-al b{font:600 12px var(--mono)}.pg-al code{color:var(--text2);font-size:11.5px}.pg-al em{margin-left:auto;font-style:normal;color:var(--text3);font-size:11px}
+.pg-logs{margin:8px 12px;padding:8px 10px;border-radius:8px;background:#05080f;font:11.5px/1.55 var(--mono);color:var(--text2);max-height:128px;overflow:auto}
+.pg-logs i{font-style:normal;color:var(--text3);margin-right:8px}.pg-logs .w{color:var(--yellow)}
+.pg-act{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:6px 12px 12px;font-size:12px;color:var(--text3)}.pg-ack{color:var(--green)}
+.pager-story{margin:8px 0}.pager-story summary{cursor:pointer;color:var(--text2);font-size:12.5px;padding:6px 0}
+
+/* fidelity */
+.fid{display:inline-block;font:600 10.5px var(--mono);padding:2px 7px;border-radius:9px;border:1px solid transparent;white-space:nowrap}
+.fid-exact{background:rgba(34,211,165,.12);color:var(--green);border-color:rgba(34,211,165,.35)}
+.fid-model{background:rgba(96,165,250,.12);color:var(--accent2);border-color:rgba(96,165,250,.35)}
+.fid-script{background:rgba(251,191,36,.12);color:var(--yellow);border-color:rgba(251,191,36,.35)}
+.fid-no{background:rgba(148,168,201,.1);color:var(--text2);border-color:var(--border2)}
+.fid-link{text-decoration:none}
+.ilab-tracks .fid{margin-left:auto}
+.fid-tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:20px 0}
+.fid-tier{padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--surface)}
+.fid-tier b{display:block;font:700 28px var(--display)}.fid-tier span{font:600 12px var(--mono);text-transform:uppercase;letter-spacing:.05em}.fid-tier p{font-size:12.5px;color:var(--text2);margin-top:6px}
+.fid-tier.fid-exact b,.fid-tier.fid-exact span{color:var(--green)}.fid-tier.fid-model b,.fid-tier.fid-model span{color:var(--accent2)}.fid-tier.fid-script b,.fid-tier.fid-script span{color:var(--yellow)}
+.fid-tier.fid{display:block;border-radius:12px;background:var(--surface);color:inherit;white-space:normal}
+.fid-h{font:700 17px var(--display);margin:28px 0 10px}.fid-p{color:var(--text2);font-size:14px;max-width:760px}.fid-p a{color:var(--accent2)}
+.fid-areas{display:grid;gap:8px}.fid-area{display:flex;gap:12px;align-items:flex-start;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--surface)}
+.fid-area .fid{flex:none;min-width:84px;text-align:center}.fid-area b{font-size:14px}.fid-area p{font-size:13px;color:var(--text2);margin-top:2px}
+.fid-ctl{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin:10px 0}.fid-ctl input{background:var(--bg2);color:var(--text);border:1px solid var(--border2);border-radius:8px;padding:7px 10px;min-width:220px}
+.fid-tw{overflow-x:auto}.fid-tab{width:100%;border-collapse:collapse;font-size:13px}.fid-tab th,.fid-tab td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}.fid-tab th{color:var(--text3);font-size:11px;text-transform:uppercase}.fid-tab a{color:var(--text);text-decoration:none}.fid-tab a:hover{color:var(--accent2)}
+@media (max-width:640px){.fid-tiers{grid-template-columns:1fr}.pg-grid{grid-template-columns:1fr}.pro-cmp{grid-template-columns:1fr}.pro-drawer{top:0;width:100vw}}
+
+/* exam: coach + navigator */
+.ex-coach{margin:20px 0;padding:14px 16px;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+.ex-coach h3{font:700 15px var(--display);margin-bottom:8px}.ex-coach ul{margin-left:18px;display:grid;gap:6px;font-size:13.5px;color:var(--text2)}.ex-coach code{color:var(--green);font-size:12.5px}
+.ex-dr small{color:var(--text3)}
+.ex-nav{display:inline-flex;gap:4px;align-items:center;flex-wrap:wrap}
+.ex-nav a{min-width:26px;height:26px;display:grid;place-items:center;border-radius:7px;border:1px solid var(--border2);background:var(--surface);color:var(--text2);font:600 11.5px var(--mono);text-decoration:none}
+.ex-nav a.tried{border-color:var(--accent2);color:var(--accent2)}.ex-nav a.flag{border-color:var(--yellow);color:var(--yellow)}.ex-nav a.cur{background:var(--accent);color:#fff;border-color:var(--accent)}
+.ex-nav a.ex-np{border:0;background:none;font-size:16px}
+
+@media (prefers-reduced-motion:reduce){.pro-drawer,.pro-funnel div,.pro-tab tbody tr,.pro-hops li,.pro-track u::after,.pro-track i,.pro-cmp li,.pro-pq,.pg-h .pg-st{animation:none!important;opacity:1!important;transform:none!important}.pro-track u::after{transform:scaleX(1)!important}}
+</style>
 <style>/* ── Landing page: split hero, path cards, light/dark rhythm, stats, closing CTA ── */
 .hero.hero2{min-height:0;display:block;text-align:left;padding:112px 24px 72px;overflow:hidden}
 .hero-grid{position:relative;z-index:1;max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1.02fr) minmax(0,1fr);gap:48px;align-items:center}
@@ -1093,6 +1240,7 @@ table.wg-t tr.hl td,table.wg-t td.hl{background:rgba(56,189,248,.12)}
         <li><a href="#cheatsheet" data-page="cheatsheet">Cheatsheet</a></li>
         <li><a href="#tools" data-page="tools">Tools</a></li>
         <li><a href="#errors" data-page="errors">Errors</a></li>
+        <li><a href="#fidelity" data-page="fidelity">Fidelity</a></li>
         <li><a href="#progress" data-page="progress">Progress</a></li>
       </ul></li>
   </ul>
@@ -1114,7 +1262,7 @@ table.wg-t tr.hl td,table.wg-t td.hl{background:rgba(56,189,248,.12)}
     <div class="hero-copy">
       <div class="hero-tag">Free · No ads · No signup · Works offline</div>
       <h1>Break a cluster.<br>Fix it.<br><span class="h1-free">Free.</span></h1>
-      <p class="hero-sub"><span data-fill="labs">96</span> auto-checked Kubernetes labs with a kubectl simulator that runs in your browser. Practise for CKA, CKAD and CKS, then check your work.</p>
+      <p class="hero-sub"><span data-fill="labs">114</span> auto-checked Kubernetes labs with a kubectl simulator that runs in your browser. Practise for CKA, CKAD and CKS, then check your work.</p>
       <div class="hero-ctas">
         <button class="btn-primary btn-lg" onclick="location.hash='#lab/s03-oomkilled'">Fix the broken pod</button>
         <a class="btn-quiet" href="#labs">Browse all labs</a>
@@ -1165,7 +1313,7 @@ table.wg-t tr.hl td,table.wg-t td.hl{background:rgba(56,189,248,.12)}
 <section class="band band-l" id="homeStats">
   <div class="band-in">
     <div class="stats4">
-      <div class="stat"><div class="stat-num" data-count="ilabs">96</div><div class="stat-label">Auto-checked labs</div></div>
+      <div class="stat"><div class="stat-num" data-count="ilabs">114</div><div class="stat-label">Auto-checked labs</div></div>
       <div class="stat"><div class="stat-num" data-count="lessons">22</div><div class="stat-label">Lessons</div></div>
       <div class="stat"><div class="stat-num" data-count="quiz">314</div><div class="stat-label">Quiz questions</div></div>
       <div class="stat"><div class="stat-num">$0</div><div class="stat-label">No ads · No signup</div></div>
@@ -1373,6 +1521,7 @@ table.wg-t tr.hl td,table.wg-t td.hl{background:rgba(56,189,248,.12)}
 </div></div>
 <div class="page" id="page-learn" role="main"><div class="section-wrap" id="learnRoot"></div></div>
 <div class="page" id="page-settings" role="main"><div class="section-wrap" id="settingsRoot"></div></div>
+<div class="page" id="page-fidelity" role="main"><div class="section-wrap" id="fidRoot"></div></div>
 <div class="page" id="page-break" role="main"><div class="section-wrap" id="breakRoot"></div></div>
 <canvas id="confetti" aria-hidden="true"></canvas>
 
@@ -5628,7 +5777,13 @@ js-yaml/dist/js-yaml.mjs:
       if (ch === "'" || ch === '"') { q = ch; has = true; i++; continue; }
       if (ch === '\\') { if (line[i + 1] === '\n') { i += 2; continue; } cur += line[i + 1] || ''; has = true; i += 2; continue; }
       if (ch === '#' && !has) break;
-      if (ch === '$') { var r2 = expandVar(line, i); cur += r2[0]; has = true; i = r2[1]; continue; }
+      if (ch === '$') { // unquoted expansion undergoes word splitting, like bash ($do, $(kubectl get ... -o name))
+        var r2 = expandVar(line, i), val = r2[0]; i = r2[1];
+        if (/\s/.test(val)) val.split(/(\s+)/).forEach(function (part) { if (/^\s+$/.test(part)) push(); else if (part) { cur += part; has = true; } });
+        else if (val !== '') { cur += val; has = true; }
+        else if (r2[0] === '' && line[i - 1] !== '$') { /* empty expansion vanishes */ }
+        continue;
+      }
       if (ch === '~' && !has && (line[i + 1] === '/' || line[i + 1] === undefined || line[i + 1] === ' ')) { cur += '/home/student'; has = true; i++; continue; }
       if (/\s/.test(ch)) { push(); i++; continue; }
       var two = line.substr(i, 2);
@@ -8081,6 +8236,188 @@ js-yaml/dist/js-yaml.mjs:
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
+<script>/* assets/js/data/labs-sim-j.js */
+/* Labs S97–S114: gap-fill against the current CKA / CKAD / CKS curricula (6 each).
+   Built only from the public curriculum competencies; these are original scenarios, not exam questions. */
+(function (root) {
+  'use strict';
+  var KL = root.KL = root.KL || {}, Labs = KL.Labs || require('../labs-engine.js'), Yh = Labs.y;
+  function T(title, hints, assert, desc) { return { id: '', title: title, desc: desc || '', hints: hints, assert: assert }; }
+  function L(o) { o.tasks.forEach(function (t, i) { t.id = String(i + 1); }); o.curriculum = true; return o; }
+  function Y() { return Array.prototype.slice.call(arguments).join('\n') + '\n'; }
+  var NS = function (n, labels) { return 'apiVersion: v1\nkind: Namespace\nmetadata:\n  name: ' + n + (labels ? '\n  labels:\n' + Object.keys(labels).map(function (k) { return '    ' + k + ': ' + labels[k]; }).join('\n') : '') + '\n'; };
+  var P = function (n, ns, labels, extra) { return 'apiVersion: v1\nkind: Pod\nmetadata:\n  name: ' + n + '\n  namespace: ' + ns + '\n' + (labels ? '  labels:\n' + Object.keys(labels).map(function (k) { return '    ' + k + ': ' + labels[k]; }).join('\n') + '\n' : '') + 'spec:\n  containers:\n  - name: c\n    image: busybox:1.36\n    command: ["sleep", "3600"]\n' + (extra || ''); };
+  var TESTER = function (ns) { return P('tester', ns, { run: 'tester' }); };
+
+  Labs.register([
+    /* ───────────── CKA ───────────── */
+    L({ id: 's97-pv-retain', num: 'S97', title: 'Storage: keep the data, allow expansion', diff: 'Intermediate', track: ['CKA'], domain: 'Storage', time: '12 min', ns: 'store',
+      story: 'The `reports` volume holds quarterly data. Its PersistentVolume would be wiped when the claim is deleted, and the StorageClass cannot grow volumes. Make the data survive claim deletion and let the class expand volumes, then grow the claim to 2Gi.',
+      caution: 'Reclaim policy Delete removes the backing data when the claim goes away. Changing a PV policy is safe, but always confirm you are editing the right PV (`kubectl get pv`) and back up first on real clusters.',
+      setup: [NS('store'), 'apiVersion: storage.k8s.io/v1\nkind: StorageClass\nmetadata:\n  name: fast\nprovisioner: rancher.io/local-path\nreclaimPolicy: Delete\nvolumeBindingMode: WaitForFirstConsumer\n',
+        'apiVersion: v1\nkind: PersistentVolume\nmetadata:\n  name: pv-reports\nspec:\n  capacity:\n    storage: 1Gi\n  accessModes: [ReadWriteOnce]\n  persistentVolumeReclaimPolicy: Delete\n  storageClassName: fast\n  hostPath:\n    path: /mnt/reports\n',
+        'apiVersion: v1\nkind: PersistentVolumeClaim\nmetadata:\n  name: reports\n  namespace: store\nspec:\n  storageClassName: fast\n  accessModes: [ReadWriteOnce]\n  resources:\n    requests:\n      storage: 1Gi\n'],
+      tasks: [T('PV `pv-reports` keeps data after the claim is deleted', ['`kubectl get pv` shows RECLAIM POLICY Delete.', '`kubectl patch pv pv-reports -p \'{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}\'`'], [{ t: 'jp', ref: 'pv/pv-reports', ns: '', path: '.spec.persistentVolumeReclaimPolicy', eq: 'Retain' }]),
+        T('StorageClass `fast` allows volume expansion', ['`kubectl explain storageclass.allowVolumeExpansion`', '`kubectl patch sc fast -p \'{"allowVolumeExpansion":true}\'`'], [{ t: 'jp', ref: 'sc/fast', ns: '', path: '.allowVolumeExpansion', eq: 'true' }]),
+        T('Claim `reports` requests 2Gi', ['Expansion only works once the class allows it.', '`kubectl patch pvc reports -n store -p \'{"spec":{"resources":{"requests":{"storage":"2Gi"}}}}\'`'], [{ t: 'jp', ref: 'pvc/reports', ns: 'store', path: '.spec.resources.requests.storage', eq: '2Gi' }])],
+      solution: ['kubectl patch pv pv-reports -p \'{"spec":{"persistentVolumeReclaimPolicy":"Retain"}}\'', 'kubectl patch sc fast -p \'{"allowVolumeExpansion":true}\'', 'kubectl patch pvc reports -n store -p \'{"spec":{"resources":{"requests":{"storage":"2Gi"}}}}\'', 'kubectl get pv,pvc -A'] }),
+
+    L({ id: 's98-drain-bare-pod', num: 'S98', title: 'Drain a node that holds a bare pod', diff: 'Advanced', track: ['CKA'], domain: 'Cluster', time: '12 min', ns: 'ops',
+      story: 'worker1 is going for maintenance. Besides a Deployment it hosts a standalone pod `legacy-job` that no controller will recreate. The drain refuses. Decide what to do with the bare pod, drain the node, and keep the Deployment fully available.',
+      caution: '`--force` deletes pods that no controller manages. They will NOT come back. Check what the pod is before forcing, and ask its owner. In a real cluster, copy any data out of emptyDir volumes first.',
+      setup: [NS('ops'), Yh.dep('api', 'ops', 'nginx:1.25', 4), P('legacy-job', 'ops', { app: 'legacy' }, '  nodeName: worker1\n')],
+      tasks: [T('Drain worker1 (DaemonSet pods ignored)', ['`kubectl drain worker1 --ignore-daemonsets --delete-emptydir-data` fails on the bare pod.', 'The pod has no owner. Add `--force` only after you accept losing it.'], [{ t: 'absent', ref: 'pod/legacy-job', ns: 'ops' }]),
+        T('All 4 `api` replicas still Ready', ['Evicted pods are rescheduled on worker2.'], [{ t: 'podsReady', ns: 'ops', sel: 'app=api', min: 4 }]),
+        T('Return worker1 to service', ['`kubectl uncordon worker1`'], [{ t: 'nodeCordoned', node: 'worker1', v: false }])],
+      solution: ['kubectl drain worker1 --ignore-daemonsets --delete-emptydir-data --force', 'kubectl get pods -n ops -o wide', 'kubectl uncordon worker1'] }),
+
+    L({ id: 's99-noexecute-eviction', num: 'S99', title: 'NoExecute taint: evict, but spare the critical pod', diff: 'Advanced', track: ['CKA'], domain: 'Scheduling', time: '14 min', ns: 'edge',
+      story: 'worker2 is being retired. Taint it `retire=true:NoExecute` so running pods are evicted. The `payments` Deployment must keep running on worker2 for 5 more minutes: give it a toleration with `tolerationSeconds: 300`. Everything else should leave.',
+      caution: 'NoExecute evicts RUNNING pods immediately, unlike NoSchedule. Add tolerations first, then taint. A taint on the wrong node can take down a whole workload.',
+      setup: [NS('edge'), Yh.dep('payments', 'edge', 'nginx:1.25', 2), Yh.dep('batch', 'edge', 'nginx:1.25', 2)],
+      tasks: [T('`payments` tolerates the taint for 300 seconds', ['`kubectl explain pod.spec.tolerations.tolerationSeconds`', 'Toleration: key retire, operator Equal, value "true", effect NoExecute, tolerationSeconds 300.'], [{ t: 'jp', ref: 'deploy/payments', ns: 'edge', path: '.spec.template.spec.tolerations[0].tolerationSeconds', eq: '300' }]),
+        T('worker2 carries `retire=true:NoExecute`', ['`kubectl taint nodes worker2 retire=true:NoExecute`'], [{ t: 'jp', ref: 'node/worker2', ns: '', path: '.spec.taints[0].effect', eq: 'NoExecute' }]),
+        T('Workloads still Ready', ['Evicted pods move to worker1.'], [{ t: 'podsReady', ns: 'edge', sel: 'app=payments', min: 2 }, { t: 'podsReady', ns: 'edge', sel: 'app=batch', min: 2 }])],
+      solution: ['kubectl patch deployment payments -n edge -p \'{"spec":{"template":{"spec":{"tolerations":[{"key":"retire","operator":"Equal","value":"true","effect":"NoExecute","tolerationSeconds":300}]}}}}\'', 'kubectl taint nodes worker2 retire=true:NoExecute', 'kubectl get pods -n edge -o wide'] }),
+
+    L({ id: 's100-hpa-unknown', num: 'S100', title: 'HPA shows <unknown>: no CPU requests', diff: 'Intermediate', track: ['CKA', 'CKAD'], domain: 'Workloads', time: '12 min', ns: 'scale',
+      story: 'HPA `web` reports `<unknown>/50%` and never scales. A percentage target is measured against the pod\'s CPU **request**, and the Deployment has none. Fix the Deployment, not the HPA.',
+      caution: 'A request that is too high wastes capacity; too low makes the HPA scale too eagerly. Set it from observed usage (`kubectl top pods`), not a guess.',
+      setup: [NS('scale'), Yh.dep('web', 'scale', 'nginx:1.25', 2), 'apiVersion: autoscaling/v2\nkind: HorizontalPodAutoscaler\nmetadata:\n  name: web\n  namespace: scale\nspec:\n  scaleTargetRef:\n    apiVersion: apps/v1\n    kind: Deployment\n    name: web\n  minReplicas: 2\n  maxReplicas: 6\n  metrics:\n  - type: Resource\n    resource:\n      name: cpu\n      target:\n        type: Utilization\n        averageUtilization: 50\n'],
+      tasks: [T('Find the cause', ['`kubectl get hpa -n scale` shows <unknown>.', '`kubectl describe hpa web -n scale` mentions missing request.'], [{ t: 'exists', ref: 'hpa/web', ns: 'scale' }]),
+        T('Deployment `web` requests 100m CPU', ['`kubectl set resources deployment web -n scale --requests=cpu=100m`'], [{ t: 'qty', ref: 'deploy/web', ns: 'scale', path: '.spec.template.spec.containers[0].resources.requests.cpu', kind: 'cpu', min: 50, max: 500 }]),
+        T('HPA keeps its 2–6 range and 50% target', ['Do not edit the HPA to "make the warning go away".'], [{ t: 'jp', ref: 'hpa/web', ns: 'scale', path: '.spec.maxReplicas', eq: '6' }, { t: 'podsReady', ns: 'scale', sel: 'app=web', min: 2 }])],
+      solution: ['kubectl describe hpa web -n scale', 'kubectl set resources deployment web -n scale --requests=cpu=100m', 'kubectl get hpa -n scale'] }),
+
+    L({ id: 's101-clusterrole-reuse', num: 'S101', title: 'RBAC: one ClusterRole, bound per namespace', diff: 'Intermediate', track: ['CKA', 'CKS'], domain: 'Cluster', time: '12 min', ns: 'dev',
+      story: 'ServiceAccount `ci` (namespace `dev`) must read pods in `dev` and `qa` — but not in `prod`. Create ONE ClusterRole `pod-viewer` (get, list, watch pods) and bind it with a RoleBinding in each allowed namespace. A ClusterRoleBinding would be too broad.',
+      caution: 'A ClusterRoleBinding grants the role in EVERY namespace, including ones created later. Prefer RoleBindings of a shared ClusterRole when access should be limited.',
+      setup: [NS('dev'), NS('qa'), NS('prod'), 'apiVersion: v1\nkind: ServiceAccount\nmetadata:\n  name: ci\n  namespace: dev\n'],
+      tasks: [T('ClusterRole `pod-viewer` exists', ['`kubectl create clusterrole pod-viewer --verb=get,list,watch --resource=pods`'], [{ t: 'exists', ref: 'clusterrole/pod-viewer', ns: '' }]),
+        T('`ci` can list pods in dev and qa', ['`kubectl create rolebinding ci-view --clusterrole=pod-viewer --serviceaccount=dev:ci -n dev`', 'Repeat with `-n qa`.'], [{ t: 'canI', as: 'system:serviceaccount:dev:ci', verb: 'list', res: 'pods', ns: 'dev' }, { t: 'canI', as: 'system:serviceaccount:dev:ci', verb: 'list', res: 'pods', ns: 'qa' }]),
+        T('`ci` cannot list pods in prod, and cannot delete anywhere', ['Do not create a ClusterRoleBinding.'], [{ t: 'canI', as: 'system:serviceaccount:dev:ci', verb: 'list', res: 'pods', ns: 'prod', expect: false }, { t: 'canI', as: 'system:serviceaccount:dev:ci', verb: 'delete', res: 'pods', ns: 'dev', expect: false }, { t: 'absent', ref: 'clusterrolebinding/ci-view', ns: '' }])],
+      solution: ['kubectl create clusterrole pod-viewer --verb=get,list,watch --resource=pods', 'kubectl create rolebinding ci-view --clusterrole=pod-viewer --serviceaccount=dev:ci -n dev', 'kubectl create rolebinding ci-view --clusterrole=pod-viewer --serviceaccount=dev:ci -n qa', 'kubectl auth can-i list pods -n prod --as=system:serviceaccount:dev:ci'] }),
+
+    L({ id: 's102-httproute-fix', num: 'S102', title: 'Gateway API: the route attaches to nothing', diff: 'Advanced', track: ['CKA'], domain: 'Networking', time: '14 min', ns: 'gw2',
+      story: 'HTTPRoute `shop` should expose Service `shop` at `shop.local` through Gateway `public`, but it points at a Gateway that does not exist and at the wrong backend port. Repair the route (do not create a second Gateway).',
+      caution: 'A route that references a missing Gateway is silently ignored: the app looks fine but gets no traffic. Check the route\'s status conditions, and the backend port against the Service port.',
+      setup: [NS('gw2'), Yh.dep('shop', 'gw2', 'nginx:1.25', 2), Yh.svc('shop', 'gw2', 'shop', 80), 'apiVersion: gateway.networking.k8s.io/v1\nkind: Gateway\nmetadata:\n  name: public\n  namespace: gw2\nspec:\n  gatewayClassName: nginx\n  listeners:\n  - name: http\n    port: 80\n    protocol: HTTP\n',
+        'apiVersion: gateway.networking.k8s.io/v1\nkind: HTTPRoute\nmetadata:\n  name: shop\n  namespace: gw2\nspec:\n  parentRefs:\n  - name: public-gw\n  hostnames: ["shop.local"]\n  rules:\n  - backendRefs:\n    - name: shop\n      port: 8080\n'],
+      tasks: [T('Route attaches to Gateway `public`', ['`kubectl get gateway -n gw2`', '`kubectl describe httproute shop -n gw2` — parentRef `public-gw` not found.'], [{ t: 'jp', ref: 'httproute/shop', ns: 'gw2', path: '.spec.parentRefs[0].name', eq: 'public' }]),
+        T('Backend port matches the Service (80)', ['`kubectl get svc shop -n gw2`', 'Service port is 80, not 8080.'], [{ t: 'jp', ref: 'httproute/shop', ns: 'gw2', path: '.spec.rules[0].backendRefs[0].port', eq: '80' }]),
+        T('Hostname and a single Gateway kept', [], [{ t: 'jp', ref: 'httproute/shop', ns: 'gw2', path: '.spec.hostnames[0]', eq: 'shop.local' }, { t: 'count', kind: 'Gateway', ns: 'gw2', min: 1, max: 1 }])],
+      solution: ['kubectl patch httproute shop -n gw2 --type=json -p \'[{"op":"replace","path":"/spec/parentRefs/0/name","value":"public"},{"op":"replace","path":"/spec/rules/0/backendRefs/0/port","value":80}]\'', 'kubectl get httproute -n gw2'] }),
+
+    /* ───────────── CKAD ───────────── */
+    L({ id: 's103-job-parallel', num: 'S103', title: 'Job: completions, parallelism and a deadline', diff: 'Intermediate', track: ['CKAD'], domain: 'Workloads', time: '12 min', ns: 'jobs2',
+      story: 'Create Job `import` (busybox:1.36, command `echo imported`) that must finish **6** successful runs, **2** at a time, retry a failed pod at most **2** times, and be stopped after **120** seconds. It must restart pods `OnFailure`.',
+      caution: 'A Job is immutable after creation for most fields: to change `completions` or `parallelism` you must delete and recreate it. Never use `restartPolicy: Always` in a Job.',
+      setup: [NS('jobs2')],
+      tasks: [T('Job exists with 6 completions, 2 parallel', ['`kubectl create job import --image=busybox:1.36 --dry-run=client -o yaml -- echo imported > job.yaml`', 'Add completions: 6 and parallelism: 2 under spec.'], [{ t: 'jp', ref: 'job/import', ns: 'jobs2', path: '.spec.completions', eq: '6' }, { t: 'jp', ref: 'job/import', ns: 'jobs2', path: '.spec.parallelism', eq: '2' }]),
+        T('Retries and deadline set', ['`backoffLimit: 2` and `activeDeadlineSeconds: 120` live under the Job spec, not the pod spec.'], [{ t: 'jp', ref: 'job/import', ns: 'jobs2', path: '.spec.backoffLimit', eq: '2' }, { t: 'jp', ref: 'job/import', ns: 'jobs2', path: '.spec.activeDeadlineSeconds', eq: '120' }]),
+        T('Pods restart OnFailure', ['`spec.template.spec.restartPolicy: OnFailure`'], [{ t: 'jp', ref: 'job/import', ns: 'jobs2', path: '.spec.template.spec.restartPolicy', eq: 'OnFailure' }])],
+      solution: ['kubectl apply -f - <<EOF\napiVersion: batch/v1\nkind: Job\nmetadata:\n  name: import\n  namespace: jobs2\nspec:\n  completions: 6\n  parallelism: 2\n  backoffLimit: 2\n  activeDeadlineSeconds: 120\n  template:\n    spec:\n      restartPolicy: OnFailure\n      containers:\n      - name: import\n        image: busybox:1.36\n        command: ["echo", "imported"]\nEOF', 'kubectl get job import -n jobs2'] }),
+
+    L({ id: 's104-cronjob-policy', num: 'S104', title: 'CronJob: no overlap, tidy history', diff: 'Intermediate', track: ['CKAD'], domain: 'Workloads', time: '10 min', ns: 'cron',
+      story: 'CronJob `cleanup` runs every minute and overlapping runs are corrupting data. Change it to run every 10 minutes, forbid overlapping runs, keep 1 successful and 2 failed jobs, and skip a run that is more than 60 seconds late.',
+      caution: 'Pick `concurrencyPolicy` deliberately: Allow (default) can pile up runs, Forbid skips new runs, Replace cancels the old run. Test with `kubectl create job --from=cronjob/cleanup` instead of waiting.',
+      setup: [NS('cron'), 'apiVersion: batch/v1\nkind: CronJob\nmetadata:\n  name: cleanup\n  namespace: cron\nspec:\n  schedule: "* * * * *"\n  jobTemplate:\n    spec:\n      template:\n        spec:\n          restartPolicy: OnFailure\n          containers:\n          - name: c\n            image: busybox:1.36\n            command: ["sh", "-c", "echo cleaning"]\n'],
+      tasks: [T('Schedule is every 10 minutes', ['`kubectl patch cronjob cleanup -n cron -p \'{"spec":{"schedule":"*/10 * * * *"}}\'`'], [{ t: 'jp', ref: 'cronjob/cleanup', ns: 'cron', path: '.spec.schedule', eq: '*/10 * * * *' }]),
+        T('Overlaps are forbidden', ['`spec.concurrencyPolicy: Forbid`'], [{ t: 'jp', ref: 'cronjob/cleanup', ns: 'cron', path: '.spec.concurrencyPolicy', eq: 'Forbid' }]),
+        T('History 1 success / 2 failed, 60s start deadline', ['`successfulJobsHistoryLimit`, `failedJobsHistoryLimit`, `startingDeadlineSeconds`'], [{ t: 'jp', ref: 'cronjob/cleanup', ns: 'cron', path: '.spec.successfulJobsHistoryLimit', eq: '1' }, { t: 'jp', ref: 'cronjob/cleanup', ns: 'cron', path: '.spec.failedJobsHistoryLimit', eq: '2' }, { t: 'jp', ref: 'cronjob/cleanup', ns: 'cron', path: '.spec.startingDeadlineSeconds', eq: '60' }])],
+      solution: ['kubectl patch cronjob cleanup -n cron -p \'{"spec":{"schedule":"*/10 * * * *","concurrencyPolicy":"Forbid","successfulJobsHistoryLimit":1,"failedJobsHistoryLimit":2,"startingDeadlineSeconds":60}}\'', 'kubectl get cronjob cleanup -n cron'] }),
+
+    L({ id: 's105-startup-probe', num: 'S105', title: 'Slow starter: add a startup probe', diff: 'Advanced', track: ['CKAD'], domain: 'Observability', time: '12 min', ns: 'slow',
+      story: 'Deployment `legacy` needs up to 5 minutes to start. Its liveness probe kills it before it is ready. Do NOT loosen the liveness probe; add a startup probe on `/` port 80 with `periodSeconds: 10` and `failureThreshold: 30`, so liveness only begins after startup succeeds.',
+      caution: 'Making liveness very lenient hides real hangs later. A startup probe delays liveness and readiness checks until the app has started once, then steps aside.',
+      setup: [NS('slow'), Yh.dep('legacy', 'slow', 'nginx:1.25', 2, '        livenessProbe:\n          httpGet:\n            path: /\n            port: 80\n          periodSeconds: 5\n          failureThreshold: 1\n')],
+      tasks: [T('Startup probe on `/`:80', ['`kubectl explain pod.spec.containers.startupProbe`', 'Add under the container: startupProbe.httpGet path / port 80.'], [{ t: 'jp', ref: 'deploy/legacy', ns: 'slow', path: '.spec.template.spec.containers[0].startupProbe.httpGet.path', eq: '/' }]),
+        T('Allows 5 minutes (period 10 × threshold 30)', ['`periodSeconds: 10`, `failureThreshold: 30`'], [{ t: 'jp', ref: 'deploy/legacy', ns: 'slow', path: '.spec.template.spec.containers[0].startupProbe.failureThreshold', eq: '30' }, { t: 'jp', ref: 'deploy/legacy', ns: 'slow', path: '.spec.template.spec.containers[0].startupProbe.periodSeconds', eq: '10' }]),
+        T('Liveness probe unchanged, pods Ready', ['Keep `periodSeconds: 5` on liveness.'], [{ t: 'jp', ref: 'deploy/legacy', ns: 'slow', path: '.spec.template.spec.containers[0].livenessProbe.periodSeconds', eq: '5' }, { t: 'podsReady', ns: 'slow', sel: 'app=legacy', min: 2 }])],
+      solution: ['kubectl patch deployment legacy -n slow --type=json -p \'[{"op":"add","path":"/spec/template/spec/containers/0/startupProbe","value":{"httpGet":{"path":"/","port":80},"periodSeconds":10,"failureThreshold":30}}]\'', 'kubectl rollout status deployment/legacy -n slow'] }),
+
+    L({ id: 's106-config-injection', num: 'S106', title: 'Inject config: envFrom and a read-only Secret volume', diff: 'Intermediate', track: ['CKAD'], domain: 'Configuration', time: '14 min', ns: 'cfg',
+      story: 'Deployment `web` must load **all keys** of ConfigMap `app-config` as environment variables, and mount Secret `app-creds` as read-only files at `/etc/creds` (not as env vars). Both objects exist.',
+      caution: 'Secrets as files are safer than env vars: env vars leak through `describe`, crash dumps and child processes. Use placeholder values in practice; never commit real credentials.',
+      setup: [NS('cfg'), 'apiVersion: v1\nkind: ConfigMap\nmetadata:\n  name: app-config\n  namespace: cfg\ndata:\n  MODE: prod\n  REGION: eu\n', 'apiVersion: v1\nkind: Secret\nmetadata:\n  name: app-creds\n  namespace: cfg\nstringData:\n  token: change-me\n', Yh.dep('web', 'cfg', 'nginx:1.25', 2)],
+      tasks: [T('All ConfigMap keys become env vars (envFrom)', ['`kubectl explain pod.spec.containers.envFrom`', 'envFrom: [{configMapRef: {name: app-config}}]'], [{ t: 'jp', ref: 'deploy/web', ns: 'cfg', path: '.spec.template.spec.containers[0].envFrom[0].configMapRef.name', eq: 'app-config' }]),
+        T('Secret mounted read-only at /etc/creds', ['Add a `volumes` entry with `secret.secretName: app-creds`.', 'volumeMounts: mountPath /etc/creds, readOnly: true'], [{ t: 'jp', ref: 'deploy/web', ns: 'cfg', path: '.spec.template.spec.volumes[0].secret.secretName', eq: 'app-creds' }, { t: 'jp', ref: 'deploy/web', ns: 'cfg', path: '.spec.template.spec.containers[0].volumeMounts[0].readOnly', eq: 'true' }, { t: 'jp', ref: 'deploy/web', ns: 'cfg', path: '.spec.template.spec.containers[0].volumeMounts[0].mountPath', eq: '/etc/creds' }]),
+        T('Pods Ready, secret not in env', [], [{ t: 'podsReady', ns: 'cfg', sel: 'app=web', min: 2 }, { t: 'jp', ref: 'deploy/web', ns: 'cfg', path: '.spec.template.spec.containers[0].env', eq: '' }])],
+      solution: ['kubectl patch deployment web -n cfg --type=json -p \'[{"op":"add","path":"/spec/template/spec/containers/0/envFrom","value":[{"configMapRef":{"name":"app-config"}}]},{"op":"add","path":"/spec/template/spec/volumes","value":[{"name":"creds","secret":{"secretName":"app-creds"}}]},{"op":"add","path":"/spec/template/spec/containers/0/volumeMounts","value":[{"name":"creds","mountPath":"/etc/creds","readOnly":true}]}]\'', 'kubectl rollout status deployment/web -n cfg'] }),
+
+    L({ id: 's107-rolling-strategy', num: 'S107', title: 'Rollout strategy: never lose capacity', diff: 'Intermediate', track: ['CKAD'], domain: 'Deployment', time: '10 min', ns: 'rolls',
+      story: 'Deployment `api` (4 replicas) must never drop below 4 ready pods during an update, and may add at most 1 extra pod. Set the rolling update to `maxSurge: 1`, `maxUnavailable: 0`, then roll out `nginx:1.26`.',
+      caution: 'With `maxUnavailable: 0` and no spare cluster capacity a rollout can stall. Pair it with a readiness probe, and check `kubectl rollout status` before assuming success.',
+      setup: [NS('rolls'), Yh.dep('api', 'rolls', 'nginx:1.25', 4)],
+      tasks: [T('Strategy: RollingUpdate, surge 1, unavailable 0', ['`kubectl explain deployment.spec.strategy.rollingUpdate`', '`kubectl patch deployment api -n rolls -p \'{"spec":{"strategy":{"type":"RollingUpdate","rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}}\'`'], [{ t: 'jp', ref: 'deploy/api', ns: 'rolls', path: '.spec.strategy.rollingUpdate.maxSurge', eq: '1' }, { t: 'jp', ref: 'deploy/api', ns: 'rolls', path: '.spec.strategy.rollingUpdate.maxUnavailable', eq: '0' }]),
+        T('Image updated to nginx:1.26 and 4 pods Ready', ['`kubectl set image deployment/api api=nginx:1.26 -n rolls`', 'Container name is `api` (same as the Deployment).'], [{ t: 'jp', ref: 'deploy/api', ns: 'rolls', path: '.spec.template.spec.containers[0].image', eq: 'nginx:1.26' }, { t: 'podsReady', ns: 'rolls', sel: 'app=api', min: 4 }])],
+      solution: ['kubectl patch deployment api -n rolls -p \'{"spec":{"strategy":{"type":"RollingUpdate","rollingUpdate":{"maxSurge":1,"maxUnavailable":0}}}}\'', 'kubectl set image deployment/api api=nginx:1.26 -n rolls', 'kubectl rollout status deployment/api -n rolls'] }),
+
+    L({ id: 's108-old-apiversion', num: 'S108', title: 'Fix a manifest that uses a removed API version', diff: 'Intermediate', track: ['CKAD'], domain: 'Observability', time: '10 min', ns: 'legacy2',
+      story: 'The file `/home/student/old-cron.yaml` was written years ago for `batch/v1beta1`, which Kubernetes no longer serves. Update it to the current API version and apply it. Use `kubectl api-resources` and `kubectl explain` to confirm the right group and version.',
+      caution: 'Removed APIs fail at apply time on a new cluster. Before upgrading a cluster, scan manifests and Helm charts for deprecated versions. Some kinds also changed shape between versions, so check with `kubectl explain` rather than only editing the apiVersion line.',
+      setup: [NS('legacy2')], files: [{ path: '/home/student/old-cron.yaml', content: 'apiVersion: batch/v1beta1\nkind: CronJob\nmetadata:\n  name: nightly\n  namespace: legacy2\nspec:\n  schedule: "0 2 * * *"\n  jobTemplate:\n    spec:\n      template:\n        spec:\n          restartPolicy: OnFailure\n          containers:\n          - name: c\n            image: busybox:1.36\n            command: ["echo", "nightly"]\n' }],
+      tasks: [T('Manifest uses the current apiVersion', ['`kubectl api-resources | grep cronjobs`', 'The group is `batch`, the version `v1`.', '`sed -i s#batch/v1beta1#batch/v1# /home/student/old-cron.yaml`'], [{ t: 'file', path: '/home/student/old-cron.yaml', has: 'apiVersion: batch/v1\n' }]),
+        T('CronJob `nightly` applied', ['`kubectl apply -f /home/student/old-cron.yaml`'], [{ t: 'exists', ref: 'cronjob/nightly', ns: 'legacy2' }, { t: 'jp', ref: 'cronjob/nightly', ns: 'legacy2', path: '.spec.schedule', eq: '0 2 * * *' }])],
+      solution: ['kubectl api-resources', 'sed -i s#batch/v1beta1#batch/v1# /home/student/old-cron.yaml', 'kubectl apply -f /home/student/old-cron.yaml'] }),
+
+    /* ───────────── CKS ───────────── */
+    L({ id: 's109-seccomp-default', num: 'S109', title: 'System hardening: seccomp RuntimeDefault', diff: 'Advanced', track: ['CKS'], domain: 'Security', time: '12 min', ns: 'sys',
+      story: 'Deployment `api` runs with no syscall filtering and may escalate privileges. Apply the container runtime\'s default seccomp profile at pod level, block privilege escalation, drop every capability and make the root filesystem read-only.',
+      caution: 'A read-only root filesystem breaks apps that write to disk; mount an emptyDir where they need to write. Custom seccomp profiles must exist on every node, so start with RuntimeDefault. Test in staging first.',
+      setup: [NS('sys'), Yh.dep('api', 'sys', 'nginx:1.25', 2)],
+      tasks: [T('Pod seccomp profile is RuntimeDefault', ['`kubectl explain pod.spec.securityContext.seccompProfile`', 'spec.template.spec.securityContext.seccompProfile.type: RuntimeDefault'], [{ t: 'jp', ref: 'deploy/api', ns: 'sys', path: '.spec.template.spec.securityContext.seccompProfile.type', eq: 'RuntimeDefault' }]),
+        T('No privilege escalation, all capabilities dropped', ['Container-level: allowPrivilegeEscalation: false, capabilities.drop: ["ALL"]'], [{ t: 'jp', ref: 'deploy/api', ns: 'sys', path: '.spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation', eq: 'false' }, { t: 'jp', ref: 'deploy/api', ns: 'sys', path: '.spec.template.spec.containers[0].securityContext.capabilities.drop[0]', eq: 'ALL' }]),
+        T('Read-only root filesystem, pods Ready', ['`readOnlyRootFilesystem: true`', 'nginx needs writable /var/cache/nginx and /var/run: mount emptyDir volumes or use the unprivileged image.'], [{ t: 'jp', ref: 'deploy/api', ns: 'sys', path: '.spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem', eq: 'true' }, { t: 'podsReady', ns: 'sys', sel: 'app=api', min: 2 }])],
+      solution: ['kubectl patch deployment api -n sys --type=json -p \'[{"op":"add","path":"/spec/template/spec/securityContext","value":{"seccompProfile":{"type":"RuntimeDefault"}}},{"op":"add","path":"/spec/template/spec/containers/0/securityContext","value":{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true,"capabilities":{"drop":["ALL"]}}}]\'', 'kubectl rollout status deployment/api -n sys'] }),
+
+    L({ id: 's110-default-deny', num: 'S110', title: 'Default-deny, then allow only what is needed', diff: 'Advanced', track: ['CKS', 'CKA'], domain: 'Security', time: '16 min', ns: 'zt',
+      story: 'Namespace `zt` is wide open. Apply a **default-deny** NetworkPolicy for all pods (ingress and egress), then allow only: pods labelled `role=frontend` may reach `db` on port 80, and `frontend` pods may send egress to `db`. Nothing else (the pod `intruder` must stay blocked).',
+      caution: 'Default-deny egress also blocks DNS (UDP/TCP 53), so names stop resolving. In a real cluster add an explicit DNS egress rule. Apply policies to a test namespace first: a wrong default-deny is an outage.',
+      setup: [NS('zt'), Yh.dep('db', 'zt', 'nginx:1.25', 1), Yh.svc('db', 'zt', 'db', 80), P('frontend', 'zt', { role: 'frontend' }), P('intruder', 'zt', { role: 'intruder' })],
+      tasks: [T('A default-deny policy exists (all pods)', ['`podSelector: {}` selects every pod.', 'policyTypes: [Ingress, Egress] with no rules denies everything.'], [{ t: 'exists', ref: 'networkpolicy/default-deny', ns: 'zt' }, { t: 'jp', ref: 'networkpolicy/default-deny', ns: 'zt', path: '.spec.policyTypes[1]', eq: 'Egress' }]),
+        T('`frontend` can reach `db`:80', ['Two rules: ingress on db from role=frontend, egress on frontend to app=db.'], [{ t: 'curl', ns: 'zt', from: 'frontend', to: 'db:80' }]),
+        T('`intruder` is still blocked', ['Do not delete the default-deny.'], [{ t: 'curl', ns: 'zt', from: 'intruder', to: 'db:80', ok: false }, { t: 'exists', ref: 'networkpolicy/default-deny', ns: 'zt' }])],
+      solution: ['kubectl apply -f - <<EOF\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: default-deny\n  namespace: zt\nspec:\n  podSelector: {}\n  policyTypes: ["Ingress", "Egress"]\n---\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: db-from-frontend\n  namespace: zt\nspec:\n  podSelector:\n    matchLabels:\n      app: db\n  policyTypes: ["Ingress"]\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          role: frontend\n    ports:\n    - port: 80\n---\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: frontend-to-db\n  namespace: zt\nspec:\n  podSelector:\n    matchLabels:\n      role: frontend\n  policyTypes: ["Egress"]\n  egress:\n  - to:\n    - podSelector:\n        matchLabels:\n          app: db\n    ports:\n    - port: 80\nEOF', 'kubectl get networkpolicy -n zt'] }),
+
+    L({ id: 's111-secret-volume', num: 'S111', title: 'Stop leaking secrets through env vars', diff: 'Intermediate', track: ['CKS', 'CKAD'], domain: 'Security', time: '12 min', ns: 'vault',
+      story: 'Deployment `billing` reads its database password from an environment variable, where it shows up in `describe`, process listings and crash dumps. Mount Secret `db-pass` as a read-only volume at `/etc/db` with file mode `0400`, and remove the env var.',
+      caution: 'Even as files, Secrets are only base64-encoded unless encryption at rest is enabled, and anyone who can `get secrets` can read them. Restrict RBAC and rotate the value after exposure. Use placeholders only in practice.',
+      setup: [NS('vault'), 'apiVersion: v1\nkind: Secret\nmetadata:\n  name: db-pass\n  namespace: vault\nstringData:\n  password: change-me\n', Yh.dep('billing', 'vault', 'nginx:1.25', 2, '        env:\n        - name: DB_PASSWORD\n          valueFrom:\n            secretKeyRef:\n              name: db-pass\n              key: password\n')],
+      tasks: [T('Secret mounted as a volume with defaultMode 0400', ['`volumes: [{name: db, secret: {secretName: db-pass, defaultMode: 256}}]` (0400 octal = 256 decimal)', 'In YAML you can write `defaultMode: 0400`.'], [{ t: 'jp', ref: 'deploy/billing', ns: 'vault', path: '.spec.template.spec.volumes[0].secret.secretName', eq: 'db-pass' }, { t: 'jp', ref: 'deploy/billing', ns: 'vault', path: '.spec.template.spec.volumes[0].secret.defaultMode', eq: '256' }]),
+        T('Mounted read-only at /etc/db', ['volumeMounts: mountPath /etc/db, readOnly: true'], [{ t: 'jp', ref: 'deploy/billing', ns: 'vault', path: '.spec.template.spec.containers[0].volumeMounts[0].mountPath', eq: '/etc/db' }, { t: 'jp', ref: 'deploy/billing', ns: 'vault', path: '.spec.template.spec.containers[0].volumeMounts[0].readOnly', eq: 'true' }]),
+        T('No DB_PASSWORD env var, pods Ready', ['Remove the whole `env` list.'], [{ t: 'jp', ref: 'deploy/billing', ns: 'vault', path: '.spec.template.spec.containers[0].env', eq: '' }, { t: 'podsReady', ns: 'vault', sel: 'app=billing', min: 2 }])],
+      solution: ['kubectl patch deployment billing -n vault --type=json -p \'[{"op":"remove","path":"/spec/template/spec/containers/0/env"},{"op":"add","path":"/spec/template/spec/volumes","value":[{"name":"db","secret":{"secretName":"db-pass","defaultMode":256}}]},{"op":"add","path":"/spec/template/spec/containers/0/volumeMounts","value":[{"name":"db","mountPath":"/etc/db","readOnly":true}]}]\'', 'kubectl rollout status deployment/billing -n vault'] }),
+
+    L({ id: 's112-audit-hunt', num: 'S112', title: 'Read the audit log: who touched the secret?', diff: 'Advanced', track: ['CKS'], domain: 'Security', time: '14 min', ns: 'audit',
+      story: 'Something read the Secret `prod-db` last night. The API server audit log is at `/home/student/audit.log` (one event per line: `user=… verb=… resource=… name=… code=…`). Find the user who **successfully** (code 200) read that Secret and write `user=<name>` to `/home/student/answer.txt`. Then count the denied requests (code 403) and write the number to `/home/student/denied.txt`.',
+      caution: 'Audit logs can contain sensitive data. Restrict access to them, ship them off the node, and rotate any credential that was read by someone who should not have had access.',
+      setup: [NS('audit')], files: [{ path: '/home/student/audit.log', content: 'user=alice verb=list resource=pods name=- code=200\nuser=bob verb=get resource=secrets name=web-tls code=200\nuser=mallory verb=get resource=secrets name=prod-db code=403\nuser=mallory verb=get resource=secrets name=prod-db code=200\nuser=carol verb=delete resource=pods name=api-1 code=200\nuser=dave verb=list resource=secrets name=- code=403\nuser=alice verb=get resource=configmaps name=app code=200\nuser=bob verb=get resource=secrets name=prod-db code=403\n' }],
+      tasks: [T('answer.txt names the user who read `prod-db` successfully', ['`grep prod-db /home/student/audit.log`', 'Then keep only `code=200`: `grep code=200`.', 'Print the first field with `awk \'{print $1}\'` and redirect with `>`.'], [{ t: 'file', path: '/home/student/answer.txt', has: 'user=mallory' }]),
+        T('denied.txt holds the number of 403 events', ['`grep -c code=403 /home/student/audit.log > /home/student/denied.txt`'], [{ t: 'file', path: '/home/student/denied.txt', has: '3' }])],
+      solution: ['grep prod-db /home/student/audit.log | grep code=200 | awk \'{print $1}\' > /home/student/answer.txt', 'grep -c code=403 /home/student/audit.log > /home/student/denied.txt', 'cat /home/student/answer.txt /home/student/denied.txt'] }),
+
+    L({ id: 's113-open-binding', num: 'S113', title: 'Hardening: an over-broad binding and the default ServiceAccount', diff: 'Advanced', track: ['CKS'], domain: 'Security', time: '14 min', ns: 'team',
+      story: 'A ClusterRoleBinding `everyone-admin` gives **cluster-admin** to the group `system:authenticated`, so every logged-in identity is an administrator. Remove it. Also, the `default` ServiceAccount in `team` should not auto-mount API tokens into pods: disable that, but keep the ServiceAccount.',
+      caution: 'Deleting a binding can lock out workloads that silently relied on it. Check who uses it first (`kubectl get clusterrolebinding everyone-admin -o yaml`, audit logs), and create narrow replacement roles before removing it on a real cluster.',
+      setup: [NS('team'), 'apiVersion: rbac.authorization.k8s.io/v1\nkind: ClusterRoleBinding\nmetadata:\n  name: everyone-admin\nroleRef:\n  apiGroup: rbac.authorization.k8s.io\n  kind: ClusterRole\n  name: cluster-admin\nsubjects:\n- apiGroup: rbac.authorization.k8s.io\n  kind: Group\n  name: system:authenticated\n'],
+      tasks: [T('`everyone-admin` is gone', ['`kubectl get clusterrolebindings | grep cluster-admin`', '`kubectl delete clusterrolebinding everyone-admin`'], [{ t: 'absent', ref: 'clusterrolebinding/everyone-admin', ns: '' }]),
+        T('Default ServiceAccount no longer auto-mounts a token', ['`kubectl patch sa default -n team -p \'{"automountServiceAccountToken":false}\'`'], [{ t: 'jp', ref: 'sa/default', ns: 'team', path: '.automountServiceAccountToken', eq: 'false' }]),
+        T('The default ServiceAccount still exists', ['Do not delete it: Kubernetes would just recreate it.'], [{ t: 'exists', ref: 'sa/default', ns: 'team' }])],
+      solution: ['kubectl delete clusterrolebinding everyone-admin', 'kubectl patch sa default -n team -p \'{"automountServiceAccountToken":false}\'', 'kubectl get sa default -n team -o yaml'] }),
+
+    L({ id: 's114-psa-rollout', num: 'S114', title: 'Pod Security: warn and audit before you enforce', diff: 'Advanced', track: ['CKS'], domain: 'Security', time: '12 min', ns: 'rollout-ns',
+      story: 'You will move namespace `rollout-ns` to the `restricted` Pod Security Standard, but existing workloads would break. Roll it out in stages: **enforce** `baseline` now, and set `warn` and `audit` to `restricted` so violations are reported without blocking. (Use the standard label keys `pod-security.kubernetes.io/<mode>`.)',
+      caution: 'Jumping straight to `enforce: restricted` blocks every new pod that violates it. `warn` shows violations to the person applying a manifest, `audit` records them in the audit log. Use both, fix the findings, then enforce.',
+      setup: [NS('rollout-ns'), Yh.dep('app', 'rollout-ns', 'nginx:1.25', 2)],
+      tasks: [T('Namespace enforces `baseline`', ['`kubectl label ns rollout-ns pod-security.kubernetes.io/enforce=baseline`'], [{ t: 'jp', ref: 'namespace/rollout-ns', ns: '', path: '.metadata.labels.pod-security\\.kubernetes\\.io/enforce', eq: 'baseline' }]),
+        T('`warn` and `audit` are `restricted`', ['Same label prefix, modes `warn` and `audit`.'], [{ t: 'jp', ref: 'namespace/rollout-ns', ns: '', path: '.metadata.labels.pod-security\\.kubernetes\\.io/warn', eq: 'restricted' }, { t: 'jp', ref: 'namespace/rollout-ns', ns: '', path: '.metadata.labels.pod-security\\.kubernetes\\.io/audit', eq: 'restricted' }]),
+        T('Existing pods keep running', ['Labels do not evict running pods; they affect new pods.'], [{ t: 'podsReady', ns: 'rollout-ns', sel: 'app=app', min: 2 }])],
+      solution: ['kubectl label ns rollout-ns pod-security.kubernetes.io/enforce=baseline pod-security.kubernetes.io/warn=restricted pod-security.kubernetes.io/audit=restricted', 'kubectl get ns rollout-ns --show-labels'] })
+  ]);
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
 <script>/* assets/js/data/debrief.js */
 /* Post-lab debrief cards: root cause · fix · how to spot it in production · pattern to memorise. id -> [cause, fix, spot, pattern] */
 (function (root) {
@@ -8183,6 +8520,34 @@ js-yaml/dist/js-yaml.mjs:
     's95-pi-day-replay': ["Expired certificates, a dead admission webhook and a stuck namespace compounded each other.", "Renew certificates and restart components, restore the webhook backend, then clear the finalizer.", "x509 expiry errors, then FailedCreate webhook errors, then a Terminating namespace.", "Restore access first, then the write path, then clean up; never delete policy just to get unblocked."],
     's96-two-nodes-down': ["One worker's kubelet died on swap and another hit disk pressure, leaving only the control plane healthy.", "Fix swap and restart the kubelet on one node; vacuum logs on the other; verify pods.", "Two NotReady/pressured nodes and Pending or Evicted pods.", "Triage one node at a time from its logs; do not delete data to free space."]
   };
+})(typeof window !== 'undefined' ? window : globalThis);
+
+</script>
+<script>/* assets/js/data/debrief-j.js */
+/* Debrief cards for S97–S114: root cause · fix · how to spot it in production · pattern to memorise. */
+(function (root) {
+  var KL = root.KL = root.KL || {}; KL.debrief = KL.debrief || {};
+  var d = {
+    's97-pv-retain': ['The volume was provisioned with reclaim policy Delete and the class could not grow volumes.', 'Patch the PV to Retain, allow expansion on the StorageClass, then raise the claim size.', 'kubectl get pv shows RECLAIM POLICY Delete for data you care about; resize requests fail with "not expandable".', 'Retain keeps data after the claim goes; expansion needs allowVolumeExpansion on the class.'],
+    's98-drain-bare-pod': ['A pod with no controller cannot be recreated, so drain refuses to evict it without --force.', 'Confirm the pod is disposable (or move its data), then drain with --force; the Deployment pods reschedule.', 'kubectl drain errors with "cannot delete Pods declared without a controller".', 'drain --ignore-daemonsets --delete-emptydir-data, plus --force only for unmanaged pods you accept losing.'],
+    's99-noexecute-eviction': ['NoExecute evicts running pods that lack a matching toleration; tolerationSeconds bounds how long one may stay.', 'Add a toleration with tolerationSeconds to the workload that needs time, then taint the node.', 'Pods disappear from a node immediately after a taint with effect NoExecute.', 'NoSchedule only blocks new pods; NoExecute also evicts running ones.'],
+    's100-hpa-unknown': ['A CPU utilization target is a percentage of the pod request; with no request the HPA has nothing to divide by.', 'Set CPU requests on the Deployment, leave the HPA alone.', 'kubectl get hpa shows <unknown>/50% and describe says missing request for cpu.', 'No requests means no percentage-based autoscaling.'],
+    's101-clusterrole-reuse': ['A ClusterRole defines permissions once; the binding decides where they apply.', 'Bind the same ClusterRole with a RoleBinding in each allowed namespace.', 'kubectl auth can-i --as=system:serviceaccount:<ns>:<sa> -n <other-ns> shows unexpected yes or no.', 'ClusterRole plus RoleBinding limits scope; ClusterRole plus ClusterRoleBinding grants everywhere.'],
+    's102-httproute-fix': ['The route referenced a Gateway that does not exist and a backend port the Service does not expose.', 'Point parentRefs at the real Gateway and use the Service port.', 'The app is healthy but gets no traffic; the HTTPRoute status shows no accepted parent.', 'Check parentRefs, hostnames and backend port in that order.'],
+    's103-job-parallel': ['Job behaviour is set in the Job spec (completions, parallelism, backoffLimit, activeDeadlineSeconds) and pods need restartPolicy Never or OnFailure.', 'Create the Job with those fields; delete and recreate to change them later.', 'Jobs run forever, retry endlessly or run serially when one of those fields is missing.', 'completions = how many succeed, parallelism = how many at once, backoffLimit = retries.'],
+    's104-cronjob-policy': ['CronJob defaults allow overlapping runs and keep little history policy control.', 'Set schedule, concurrencyPolicy: Forbid, history limits and startingDeadlineSeconds.', 'Multiple Job pods of the same CronJob running at once; old finished Jobs piling up.', 'Forbid skips overlap, Replace cancels the old run; test with kubectl create job --from=cronjob/<name>.'],
+    's105-startup-probe': ['A liveness probe started killing a slow-starting container before it was ready.', 'Add a startup probe that allows enough time; keep liveness strict.', 'Pods restart in a loop at start-up with no application errors in logs.', 'startupProbe holds off liveness and readiness until the app has started once.'],
+    's106-config-injection': ['Config should come from ConfigMaps and Secrets rather than baked into the image or env literals.', 'Use envFrom for all keys of a ConfigMap and mount a Secret as a read-only volume.', 'Pods lack expected env vars; secrets appear in describe output as env vars.', 'envFrom pulls every key; secret volumes avoid leaking through env.'],
+    's107-rolling-strategy': ['The default 25% / 25% rolling update can dip below the desired capacity.', 'Set maxSurge 1 and maxUnavailable 0, then roll out; a readiness probe guards it.', 'Capacity drops during deploys; rollouts stall when no spare capacity exists.', 'maxUnavailable 0 keeps full capacity; maxSurge sets how many extra pods are allowed.'],
+    's108-old-apiversion': ['The manifest used an API version that is no longer served.', 'Find the current group/version with api-resources and explain, update the file, apply.', 'Applying old manifests fails with "no matches for kind ... in version ...".', 'Check apiVersion first when a manifest that used to work fails after an upgrade.'],
+    's109-seccomp-default': ['Containers ran with no syscall filter, privilege escalation allowed and a writable root filesystem.', 'Set seccompProfile RuntimeDefault, block escalation, drop all capabilities, read-only root with emptyDir where needed.', 'Pod Security checks and scanners flag missing seccompProfile, allowPrivilegeEscalation and capabilities.', 'RuntimeDefault seccomp, no escalation, drop ALL, read-only root.'],
+    's110-default-deny': ['With no NetworkPolicy every pod can talk to every pod.', 'Apply a default-deny for ingress and egress, then add narrow allow rules (and DNS in real clusters).', 'Any pod can reach the database; a compromised pod can move laterally.', 'Default deny first, then allow exactly what is needed.'],
+    's111-secret-volume': ['A secret was injected as an environment variable, which is easy to leak.', 'Mount the Secret as a read-only volume with restrictive file mode and remove the env var.', 'The value is visible in kubectl describe, process environments and crash dumps.', 'Prefer secret volumes over env vars, and restrict who can get secrets.'],
+    's112-audit-hunt': ['Audit logs record who did what to which resource; the answer was in the successful read event.', 'Filter by resource name and status code, extract the user field, count denied events.', 'Unexpected secret reads show up as get secrets with code 200 from an unusual user.', 'grep, filter by code, extract a field; audit logs answer who, what and when.'],
+    's113-open-binding': ['A ClusterRoleBinding gave cluster-admin to every authenticated identity, and the default ServiceAccount token was auto-mounted.', 'Delete the binding and turn off automountServiceAccountToken on the default ServiceAccount.', 'kubectl get clusterrolebindings shows cluster-admin bound to broad groups such as system:authenticated.', 'Hunt broad bindings and stop auto-mounting tokens where they are not needed.'],
+    's114-psa-rollout': ['Enforcing a strict Pod Security level immediately would break existing workloads.', 'Enforce baseline, set warn and audit to restricted, fix the findings, then tighten enforce.', 'Warnings appear when applying manifests; audit events list pods that would violate restricted.', 'Use warn and audit to measure impact before you enforce.']
+  };
+  Object.keys(d).forEach(function (k) { KL.debrief[k] = d[k]; });
 })(typeof window !== 'undefined' ? window : globalThis);
 
 </script>
@@ -8851,7 +9216,7 @@ js-yaml/dist/js-yaml.mjs:
     var shown = Labs.list.filter(function (l) { return labMatch(l, 'sim'); });
     list.innerHTML = shown.map(function (l) {
       var done = store.labDone(l.id), tasks = store.labTasks(l.id), n = Object.keys(tasks).filter(function (k) { return tasks[k]; }).length;
-      return '<a class="ilab-card' + (done ? ' done' : '') + '" href="#lab/' + l.id + '" data-id="' + l.id + '"><div class="ilab-top"><span class="ilab-num">' + l.num + '</span><span class="lab-diff ' + diffCls(l.diff) + '">' + l.diff + '</span>' + (done ? '<span class="ilab-done" aria-label="completed">✓</span>' : '') + '</div><div class="ilab-title">' + esc(l.title) + '</div><div class="ilab-meta"><span>⏱ ' + l.time + '</span><span>' + esc(l.domain || '') + '</span></div><div class="ilab-tracks">' + l.track.map(function (t) { return '<span class="tag tag-blue">' + t + '</span>'; }).join('') + '</div><div class="ilab-prog"><i style="width:' + (done ? 100 : Math.round(n / l.tasks.length * 100)) + '%"></i></div></a>';
+      return '<a class="ilab-card' + (done ? ' done' : '') + '" href="#lab/' + l.id + '" data-id="' + l.id + '"><div class="ilab-top"><span class="ilab-num">' + l.num + '</span><span class="lab-diff ' + diffCls(l.diff) + '">' + l.diff + '</span>' + (done ? '<span class="ilab-done" aria-label="completed">✓</span>' : '') + '</div><div class="ilab-title">' + esc(l.title) + '</div><div class="ilab-meta"><span>⏱ ' + l.time + '</span><span>' + esc(l.domain || '') + '</span></div><div class="ilab-tracks">' + l.track.map(function (t) { return '<span class="tag tag-blue">' + t + '</span>'; }).join('') + (KL.fid ? KL.fid.badge(l) : '') + '</div><div class="ilab-prog"><i style="width:' + (done ? 100 : Math.round(n / l.tasks.length * 100)) + '%"></i></div></a>';
     }).join('');
     $('ilabsHead').style.display = filt.mode === 'walk' ? 'none' : '';
     list.style.display = filt.mode === 'walk' ? 'none' : '';
@@ -9162,10 +9527,16 @@ js-yaml/dist/js-yaml.mjs:
     r.buf = ''; $('lrPrompt').textContent = prompt(); if (text.trim()) { r.hist.push(text.split('\n')[0]); r.hi = r.hist.length; }
     var t = text.trim(); if (t === 'clear') { r.out = []; $('lrOut').innerHTML = ''; return; }
     if (r.mode === 'real' && /^(k|kubectl)\s+config\s+(use-context|current-context|get-contexts)\b/.test(t)) { ctxCmd(t); return; }
-    var res; try { res = sim.exec(text); } catch (e) { res = { stdout: '', stderr: 'simulator error: ' + e.message + '\n', code: 1 }; }
-    if (res.stdout) say(res.stdout, ''); if (res.stderr) say(res.stderr, 'err');
-    if (res.edit) openEditor(res.edit, res.applyOnSave);
-    sim.settle(3); $('lrPrompt').textContent = prompt(); refreshState(); saveRun(r);
+    var go = function () {
+      var res; try { res = sim.exec(text); } catch (e) { res = { stdout: '', stderr: 'simulator error: ' + e.message + '\n', code: 1 }; }
+      if (res.stdout) say(res.stdout, ''); if (res.stderr) say(res.stderr, 'err');
+      if (res.edit) openEditor(res.edit, res.applyOnSave);
+      sim.settle(3); $('lrPrompt').textContent = prompt(); refreshState(); saveRun(r);
+      try { window.dispatchEvent(new CustomEvent('kl:cmd', { detail: { run: r, line: text, res: res } })); } catch (e) { /* ignore */ }
+    };
+    // optional gate (predict-the-output asks a question first, then calls go)
+    if (KL.gate && r.mode === 'learn' && KL.gate(r, text, go)) return;
+    go();
   }
   function ctxCmd(t) {
     var r = cur, a = t.split(/\s+/), sub = a[2];
@@ -9192,6 +9563,7 @@ js-yaml/dist/js-yaml.mjs:
     s.ctxNs = sv; el.textContent = txt;
     try { refreshDiagram(); } catch (e) { var d = $('lrDia'); if (d) d.textContent = 'diagram error: ' + e.message; }
   }
+  KL.runner = { cur: function () { return cur; }, say: say, run: runCmd, refresh: refreshState, save: saveRun, tasks: renderTasks, prompt: prompt };
   window.addEventListener('pagehide', function () { if (cur) saveRun(cur, true); });
   document.addEventListener('visibilitychange', function () { if (document.hidden && cur) saveRun(cur, true); });
   function boot() { renderIlabs(); bindFilters(); enhanceWalk(); }
@@ -9257,6 +9629,27 @@ js-yaml/dist/js-yaml.mjs:
   // ── curated mock-exam bundles (deterministic, weighted, domain report) ──
   var WT = { Beginner: 4, Intermediate: 6, Advanced: 9 };
   function weightsFor(ids) { var tot = 0, w = {}; ids.forEach(function (id) { tot += WT[Labs.byId[id].diff] || 6; }); ids.forEach(function (id) { w[id] = Math.round((WT[Labs.byId[id].diff] || 6) / tot * 1000) / 10; }); return w; }
+  // official CNCF curriculum domains and weights (public, from the exam pages) mapped onto our lab domains
+  var CURR = {
+    CKA: [['Troubleshooting', 30], ['Cluster Architecture, Installation and Configuration', 25], ['Services and Networking', 20], ['Workloads and Scheduling', 15], ['Storage', 10]],
+    CKAD: [['Application Environment, Configuration and Security', 25], ['Application Design and Build', 20], ['Application Deployment', 20], ['Services and Networking', 20], ['Application Observability and Maintenance', 15]],
+    CKS: [['Supply Chain Security', 20], ['Minimize Microservice Vulnerabilities', 20], ['Monitoring, Logging and Runtime Security', 20], ['Cluster Hardening', 15], ['System Hardening', 15], ['Cluster Setup', 10]]
+  };
+  S.CURR = CURR;
+  function bucket(track, lab) {
+    var d = lab.domain || '', t = (lab.title + ' ' + lab.id).toLowerCase();
+    if (track === 'CKA') return /troubl|incident/i.test(d + t) ? CURR.CKA[0][0] : /storage|pvc|volume/i.test(d + t) ? CURR.CKA[4][0] : /network|service|dns|ingress|gateway|netpol/i.test(d + t) ? CURR.CKA[2][0] : /schedul|workload|deploy|taint|affinity|hpa|scale/i.test(d + t) ? CURR.CKA[3][0] : CURR.CKA[1][0];
+    if (track === 'CKAD') return /observ|probe|log|debug|monitor/i.test(d + t) ? CURR.CKAD[4][0] : /network|service|ingress|netpol|dns/i.test(d + t) ? CURR.CKAD[3][0] : /deploy|rollout|rolling|helm|kustom/i.test(d + t) ? CURR.CKAD[2][0] : /config|secret|security|rbac|serviceaccount|quota|limit/i.test(d + t) ? CURR.CKAD[0][0] : CURR.CKAD[1][0];
+    return /image|scan|supply|registry|trivy/i.test(t) ? CURR.CKS[0][0] : /netpol|psa|pod security|secret|multitenant|sandbox|mtls|default-deny/i.test(t) ? CURR.CKS[1][0] : /audit|falco|runtime|log|monitor/i.test(t) ? CURR.CKS[2][0] : /rbac|sa-token|serviceaccount|binding|cluster-admin|api/i.test(t) ? CURR.CKS[3][0] : /seccomp|apparmor|hardening|sys|kernel|privileg/i.test(t) ? CURR.CKS[4][0] : CURR.CKS[5][0];
+  }
+  S.bucket = bucket;
+  function currIds(track, n) {
+    var pool = Labs.list.filter(function (l) { return l.track.indexOf(track) >= 0; }), by = {}, ids = [];
+    pool.forEach(function (l) { (by[bucket(track, l)] = by[bucket(track, l)] || []).push(l); });
+    CURR[track].forEach(function (d) { var want = Math.max(1, Math.round(d[1] / 100 * n)), arr = (by[d[0]] || []).slice(0, want); arr.forEach(function (l) { ids.push(l.id); }); });
+    pool.forEach(function (l) { if (ids.length < n && ids.indexOf(l.id) < 0) ids.push(l.id); });
+    return ids.slice(0, n);
+  }
   S.bundles = function () {
     var out = [];
     ['CKA', 'CKAD', 'CKS'].forEach(function (tr) {
@@ -9267,12 +9660,17 @@ js-yaml/dist/js-yaml.mjs:
         out.push({ id: tr.toLowerCase() + '-mock-' + (b + 1), name: tr + ' Mock ' + (b + 1), track: tr, ids: ids, mins: Math.max(45, Math.min(120, Math.round(sum * 0.8 / 5) * 5)) });
       }
     });
+    ['CKA', 'CKAD', 'CKS'].forEach(function (tr) {
+      var ids = currIds(tr, 12); if (ids.length < 4) return;
+      var sum = ids.reduce(function (a, id) { return a + (parseInt(Labs.byId[id].time, 10) || 10); }, 0);
+      out.push({ id: tr.toLowerCase() + '-curr', name: tr + ' Curriculum-weighted', track: tr, ids: ids, mins: Math.max(60, Math.min(120, Math.round(sum * 0.8 / 5) * 5)), curr: true });
+    });
     return out;
   };
   S.startBundle = function (bid, env) {
     var b = S.bundles().filter(function (x) { return x.id === bid; })[0]; if (!b) return;
     Promise.all(b.ids.map(function (id) { return KL.labRun(id, true); })).then(function () {
-      S.result = null; S.active = { track: b.track, ids: b.ids, start: Date.now(), end: Date.now() + b.mins * 60000, mins: b.mins, flags: {}, w: weightsFor(b.ids), env: !!env, name: b.name }; saveActive();
+      S.result = null; S.active = { track: b.track, ids: b.ids, start: Date.now(), end: Date.now() + b.mins * 60000, mins: b.mins, flags: {}, w: weightsFor(b.ids), env: !!env, name: b.name, curr: !!b.curr }; saveActive();
       if (location.hash === '#exam') render(); else location.hash = 'exam';
     });
   };
@@ -9291,14 +9689,30 @@ js-yaml/dist/js-yaml.mjs:
     var a = S.active; if (!a) return; clearInterval(timer); S.active = null; saveActive();
     Promise.all(a.ids.map(function (id) { return KL.labRun(id); })).then(function (runs) { finishWith(a, runs); });
   };
+  // speed coach: reads the command history of each task and points out slow habits (no spoilers, no grading)
+  function coach(runs, rows) {
+    var tips = [], all = []; runs.forEach(function (r) { all = all.concat(r.hist || []); });
+    var full = all.filter(function (c) { return /^kubectl\s/.test(c); }).length, kshort = all.filter(function (c) { return /^k\s/.test(c); }).length;
+    var ed = all.filter(function (c) { return /^(vi|vim|nano)\s/.test(c); }).length, edit = all.filter(function (c) { return /^(k|kubectl)\s+edit\b/.test(c); }).length;
+    var dry = all.filter(function (c) { return /--dry-run|\$do\b/.test(c); }).length, expl = all.filter(function (c) { return /^(k|kubectl)\s+explain\b/.test(c); }).length;
+    var imp = all.filter(function (c) { return /^(k|kubectl)\s+(set|scale|patch|label|annotate|taint|expose|create|run)\b/.test(c); }).length;
+    var untouched = rows.filter(function (x, i) { return !(runs[i].hist || []).length; });
+    if (full >= 8 && kshort < full / 4) tips.push('You typed <code>kubectl</code> ' + full + ' times. In the exam <code>k</code> is already an alias, which saves about ' + full * 6 + ' keystrokes. Practise with <code>k</code>.');
+    if (ed >= 3 && !dry) tips.push('You opened an editor ' + ed + ' times but never generated YAML. Try <code>k create deploy x --image=nginx $do > x.yaml</code>, then edit only the lines you need.');
+    if (edit >= 3 && imp === 0) tips.push('You used <code>kubectl edit</code> ' + edit + ' times. One-line <code>k set image</code>, <code>k scale</code>, <code>k patch</code> or <code>k label</code> is usually faster and easier to repeat.');
+    if (!expl && ed >= 2) tips.push('You never ran <code>kubectl explain</code>. It is the fastest way to find a field name without leaving the terminal.');
+    if (untouched.length) tips.push(untouched.length + ' task' + (untouched.length > 1 ? 's were' : ' was') + ' never attempted. Real exams give partial credit per task, so a first quick pass over every task usually beats finishing a few perfectly.');
+    if (!tips.length) tips.push('No slow habits stood out. Keep timing yourself: the real exam is mostly about speed on tasks you already know.');
+    return tips;
+  }
   function finishWith(a, runs) {
     var w = a.w || weightsFor(a.ids), dom = {};
     var rows = a.ids.map(function (id, i) { var lab = Labs.byId[id], res = Labs.check(runs[i].sim, lab); return { lab: lab, res: res, w: w[id] || 0 }; });
-    var got = 0, tot = 0, score = 0, wt = 0; rows.forEach(function (r) { got += r.res.passed; tot += r.res.total; var f = r.res.total ? r.res.passed / r.res.total : 0; score += r.w * f; wt += r.w; var d = dom[r.lab.domain] = dom[r.lab.domain] || { got: 0, w: 0 }; d.got += r.w * f; d.w += r.w; });
+    var got = 0, tot = 0, score = 0, wt = 0; rows.forEach(function (r) { got += r.res.passed; tot += r.res.total; var f = r.res.total ? r.res.passed / r.res.total : 0; score += r.w * f; wt += r.w; var dn = a.curr && CURR[a.track] ? bucket(a.track, r.lab) : r.lab.domain, d = dom[dn] = dom[dn] || { got: 0, w: 0 }; d.got += r.w * f; d.w += r.w; });
     var pct = wt ? Math.round(score / wt * 100) : 0, secs = Math.min(Math.round((Date.now() - a.start) / 1000), a.mins * 60);
     store.addExam({ date: Date.now(), track: a.name || a.track, pct: pct, got: got, tot: tot, secs: secs, n: a.ids.length });
-    var domains = Object.keys(dom).map(function (k) { return { name: k, pct: Math.round(dom[k].got / dom[k].w * 100), w: Math.round(dom[k].w) }; }).sort(function (x, y) { return x.pct - y.pct; });
-    S.result = { rows: rows, pct: pct, got: got, tot: tot, secs: secs, track: a.name || a.track, domains: domains, weighted: true };
+    var domains = Object.keys(dom).map(function (k) { var off = a.curr && CURR[a.track] ? (CURR[a.track].filter(function (c) { return c[0] === k; })[0] || [0, 0])[1] : 0; return { name: k, pct: Math.round(dom[k].got / dom[k].w * 100), w: Math.round(dom[k].w), off: off }; }).sort(function (x, y) { return x.pct - y.pct; });
+    S.result = { rows: rows, pct: pct, got: got, tot: tot, secs: secs, track: a.name || a.track, domains: domains, weighted: true, coach: coach(runs, rows) };
     render(); if (pct >= 66 && KL.fx) KL.fx.confetti();
   }
   function render() {
@@ -9313,8 +9727,8 @@ js-yaml/dist/js-yaml.mjs:
     }
     if (S.result) {
       var r = S.result, pass = r.pct >= 66;
-      h += '<div class="ex-result ' + (pass ? 'pass' : 'fail') + '"><div class="ex-score">' + r.pct + '%</div><div class="ex-verdict">' + (pass ? '🏆 PASS — you cleared 66%' : '📚 Not yet — you need 66%') + '</div><div class="ex-sub">' + r.got + ' / ' + r.tot + ' checks · ' + fmt(r.secs) + ' used · ' + r.track + (r.weighted ? ' · weighted' : '') + '</div></div>' + (r.domains ? '<div class="ex-dom"><h3>Score by domain</h3>' + r.domains.map(function (d) { return '<div class="ex-dr"><span>' + esc(d.name) + '</span><div class="ex-db"><div class="' + (d.pct >= 66 ? 'ok' : 'no') + '" style="width:' + d.pct + '%"></div></div><b>' + d.pct + '%</b></div>'; }).join('') + '<p class="ex-note">Weakest area: <b>' + esc(r.domains[0].name) + '</b> — retry its tasks below in practice mode.</p></div>' : '') +
-        '<div class="ex-list">' + r.rows.map(function (x) { return '<div class="ex-q ' + (x.res.ok ? 'okq' : 'badq') + '"><span class="ex-n">' + (x.res.ok ? '✓' : '✗') + '</span><span class="ex-t">' + esc(x.lab.title) + '</span><span class="ex-w">' + (x.w ? x.w + '% · ' : '') + x.res.passed + '/' + x.res.total + '</span><a href="#lab/' + x.lab.id + '" onclick="KL.labRun(\'' + x.lab.id + '\',true)">retry in practice mode</a></div>'; }).join('') + '</div><button class="btn-primary" id="exAgain" style="margin-top:1.5rem">New exam</button>';
+      h += '<div class="ex-result ' + (pass ? 'pass' : 'fail') + '"><div class="ex-score">' + r.pct + '%</div><div class="ex-verdict">' + (pass ? '🏆 PASS — you cleared 66%' : '📚 Not yet — you need 66%') + '</div><div class="ex-sub">' + r.got + ' / ' + r.tot + ' checks · ' + fmt(r.secs) + ' used · ' + r.track + (r.weighted ? ' · weighted' : '') + '</div></div>' + (r.domains ? '<div class="ex-dom"><h3>Score by domain</h3>' + r.domains.map(function (d) { return '<div class="ex-dr"><span>' + esc(d.name) + (d.off ? ' <small>(exam weight ' + d.off + '%)</small>' : '') + '</span><div class="ex-db"><div class="' + (d.pct >= 66 ? 'ok' : 'no') + '" style="width:' + d.pct + '%"></div></div><b>' + d.pct + '%</b></div>'; }).join('') + '<p class="ex-note">Weakest area: <b>' + esc(r.domains[0].name) + '</b> — retry its tasks below in practice mode.</p></div>' : '') +
+        (r.coach ? '<div class="ex-coach"><h3>⚡ Speed coach</h3><ul>' + r.coach.map(function (t) { return '<li>' + t + '</li>'; }).join('') + '</ul></div>' : '') + '<div class="ex-list">' + r.rows.map(function (x) { return '<div class="ex-q ' + (x.res.ok ? 'okq' : 'badq') + '"><span class="ex-n">' + (x.res.ok ? '✓' : '✗') + '</span><span class="ex-t">' + esc(x.lab.title) + '</span><span class="ex-w">' + (x.w ? x.w + '% · ' : '') + x.res.passed + '/' + x.res.total + '</span><a href="#lab/' + x.lab.id + '" onclick="KL.labRun(\'' + x.lab.id + '\',true)">retry in practice mode</a></div>'; }).join('') + '</div><button class="btn-primary" id="exAgain" style="margin-top:1.5rem">New exam</button>';
       root.innerHTML = h; $('exAgain').onclick = function () { S.result = null; render(); }; return;
     }
     var hist = store.data().exams.slice(-8).reverse();
@@ -9335,6 +9749,14 @@ js-yaml/dist/js-yaml.mjs:
     var rs = $('lrReset'); if (rs) rs.remove();
     ['.lr-hints', '.lr-sol', '.lr-pack', '.lr-feedback', '.lr-mode', '#lrPredict', '.lr-exam-note'].forEach(function (q) { document.querySelectorAll(q).forEach(function (n) { n.remove(); }); });
     var back = bar.querySelector('.lr-back'); back.textContent = '← Exam overview'; back.href = '#exam';
+    // question navigator: previous / next and a status strip (attempted, flagged)
+    if (!bar.querySelector('.ex-nav')) {
+      var i0 = a.ids.indexOf(e.detail.lab.id), nav = document.createElement('div'); nav.className = 'ex-nav'; nav.setAttribute('aria-label', 'Exam questions');
+      Promise.all(a.ids.map(function (id) { return KL.labRun(id); })).then(function (runs) {
+        nav.innerHTML = (i0 > 0 ? '<a class="ex-np" href="#lab/' + a.ids[i0 - 1] + '" aria-label="Previous question">‹</a>' : '') + a.ids.map(function (id, i) { var tried = (runs[i].hist || []).length > 0; return '<a href="#lab/' + id + '" class="' + (i === i0 ? 'cur ' : '') + (tried ? 'tried ' : '') + (a.flags[id] ? 'flag' : '') + '" title="' + esc(Labs.byId[id].title) + '">' + (i + 1) + '</a>'; }).join('') + (i0 < a.ids.length - 1 ? '<a class="ex-np" href="#lab/' + a.ids[i0 + 1] + '" aria-label="Next question">›</a>' : '');
+      });
+      bar.insertBefore(nav, $('lrTimer'));
+    }
     var t = $('lrTimer'), iv = setInterval(function () { if (!document.body.contains(t) || !S.active) return clearInterval(iv); t.textContent = '⏳ ' + fmt((a.end - Date.now()) / 1000); }, 1000);
   });
 })();
@@ -9423,9 +9845,9 @@ js-yaml/dist/js-yaml.mjs:
 
   // ── learning path ──
   var PATHS = {
-    CKA: { title: 'CKA — Certified Kubernetes Administrator', mods: [1, 2, 3, 4, 5, 6, 8, 13, 14], labs: ['s01-pending-cpu', 's02-imagepull', 's03-oomkilled', 's04-no-endpoints', 's07-scheduling', 's13-pvc-pending', 's14-statefulset-pvc', 's15-quota-limits', 's17-drain-cordon', 's20-pdb-spread', 's23-gateway-api', 's29-svc-targetport', 's34-nodeselector', 's35-taint-toleration', 's44-static-pv', 's46-pdb-blocks-drain', 's49-clusterrole-nodes', 's63-etcd-backup', 's64-jsonpath-nodes', 's28-incident'], quiz: 'CKA' },
-    CKAD: { title: 'CKAD — Certified Kubernetes Application Developer', mods: [19, 3, 4, 7, 15, 16], labs: ['s02-imagepull', 's05-config-error', 's06-rollout-rollback', 's08-probes', 's09-jobs', 's10-sidecar', 's16-hpa', 's18-secret-env', 's19-ingress', 's25-kustomize', 's31-init-container', 's33-cm-volume', 's39-rollout-revision', 's40-cronjob-fix', 's55-image-pull-secret', 's60-canary-weights', 's66-imperative-speedrun'], quiz: 'CKAD' },
-    CKS: { title: 'CKS — Certified Kubernetes Security Specialist', mods: [9, 17, 18], labs: ['s11-rbac-sa', 's12-netpol-isolate', 's21-psa-restricted', 's22-sa-token', 's26-multitenant', 's27-image-scan', 's49-clusterrole-nodes', 's50-rolebinding-wrong-role', 's51-netpol-egress', 's52-netpol-namespace', 's53-psa-baseline', 's54-hostpath-baseline'], quiz: 'CKS' }
+    CKA: { title: 'CKA — Certified Kubernetes Administrator', mods: [1, 2, 3, 4, 5, 6, 8, 13, 14], labs: ['s01-pending-cpu', 's02-imagepull', 's03-oomkilled', 's04-no-endpoints', 's07-scheduling', 's13-pvc-pending', 's14-statefulset-pvc', 's15-quota-limits', 's17-drain-cordon', 's20-pdb-spread', 's23-gateway-api', 's29-svc-targetport', 's34-nodeselector', 's35-taint-toleration', 's44-static-pv', 's46-pdb-blocks-drain', 's49-clusterrole-nodes', 's63-etcd-backup', 's64-jsonpath-nodes', 's28-incident', 's97-pv-retain', 's98-drain-bare-pod', 's99-noexecute-eviction', 's100-hpa-unknown', 's101-clusterrole-reuse', 's102-httproute-fix', 's110-default-deny'], quiz: 'CKA' },
+    CKAD: { title: 'CKAD — Certified Kubernetes Application Developer', mods: [19, 3, 4, 7, 15, 16], labs: ['s02-imagepull', 's05-config-error', 's06-rollout-rollback', 's08-probes', 's09-jobs', 's10-sidecar', 's16-hpa', 's18-secret-env', 's19-ingress', 's25-kustomize', 's31-init-container', 's33-cm-volume', 's39-rollout-revision', 's40-cronjob-fix', 's55-image-pull-secret', 's60-canary-weights', 's66-imperative-speedrun', 's100-hpa-unknown', 's103-job-parallel', 's104-cronjob-policy', 's105-startup-probe', 's106-config-injection', 's107-rolling-strategy', 's108-old-apiversion', 's111-secret-volume'], quiz: 'CKAD' },
+    CKS: { title: 'CKS — Certified Kubernetes Security Specialist', mods: [9, 17, 18], labs: ['s11-rbac-sa', 's12-netpol-isolate', 's21-psa-restricted', 's22-sa-token', 's26-multitenant', 's27-image-scan', 's49-clusterrole-nodes', 's50-rolebinding-wrong-role', 's51-netpol-egress', 's52-netpol-namespace', 's53-psa-baseline', 's54-hostpath-baseline', 's101-clusterrole-reuse', 's109-seccomp-default', 's110-default-deny', 's111-secret-volume', 's112-audit-hunt', 's113-open-binding', 's114-psa-rollout'], quiz: 'CKS' }
   };
   var pathTrack = 'CKA'; KL.PATHS = PATHS; KL.setPathTrack = function (t) { if (PATHS[t]) pathTrack = t; };
   function renderPath() {
@@ -11263,6 +11685,554 @@ js-yaml/dist/js-yaml.mjs:
   function tick() { navMore(); fills(); pathCards(); heroDemo(); reveals(); countUp(); }
   document.addEventListener('DOMContentLoaded', tick); tick();
   setInterval(function () { if (pageOn('home')) { fills(); pathCards(); heroDemo(); reveals(); countUp(); } }, 1500);
+})();
+
+</script>
+<script>/* assets/js/pro-fidelity.js */
+/* Fidelity: per-lab badge (Exact / Modelled / Scripted) and the #fidelity page that says what the simulator does and does not do. */
+(function () {
+  'use strict';
+  var KL = window.KL, Labs = KL.Labs;
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var TIERS = { exact: { label: 'Exact', tip: 'Behaves like real Kubernetes for the objects and commands this lab uses.' }, model: { label: 'Modelled', tip: 'Core behaviour is real, but part of it (network, metrics, runtime) is a faithful model, not the real thing.' }, script: { label: 'Scripted', tip: 'Part of this lab uses scripted tooling (ssh, kubeadm, scanners…) that follows the lab scenario, not a real implementation.' } };
+  var SCRIPTED = [[/\bssh\b|systemctl|journalctl|crictl/, 'Node access (ssh, systemctl, journalctl, crictl) is a scripted shell'], [/kubeadm|etcdctl|openssl|\/etc\/kubernetes/, 'Control-plane tooling (kubeadm, etcdctl, certificates) follows scripted flows'], [/trivy/, 'Scanner output is canned for the lab images']];
+  var MODELLED = [[/\bcurl\b|\bwget\b|nslookup|NetworkPolicy|netpol/i, 'Network is modelled (DNS, Services, policies), not real packets'], [/\btop\b|HorizontalPodAutoscaler|\bhpa\b/i, 'CPU and memory metrics are synthetic'], [/Gateway|HTTPRoute|Ingress/, 'No real data plane: routing objects are checked, not served'], [/PersistentVolume|StorageClass|\bpvc\b|\bpv\b/i, 'Volumes bind and expand as objects; no real disk'], [/seccomp|apparmor|securityContext|runAsNonRoot|readOnlyRootFilesystem/i, 'Security settings are validated as spec fields, not enforced by a runtime'], [/OOMKilled|oom|memory/i, 'Container memory behaviour is inferred from image and command'], [/probe|CrashLoop|logs/i, 'Container behaviour is inferred from image and command']];
+  var cache = {};
+  function fidelity(lab) {
+    if (cache[lab.id]) return cache[lab.id];
+    var txt = JSON.stringify([lab.setup, lab.setupCmds, lab.solution, lab.files, lab.tasks.map(function (t) { return t.assert; })]) + ' ' + lab.story, why = [], tier = 'exact';
+    SCRIPTED.forEach(function (p) { if (p[0].test(txt)) { why.push(p[1]); tier = 'script'; } });
+    if (tier !== 'script') MODELLED.forEach(function (p) { if (p[0].test(txt) && why.indexOf(p[1]) < 0) { why.push(p[1]); tier = 'model'; } });
+    if (lab.simOnly && tier === 'exact') { tier = 'model'; why.push('Simulator-only scenario: a kind pack cannot reproduce it faithfully'); }
+    return (cache[lab.id] = { tier: tier, why: why.slice(0, 3) });
+  }
+  KL.fid = {
+    of: fidelity, TIERS: TIERS,
+    badge: function (lab) { var f = fidelity(lab); return '<span class="fid fid-' + f.tier + '" title="' + esc(TIERS[f.tier].label + ': ' + TIERS[f.tier].tip) + '">' + TIERS[f.tier].label + '</span>'; }
+  };
+  var AREAS = [
+    ['API objects and kubectl', 'exact', 'get, describe, apply, create, patch, scale, set, rollout, label, taint, drain, explain and more. Required fields are validated; unknown fields and removed apiVersions are not rejected.'],
+    ['Controllers', 'model', 'Deployment, ReplicaSet, StatefulSet, DaemonSet, Job, CronJob, HPA, PDB reconcile on a simulated clock.'],
+    ['Scheduler', 'model', 'Node name, cordon, selector and node affinity, taints and tolerations, requests, pod anti-affinity, topology spread; least-loaded scoring. No priority classes or preemption.'],
+    ['Kubelet and containers', 'model', 'Pod lifecycle, probes, restarts, CrashLoopBackOff, OOMKilled. Container behaviour is inferred from the image and command; there are no real processes.'],
+    ['Networking', 'model', 'DNS, Services and endpoints, NetworkPolicy ingress and egress, curl and wget from pods. No packets, CNI or kube-proxy modes. Ingress and Gateway objects are checked, not served.'],
+    ['Storage', 'model', 'PV and PVC binding, StorageClass, WaitForFirstConsumer, reclaim policy, expansion flag. No real volumes or data.'],
+    ['RBAC and admission', 'model', 'Roles, ClusterRoles, bindings, can-i, ResourceQuota, LimitRange, Pod Security labels. Aggregated roles and non-resource URLs may be incomplete.'],
+    ['Metrics', 'script', 'kubectl top and HPA use synthetic load, so the numbers are plausible but not measured.'],
+    ['Node and control-plane tasks', 'script', 'ssh, systemctl, journalctl, crictl, kubeadm, etcdctl and certificate checks follow scripted flows for the lab scenarios.'],
+    ['Security tooling', 'script', 'Image scanner output is canned. Settings such as seccomp or AppArmor are accepted as spec fields but not enforced.'],
+    ['Not modelled', 'no', 'CertificateSigningRequest, RuntimeClass, Lease, EndpointSlices, static pod directories, kubectl debug, Falco, audit policy files, real admission webhooks, real container runtime and real time.']
+  ];
+  var filt = { tier: 'all', q: '' };
+  function render() {
+    var root = $('fidRoot'); if (!root) return; var labs = Labs.list, n = { exact: 0, model: 0, script: 0 };
+    labs.forEach(function (l) { n[fidelity(l).tier]++; });
+    var shown = labs.filter(function (l) { var f = fidelity(l); return (filt.tier === 'all' || f.tier === filt.tier) && (!filt.q || (l.num + ' ' + l.title).toLowerCase().indexOf(filt.q) >= 0); });
+    var h = '<div class="section-header"><div class="section-tag">Trust</div><h2 class="section-title">Simulator fidelity</h2><p class="section-desc">KubeLab runs a Kubernetes simulator in your browser (modelled on ' + esc(KL.Sim.VERSION) + '). It is good for learning the model and building muscle memory, and it is not a real cluster. This page says exactly where it matches and where it does not.</p></div>';
+    h += '<div class="fid-tiers">' + ['exact', 'model', 'script'].map(function (k) { return '<div class="fid-tier fid-' + k + '"><b>' + n[k] + '</b><span>' + TIERS[k].label + '</span><p>' + esc(TIERS[k].tip) + '</p></div>'; }).join('') + '</div>';
+    h += '<h3 class="fid-h">What the simulator covers</h3><div class="fid-areas">' + AREAS.map(function (a) { var lab = { exact: 'Exact', model: 'Modelled', script: 'Scripted', no: 'Not modelled' }[a[1]]; return '<div class="fid-area"><span class="fid fid-' + a[1] + '">' + lab + '</span><div><b>' + esc(a[0]) + '</b><p>' + esc(a[2]) + '</p></div></div>'; }).join('') + '</div>';
+    h += '<h3 class="fid-h">How every lab is tested</h3><p class="fid-p">Each of the ' + labs.length + ' labs is run twice by an automated test: it must <b>fail</b> in its broken state and <b>pass</b> after its reference solution, and the same result must survive saving and reloading a session. The tests check the end state of the cluster, as the real exam does.</p>';
+    h += '<h3 class="fid-h">Fidelity of each lab</h3><div class="fid-ctl"><div class="filter-group" id="fidTier" role="group" aria-label="Filter by tier">' + [['all', 'All'], ['exact', 'Exact'], ['model', 'Modelled'], ['script', 'Scripted']].map(function (t) { return '<button type="button" class="filter-btn' + (filt.tier === t[0] ? ' active' : '') + '" data-v="' + t[0] + '">' + t[1] + '</button>'; }).join('') + '</div><input id="fidQ" type="search" placeholder="Search labs…" aria-label="Search labs" value="' + esc(filt.q) + '"></div>';
+    h += '<div class="fid-tw"><table class="fid-tab"><thead><tr><th>Lab</th><th>Fidelity</th><th>What is modelled or scripted</th></tr></thead><tbody>' + shown.map(function (l) { var f = fidelity(l); return '<tr><td><a href="#lab/' + l.id + '"><b>' + esc(l.num) + '</b> ' + esc(l.title) + '</a></td><td>' + KL.fid.badge(l) + '</td><td>' + (f.why.length ? f.why.map(esc).join('; ') : 'Nothing: behaves like real Kubernetes for these commands.') + '</td></tr>'; }).join('') + '</tbody></table></div>';
+    h += '<p class="fid-p">Found a place where real Kubernetes behaves differently? <a href="https://github.com/eknatha/KubeLab/issues/new" target="_blank" rel="noopener">Open an issue</a> with the command and what you expected. For exam practice, also run the kind lab packs on a real cluster.</p>';
+    root.innerHTML = h;
+    root.querySelectorAll('#fidTier button').forEach(function (b) { b.onclick = function () { filt.tier = b.dataset.v; render(); }; });
+    var q = $('fidQ'); q.oninput = function () { filt.q = q.value.toLowerCase(); var pos = q.selectionStart; render(); var q2 = $('fidQ'); q2.focus(); q2.setSelectionRange(pos, pos); };
+  }
+  KL.route('fidelity', render);
+  window.addEventListener('kl:runner', function () {
+    setTimeout(function () { var r = KL.runner && KL.runner.cur(), chips = document.querySelector('.lr-chips'); if (!r || !chips || chips.querySelector('.fid')) return; var a = document.createElement('a'); a.href = '#fidelity'; a.className = 'fid-link'; a.innerHTML = KL.fid.badge(r.lab); a.title = 'How faithful is this lab? Click for details.'; chips.appendChild(a); }, 40);
+  });
+})();
+
+</script>
+<script>/* assets/js/pro-term.js */
+/* Pro terminal layer: smart Tab completion, Ctrl-R history search, line editing, mobile key toolbar,
+   cluster time machine (rewind / undo / compare with the reference path) and predict-the-output.
+   Everything is local, offline, and sits on top of the runner through KL.runner + the kl:runner / kl:cmd events. */
+(function () {
+  'use strict';
+  var KL = window.KL, Labs = KL.Labs, store = KL.store;
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function R() { return KL.runner && KL.runner.cur(); }
+  function inExam(r) { var a = KL.exam && KL.exam.active; return !!(a && r && a.ids.indexOf(r.lab.id) >= 0); }
+  function ls(k, v) { try { if (v === undefined) return localStorage.getItem(k); localStorage.setItem(k, v); } catch (e) { /* ignore */ } return null; }
+  var RO = /^\s*(k|kubectl)\s+(get|describe|logs|top|explain|api-resources|api-versions|version|cluster-info|events|diff|auth\s+can-i|config\s+(view|get|current))\b|^\s*(ls|cat|cd|pwd|echo|grep|head|tail|clear|help|history|env|printenv|whoami|date|wc|find|which|man|alias)\b/;
+  KL.proIsReadOnly = function (line) { return RO.test(line) && !/>/.test(line); };
+
+  // ───────── smart Tab completion ─────────
+  var VERBS = 'get describe create apply delete run expose scale set rollout logs exec label annotate taint cordon uncordon drain top auth api-resources explain wait patch edit config kustomize events autoscale replace diff version cluster-info'.split(' ');
+  var FLAGS = ['--namespace=', '--output=', '--selector=', '--all-namespaces', '--dry-run=client', '--image=', '--replicas=', '--force', '--watch', '--from-literal=', '--container=', '--tail=', '--previous', '--as=', '--ignore-daemonsets', '--delete-emptydir-data', '--show-labels', '--field-selector=', '--sort-by=', '--grace-period=', '--port=', '--target-port=', '--type='];
+  var OUT = ['yaml', 'json', 'wide', 'name', 'jsonpath=', 'custom-columns='];
+  var SHELL = ['kubectl', 'k', 'ls', 'cat', 'cd', 'mkdir', 'echo', 'vi', 'nano', 'grep', 'help', 'clear', 'trivy', 'etcdctl', 'kubeadm', 'curl', 'wget', 'export', 'awk', 'sed', 'wc', 'head', 'tail', 'sort', 'ssh', 'systemctl', 'journalctl', 'crictl', 'history', 'alias'];
+  var NAMESPACED_NAME_VERBS = /^(get|describe|delete|edit|label|annotate|scale|patch|logs|exec|top|expose|autoscale|wait|replace|rollout|set|explain)$/;
+  function common(a) { if (!a.length) return ''; var p = a[0]; a.forEach(function (x) { while (x.indexOf(p) !== 0) p = p.slice(0, -1); }); return p; }
+  function namesOf(sim, kindTok, ns) {
+    try {
+      var d = sim.findKind(kindTok.split('/')[0]); if (!d) return [];
+      return sim.list(d.kind, d.ns ? ns : '').map(function (o) { return o.metadata.name; });
+    } catch (e) { return []; }
+  }
+  function candidates(r, value) {
+    var sim = r.sim, parts = value.split(/\s+/), last = parts[parts.length - 1], prev = parts[parts.length - 2] || '', head = parts[0];
+    var ns = sim.ctxNs; for (var i = 0; i < parts.length - 1; i++) { if (/^(-n|--namespace)$/.test(parts[i]) && parts[i + 1]) ns = parts[i + 1]; var m = /^--namespace=(.+)$/.exec(parts[i]); if (m) ns = m[1]; }
+    if (parts.length === 1) return { pool: SHELL, last: last, pre: '' };
+    if (!/^(kubectl|k)$/.test(head)) {
+      var files = []; try { files = Object.keys(sim.fs).filter(function (p) { return p.indexOf('/home/student/') === 0; }).map(function (p) { return p.replace('/home/student/', ''); }); } catch (e) { /* ignore */ }
+      return { pool: files, last: last };
+    }
+    if (/^(-n|--namespace)$/.test(prev)) return { pool: namesOf(sim, 'namespaces', ''), last: last };
+    if (/^(-o|--output)$/.test(prev)) return { pool: OUT, last: last };
+    if (/^--namespace=/.test(last)) { var ps = namesOf(sim, 'namespaces', '').map(function (x) { return '--namespace=' + x; }); return { pool: ps, last: last }; }
+    if (/^--output=|^-o=/.test(last)) return { pool: OUT.map(function (x) { return '--output=' + x; }), last: last };
+    if (/^-/.test(last)) return { pool: FLAGS, last: last };
+    var pos = parts.slice(1, -1).filter(function (x) { return x && x[0] !== '-' && !/^(-n|--namespace|-o|--output|-l|--selector|-f|-c|--container|--image)$/.test(parts[parts.indexOf(x) - 1] || ''); });
+    var verb = pos[0];
+    if (!verb) return { pool: VERBS, last: last };
+    if (verb === 'config' && pos.length === 1) return { pool: ['use-context', 'get-contexts', 'current-context', 'view', 'set-context'], last: last };
+    if (verb === 'rollout' && pos.length === 1) return { pool: ['status', 'undo', 'history', 'restart', 'pause', 'resume'], last: last };
+    if (verb === 'set' && pos.length === 1) return { pool: ['image', 'resources', 'env', 'serviceaccount', 'selector'], last: last };
+    if (verb === 'auth' && pos.length === 1) return { pool: ['can-i', 'whoami'], last: last };
+    if (/^(cordon|uncordon|drain)$/.test(verb)) return { pool: namesOf(sim, 'nodes', ''), last: last };
+    if (verb === 'taint') return { pool: pos.length === 1 ? ['nodes'] : namesOf(sim, 'nodes', ''), last: last };
+    if (verb === 'top') return { pool: pos.length === 1 ? ['pods', 'nodes'] : namesOf(sim, pos[1] === 'nodes' || pos[1] === 'node' ? 'nodes' : 'pods', ns), last: last };
+    if (/^(logs|exec)$/.test(verb)) return { pool: namesOf(sim, 'pods', ns), last: last };
+    var kindIdx = (verb === 'rollout' || verb === 'set') ? 2 : 1, kind = pos[kindIdx], pool;
+    if (!NAMESPACED_NAME_VERBS.test(verb)) return { pool: [], last: last };
+    if (last.indexOf('/') > 0) { var k0 = last.split('/')[0]; return { pool: namesOf(sim, k0, ns).map(function (x) { return k0 + '/' + x; }), last: last }; }
+    if (pos.length === kindIdx) { pool = ['pods', 'deployments', 'services', 'nodes', 'namespaces', 'configmaps', 'secrets', 'persistentvolumeclaims', 'persistentvolumes', 'storageclasses', 'ingresses', 'networkpolicies', 'roles', 'rolebindings', 'clusterroles', 'clusterrolebindings', 'serviceaccounts', 'statefulsets', 'daemonsets', 'jobs', 'cronjobs', 'horizontalpodautoscalers', 'poddisruptionbudgets', 'events', 'endpoints', 'replicasets', 'resourcequotas', 'limitranges', 'customresourcedefinitions']; if (verb === 'rollout' || verb === 'set' || verb === 'scale' || verb === 'autoscale' || verb === 'expose') pool = ['deployment', 'statefulset', 'daemonset'].concat(verb === 'expose' ? ['pod', 'service'] : []); return { pool: pool, last: last }; }
+    if (kind) return { pool: namesOf(sim, kind, ns), last: last };
+    return { pool: [], last: last };
+  }
+  function smartComplete(inp) {
+    var r = R(); if (!r) return;
+    var v = inp.value.slice(0, inp.selectionStart == null ? inp.value.length : inp.selectionStart), c = candidates(r, v), last = c.last;
+    var m = (c.pool || []).filter(function (x, i, a) { return x.indexOf(last) === 0 && a.indexOf(x) === i; });
+    if (!m.length) return;
+    var parts = v.split(/\s+/), cp = common(m.slice());
+    if (m.length === 1) { parts[parts.length - 1] = m[0]; inp.value = parts.join(' ') + (/[=/]$/.test(m[0]) ? '' : ' '); }
+    else if (cp.length > last.length) { parts[parts.length - 1] = cp; inp.value = parts.join(' '); }
+    else KL.runner.say(m.slice(0, 40).join('  ') + (m.length > 40 ? '  … +' + (m.length - 40) : ''), 'dim');
+  }
+  KL.proComplete = function (r, value) { var c = candidates(r, value); return (c.pool || []).filter(function (x) { return x.indexOf(c.last) === 0; }); };
+
+  // ───────── Ctrl-R reverse history search ─────────
+  var rs = null;
+  function rsEnd(accept, inp) {
+    if (!rs) return; var el = rs.el; if (accept && rs.match >= 0) { inp.value = rs.hits[rs.match]; } el.remove(); rs = null; inp.focus();
+  }
+  function rsPaint() {
+    var q = rs.q, r = R(), seen = {}, hits = [];
+    for (var i = r.hist.length - 1; i >= 0; i--) { var h = r.hist[i]; if (!seen[h] && (!q || h.indexOf(q) >= 0)) { seen[h] = 1; hits.push(h); } }
+    rs.hits = hits; rs.match = hits.length ? Math.min(rs.match < 0 ? 0 : rs.match, hits.length - 1) : -1;
+    var m = rs.match >= 0 ? hits[rs.match] : '';
+    var hl = q && m ? esc(m).replace(new RegExp(esc(q).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'i'), function (x) { return '<mark>' + x + '</mark>'; }) : esc(m);
+    rs.el.innerHTML = '<span>(reverse-i-search)</span> <b>`' + esc(q) + '`</b>: <code>' + (hl || '<i>no match</i>') + '</code><em>Enter accept · Ctrl-R older · Esc cancel</em>';
+  }
+  function rsStart(inp) {
+    var line = document.querySelector('.lr-line'); if (!line || rs) return; var el = document.createElement('div'); el.className = 'pro-rs'; line.parentNode.insertBefore(el, line);
+    rs = { q: '', hits: [], match: -1, el: el }; rsPaint();
+  }
+
+  // ───────── key handling (capture phase, before the runner's own handler) ─────────
+  function undoLast() { var r = R(); if (!r || r.mode !== 'learn' || inExam(r)) return false; var t = r.tm; if (!t || t.snaps.length < 2) { KL.runner.say('nothing to undo yet', 'dim'); return true; } rewind(r, t.snaps.length - 2, 'undo'); return true; }
+  function onKey(e) {
+    var inp = e.target; if (!inp || inp.id !== 'lrIn') return;
+    var k = e.key, ctrl = e.ctrlKey && !e.altKey && !e.metaKey;
+    if (rs) {
+      e.preventDefault(); e.stopImmediatePropagation();
+      if (k === 'Escape' || (ctrl && (k === 'g' || k === 'c'))) rsEnd(false, inp);
+      else if (k === 'Enter') { rsEnd(true, inp); }
+      else if (k === 'Tab' || k === 'ArrowRight' || k === 'ArrowLeft') rsEnd(true, inp);
+      else if (ctrl && k === 'r') { rs.match++; if (rs.match >= rs.hits.length) rs.match = 0; rsPaint(); }
+      else if (k === 'Backspace') { rs.q = rs.q.slice(0, -1); rs.match = -1; rsPaint(); }
+      else if (k.length === 1 && !ctrl) { rs.q += k; rs.match = -1; rsPaint(); }
+      return;
+    }
+    if (k === 'Tab' && !e.shiftKey) { e.preventDefault(); e.stopImmediatePropagation(); smartComplete(inp); return; }
+    if (ctrl && k === 'r') { e.preventDefault(); e.stopImmediatePropagation(); rsStart(inp); return; }
+    if (ctrl && k === 'z') { e.preventDefault(); e.stopImmediatePropagation(); undoLast(); return; }
+    if (ctrl && (k === 'u' || k === 'w' || k === 'k' || k === 'a' || k === 'e')) {
+      e.preventDefault(); e.stopImmediatePropagation(); var v = inp.value, p = inp.selectionStart == null ? v.length : inp.selectionStart;
+      if (k === 'u') { inp.value = v.slice(p); inp.setSelectionRange(0, 0); }
+      else if (k === 'k') inp.value = v.slice(0, p);
+      else if (k === 'a') inp.setSelectionRange(0, 0);
+      else if (k === 'e') inp.setSelectionRange(v.length, v.length);
+      else { var q = v.slice(0, p).replace(/\s+$/, ''), cut = q.lastIndexOf(' ') + 1; inp.value = v.slice(0, cut) + v.slice(p); inp.setSelectionRange(cut, cut); }
+    }
+  }
+  document.addEventListener('keydown', onKey, true);
+
+  // ───────── mobile / touch key toolbar ─────────
+  var KEYS = [['Tab', 'Tab', 'Complete'], ['↑', 'ArrowUp', 'Previous command'], ['↓', 'ArrowDown', 'Next command'], ['^C', 'Ctrl-c', 'Cancel line'], ['^R', 'Ctrl-r', 'Search history'], ['↶', 'Ctrl-z', 'Undo last change'], ['|', '|'], ['~', '~'], ['/', '/'], ['-', '-'], ['_', '_'], ['.', '.'], ['=', '='], ['"', '"'], ["'", "'"], ['>', '>'], ['$', '$'], ['{', '{'], ['}', '}'], [':', ':'], ['⏎', 'Enter', 'Run']];
+  function keyBar() {
+    var bar = document.createElement('div'); bar.className = 'pro-keys'; bar.setAttribute('role', 'toolbar'); bar.setAttribute('aria-label', 'Terminal keys');
+    bar.innerHTML = '<button type="button" class="pk wide" data-ins="kubectl ">kubectl</button>' + KEYS.map(function (k) { return '<button type="button" class="pk' + (k[1].length > 1 ? ' fn' : '') + '" data-k="' + esc(k[1]) + '" aria-label="' + esc(k[2] || k[0]) + '">' + esc(k[0]) + '</button>'; }).join('');
+    function press(b) {
+      var inp = $('lrIn'); if (!inp) return; var ins = b.dataset.ins, key = b.dataset.k;
+      if (ins) { put(inp, ins); return; }
+      if (key.length === 1) { put(inp, key); return; }
+      var ctrl = /^Ctrl-/.test(key), kk = ctrl ? key.slice(5) : key;
+      inp.dispatchEvent(new KeyboardEvent('keydown', { key: kk, ctrlKey: ctrl, bubbles: true, cancelable: true }));
+    }
+    function put(inp, s) { var a = inp.selectionStart == null ? inp.value.length : inp.selectionStart, z = inp.selectionEnd == null ? a : inp.selectionEnd; inp.value = inp.value.slice(0, a) + s + inp.value.slice(z); inp.setSelectionRange(a + s.length, a + s.length); }
+    bar.addEventListener('pointerdown', function (e) { var b = e.target.closest('button'); if (!b) return; e.preventDefault(); press(b); try { if (navigator.vibrate) navigator.vibrate(5); } catch (x) { /* ignore */ } });
+    bar.addEventListener('keydown', function (e) { if ((e.key === 'Enter' || e.key === ' ') && e.target.closest('button')) { e.preventDefault(); press(e.target.closest('button')); } });
+    return bar;
+  }
+
+  // ───────── time machine ─────────
+  function tmInit(r) { if (!r.tm) r.tm = { snaps: [{ line: r.hist.length ? 'Session restored' : 'Start of lab', at: Date.now(), t: r.sim.t, s: r.sim.dump() }], branch: null }; return r.tm; }
+  function snap(r, line) {
+    var t = tmInit(r); t.snaps.push({ line: line.split('\n')[0], at: Date.now(), t: r.sim.t, s: r.sim.dump() });
+    if (t.snaps.length > 41) t.snaps.splice(1, 1);
+    t.branch = null;
+    var b = $('proTmCount'); if (b) b.textContent = String(t.snaps.length - 1);
+  }
+  function rewind(r, i, why) {
+    var t = tmInit(r), s = t.snaps[i]; if (!s) return;
+    t.branch = { snaps: t.snaps.slice(i + 1), cur: r.sim.dump(), cmd: t.snaps[t.snaps.length - 1].line };
+    t.snaps = t.snaps.slice(0, i + 1);
+    r.sim = new KL.Sim().load(JSON.parse(JSON.stringify(s.s)));
+    KL.runner.say('⏪ ' + (why === 'undo' ? 'Undid' : 'Rewound to') + ' step ' + i + ' · ' + s.line + '   (Ctrl-Z undoes again, “Return” in the time machine redoes)', 'dim');
+    KL.runner.refresh(); KL.runner.save(r, true); drawerRefresh(); var b = $('proTmCount'); if (b) b.textContent = String(t.snaps.length - 1);
+  }
+  function forward(r) {
+    var t = tmInit(r), b = t.branch; if (!b) return;
+    r.sim = new KL.Sim().load(JSON.parse(JSON.stringify(b.cur))); t.snaps = t.snaps.concat(b.snaps); t.branch = null;
+    KL.runner.say('↪ Returned to where you were · ' + b.cmd, 'dim'); KL.runner.refresh(); KL.runner.save(r, true); drawerRefresh();
+  }
+  function sig(o) { var c = { s: o.spec, d: o.data, r: o.rules, sb: o.subjects, rr: o.roleRef, l: o.metadata && o.metadata.labels, a: o.metadata && o.metadata.annotations, f: o.metadata && o.metadata.deletionTimestamp ? 1 : 0, sc: o.secrets, au: o.automountServiceAccountToken, rp: o.reclaimPolicy, ab: o.allowVolumeExpansion }; return JSON.stringify(c); }
+  function diffVs(r, snapObj) {
+    var A = snapObj.objs || {}, B = r.sim.objs || {}, add = [], del = [], chg = [];
+    function skip(k) { return /^(Endpoints|EndpointSlice|Lease|Event)\//.test(k) || /\/kube-(system|public|node-lease)\//.test(k) || /^Node\//.test(k) && false; }
+    Object.keys(A).forEach(function (k) { if (skip(k)) return; if (!(k in B)) add.push(k); else if (sig(A[k]) !== sig(B[k])) chg.push(k); });
+    Object.keys(B).forEach(function (k) { if (skip(k)) return; if (!(k in A)) del.push(k); });
+    var fa = snapObj.fs || {}, fb = r.sim.fs || {}, files = []; Object.keys(fa).concat(Object.keys(fb)).forEach(function (p) { if (fa[p] !== fb[p] && files.indexOf(p) < 0 && /^\/home\/student/.test(p)) files.push(p); });
+    return { restore: add, remove: del, revert: chg, files: files };
+  }
+  function pretty(k) { var p = k.split('/'); return p[0] + ' ' + (p[1] ? p[1] + '/' : '') + (p[2] || ''); }
+  function list(a) { return a.slice(0, 8).map(function (k) { return '<li>' + esc(pretty(k)) + '</li>'; }).join('') + (a.length > 8 ? '<li class="more">+' + (a.length - 8) + ' more</li>' : ''); }
+  var drawerSel = -1, drawerTab = 'steps';
+  function drawer() { return $('proTm'); }
+  function drawerRefresh() { var d = drawer(); if (d) drawerPaint(d); }
+  function ago(ts) { var s = Math.max(0, Math.round((Date.now() - ts) / 1000)); return s < 90 ? s + 's ago' : Math.round(s / 60) + 'm ago'; }
+  function mine(r) { return r.hist.filter(function (h) { return !KL.proIsReadOnly(h); }); }
+  function drawerPaint(d) {
+    var r = R(); if (!r) return; var t = tmInit(r), n = t.snaps.length, h = '';
+    h += '<div class="pro-dh"><b>⏪ Cluster time machine</b><button type="button" id="proTmX" aria-label="Close">✕</button></div>';
+    h += '<div class="pro-tabs" role="tablist"><button role="tab" data-tab="steps" class="' + (drawerTab === 'steps' ? 'on' : '') + '">Timeline</button><button role="tab" data-tab="cmp" class="' + (drawerTab === 'cmp' ? 'on' : '') + '">My path vs reference</button></div>';
+    if (drawerTab === 'steps') {
+      if (drawerSel < 0 || drawerSel >= n) drawerSel = n - 1;
+      h += '<p class="pro-note">Every state-changing command takes a snapshot of the whole simulated cluster (and your files). Pick a step to see what would change, then rewind. <kbd>Ctrl</kbd>+<kbd>Z</kbd> undoes the last one.</p>';
+      h += '<div class="pro-scrub"><input type="range" id="proTmRange" min="0" max="' + (n - 1) + '" value="' + drawerSel + '" aria-label="Timeline position"><span>' + drawerSel + ' / ' + (n - 1) + '</span></div>';
+      h += '<ol class="pro-steps">' + t.snaps.map(function (s, i) { return '<li class="' + (i === n - 1 ? 'now ' : '') + (i === drawerSel ? 'sel' : '') + '" data-i="' + i + '" tabindex="0"><i>' + i + '</i><code>' + esc(s.line.slice(0, 70)) + '</code><em>' + (i === n - 1 ? 'now' : ago(s.at)) + '</em></li>'; }).join('') + '</ol>';
+      if (drawerSel < n - 1) {
+        var d2 = diffVs(r, t.snaps[drawerSel].s), none = !d2.restore.length && !d2.remove.length && !d2.revert.length && !d2.files.length;
+        h += '<div class="pro-diff"><b>Rewinding to step ' + drawerSel + ' would:</b>' + (none ? '<p>change nothing in the cluster (only simulated time differs).</p>' : (d2.restore.length ? '<div class="g">＋ bring back<ul>' + list(d2.restore) + '</ul></div>' : '') + (d2.remove.length ? '<div class="r">－ remove<ul>' + list(d2.remove) + '</ul></div>' : '') + (d2.revert.length ? '<div class="y">≠ revert<ul>' + list(d2.revert) + '</ul></div>' : '') + (d2.files.length ? '<div class="y">▤ files<ul>' + list(d2.files.map(function (f) { return 'F/' + f.replace('/home/student/', ''); })) + '</ul></div>' : '')) +
+          '<button type="button" class="btn-primary" id="proTmGo">⏪ Rewind to step ' + drawerSel + '</button></div>';
+      } else h += '<p class="pro-note">You are at the latest step.</p>';
+      if (t.branch) h += '<div class="pro-branch">↪ You rewound from “<code>' + esc(t.branch.cmd.slice(0, 50)) + '</code>” — <button type="button" class="btn-secondary" id="proTmFwd">Return to where I was</button></div>';
+    } else {
+      var done = store.labDone(r.lab.id) || r.over, mn = mine(r), ref = r.lab.solution.filter(function (l) { return !KL.proIsReadOnly(l); });
+      if (!done) h += '<p class="pro-note">🔒 Finish the lab to compare your path with the reference solution. (Peeking early spoils the puzzle.)</p>';
+      else {
+        var eff = mn.length ? Math.min(100, Math.round(ref.length / mn.length * 100)) : 100;
+        h += '<div class="pro-cmp"><div><b>You · ' + mn.length + ' changing commands</b><ol>' + (mn.slice(0, 30).map(function (c, i) { return '<li style="--d:' + i * 40 + 'ms"><code>' + esc(c.slice(0, 80)) + '</code></li>'; }).join('') || '<li><i>none</i></li>') + '</ol></div><div><b>Reference · ' + ref.length + '</b><ol>' + ref.map(function (c, i) { return '<li style="--d:' + i * 40 + 'ms"><code>' + esc(c.split('\n')[0].slice(0, 80)) + '</code></li>'; }).join('') + '</ol></div></div>' +
+          '<div class="pro-eff"><span>Path efficiency</span><div><i style="width:' + eff + '%"></i></div><b>' + eff + '%</b></div><p class="pro-note">' + (mn.length > ref.length * 2 ? 'Your path used more than twice the commands. Look for a single imperative command (<code>kubectl set</code>, <code>patch</code>, <code>create --dry-run=client -o yaml</code>) that replaces several edits.' : 'Close to the reference path. Efficiency is a speed hint, not a grade: a safe longer path can be the right call in production.') + '</p>';
+      }
+    }
+    d.innerHTML = h;
+    $('proTmX').onclick = function () { d.remove(); };
+    d.querySelectorAll('.pro-tabs button').forEach(function (b) { b.onclick = function () { drawerTab = b.dataset.tab; drawerPaint(d); }; });
+    var rg = $('proTmRange'); if (rg) rg.oninput = function () { drawerSel = +rg.value; drawerPaint(d); var x = $('proTmRange'); if (x) x.focus(); };
+    d.querySelectorAll('.pro-steps li').forEach(function (li) { li.onclick = function () { drawerSel = +li.dataset.i; drawerPaint(d); }; li.onkeydown = function (e) { if (e.key === 'Enter') li.click(); }; });
+    var go = $('proTmGo'); if (go) go.onclick = function () { rewind(r, drawerSel, 'rewind'); drawerSel = -1; };
+    var fw = $('proTmFwd'); if (fw) fw.onclick = function () { forward(r); };
+  }
+  function openDrawer() { var ex = drawer(); if (ex) { ex.remove(); return; } var d = document.createElement('aside'); d.id = 'proTm'; d.className = 'pro-drawer'; d.setAttribute('aria-label', 'Cluster time machine'); $('labRunner').appendChild(d); drawerSel = -1; drawerPaint(d); d.onkeydown = function (e) { if (e.key === 'Escape') d.remove(); }; }
+
+  // ───────── predict-the-output (state-changing commands) ─────────
+  var MUT = /^\s*(k|kubectl)\s+(apply|create|delete|scale|set|rollout\s+(undo|restart)|patch|taint|cordon|uncordon|drain|label|annotate|expose|autoscale|replace|run)\b/;
+  function pOn() { return ls('kl.p2') === '1'; }
+  function pStats() { try { return JSON.parse(ls('kl.pred2')) || { r: 0, t: 0 }; } catch (e) { return { r: 0, t: 0 }; } }
+  function summarise(sim, ns) {
+    var pods = sim.list('Pod', ns).filter(function (p) { var st = sim.podStatus(p); return !/Completed|Succeeded/.test(st); }), ready = 0, bad = [];
+    pods.forEach(function (p) { var st = sim.podStatus(p); if (sim.podReady(p) && p.status.phase === 'Running' && !p.metadata.deletionTimestamp) ready++; else if (!/Terminating/.test(st)) bad.push(p.metadata.name + ' → ' + st); });
+    return { ready: ready, total: pods.length, bad: bad };
+  }
+  function seeded(str) { var h = 2166136261 >>> 0, i; for (i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return function () { h = (Math.imul(h, 1664525) + 1013904223) >>> 0; return h / 4294967296; }; }
+  KL.gate = function (r, text, go) {
+    if (!pOn() || inExam(r) || !MUT.test(text) || r.tm && r.tm.asking) return false;
+    var ns = r.lab.ns, before, after;
+    try { before = summarise(r.sim, ns); var c = new KL.Sim().load(r.sim.dump()); c.exec(text); c.settle(30); after = summarise(c, ns); } catch (e) { return false; }
+    if (before.ready === after.ready && before.total === after.total && before.bad.length === after.bad.length) return false;
+    var right = after.ready + '/' + after.total + ' Ready', cand = [[after.ready, after.total], [after.total, after.total], [Math.max(0, after.ready - 1), after.total], [after.ready, after.total + 1], [0, after.total], [Math.min(after.total, after.ready + 1), after.total], [after.ready, Math.max(0, after.total - 1)]], seen = {}, opts = [];
+    cand.forEach(function (x) { var s = x[0] + '/' + x[1] + ' Ready'; if (x[0] >= 0 && x[0] <= x[1] && !seen[s]) { seen[s] = 1; opts.push(s); } });
+    var rnd = seeded(text), rest = opts.filter(function (x) { return x !== right; }).sort(function () { return rnd() - 0.5; }).slice(0, 3); opts = rest.concat([right]).sort(function () { return rnd() - 0.5; });
+    r.tm = r.tm || {}; r.tm.asking = true;
+    var host = document.querySelector('.lr-term'); if (!host) { r.tm.asking = false; return false; }
+    var box = document.createElement('div'); box.className = 'pro-pq'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-label', 'Predict the output');
+    box.innerHTML = '<b>🔮 Predict first</b><code>' + esc(text.split('\n')[0].slice(0, 90)) + '</code><p>About 30 seconds after this runs, how many pods in <code>' + esc(ns) + '</code> will be Ready? <small>(now ' + before.ready + '/' + before.total + ')</small></p><div class="pro-pqo">' + opts.map(function (o, i) { return '<button type="button" data-i="' + i + '">' + esc(o) + '</button>'; }).join('') + '</div><button type="button" class="pro-skip">Just run it</button>';
+    host.parentNode.insertBefore(box, host.nextSibling);
+    function done(pick) {
+      box.remove(); r.tm.asking = false; var inp = $('lrIn'); go();
+      if (pick == null) { if (inp) inp.focus(); return; }
+      r.sim.settle(27); KL.runner.refresh();
+      var ok = pick === right, st = pStats(); st.t++; if (ok) st.r++; ls('kl.pred2', JSON.stringify(st));
+      var why = after.bad.length ? ' Not ready: ' + after.bad.slice(0, 2).join('; ') + '.' : ' Everything settled.';
+      KL.runner.say('🔮 You predicted ' + pick + ' — after 30s it is ' + right + (ok ? '  ✓' : '  ✗') + '.' + why + '  (overall ' + st.r + '/' + st.t + ')', ok ? 'dim' : 'err');
+      var chip = $('proPredBtn'); if (chip) chip.title = 'Predict-the-output: ' + st.r + '/' + st.t + ' correct'; if (inp) inp.focus();
+    }
+    box.querySelectorAll('.pro-pqo button').forEach(function (b) { b.onclick = function () { done(opts[+b.dataset.i]); }; });
+    box.querySelector('.pro-skip').onclick = function () { done(null); };
+    var first = box.querySelector('.pro-pqo button'); if (first) first.focus();
+    return true;
+  };
+
+  // ───────── wire into the runner ─────────
+  function install() {
+    var r = R(); if (!r) return; var bar = document.querySelector('.lr-bar'); if (!bar || bar.querySelector('.pro-tools')) return;
+    var learn = r.mode === 'learn' && !inExam(r), st = pStats(), tools = document.createElement('div'); tools.className = 'pro-tools';
+    tools.innerHTML = (learn ? '<button type="button" class="btn-secondary" id="proTmBtn" title="Rewind the cluster to any earlier step">⏪ Time machine <span class="pro-badge" id="proTmCount">0</span></button>' : '') + (learn ? '<button type="button" class="btn-secondary" id="proPredBtn" aria-pressed="' + pOn() + '" title="Predict-the-output: ' + st.r + '/' + st.t + ' correct">🔮 Predict' + (pOn() ? ': on' : '') + '</button>' : '');
+    var anchor = $('lrDocsBtn'); bar.insertBefore(tools, anchor || null);
+    var tb = $('proTmBtn'); if (tb) { tb.onclick = openDrawer; $('proTmCount').textContent = String(Math.max(0, tmInit(r).snaps.length - 1)); }
+    var pb = $('proPredBtn'); if (pb) pb.onclick = function () { ls('kl.p2', pOn() ? '0' : '1'); pb.setAttribute('aria-pressed', pOn()); pb.textContent = '🔮 Predict' + (pOn() ? ': on' : ''); KL.toast(pOn() ? 'Predict-the-output on: you will guess before state-changing commands.' : 'Predict-the-output off.'); };
+    var right = document.querySelector('.lr-right'), term = $('lrTerm'); if (right && term && !right.querySelector('.pro-keys')) term.parentNode.insertBefore(keyBar(), term.nextSibling);
+    // exam-style shell variables, like the real exam image
+    if (!r.sim.env.do) r.sim.env.do = '--dry-run=client -o yaml'; if (!r.sim.env.now) r.sim.env.now = '--force --grace-period 0';
+    if (!r.proHint && !r.out.some(function (o) { return /Tab completes/.test(o.t); })) r.proHint = 1;
+    if (!r.proSaid) { r.proSaid = 1; KL.runner.say('Tips: Tab completes resource names · Ctrl-R searches history · $do = --dry-run=client -o yaml · $now = --force --grace-period 0' + (learn ? ' · Ctrl-Z undoes your last change' : ''), 'dim'); }
+  }
+  window.addEventListener('kl:runner', function () { setTimeout(install, 0); });
+  window.addEventListener('kl:cmd', function (e) {
+    var d = e.detail, r = d.run; if (!r || r.mode !== 'learn' || inExam(r)) return; tmInit(r);
+    if (!KL.proIsReadOnly(d.line)) snap(r, d.line);
+    if (drawer()) drawerRefresh();
+  });
+})();
+
+</script>
+<script>/* assets/js/pro-explain.js */
+/* Explainers: "why is this pod Pending?" (scheduler filter/score trace) and "why can't A reach B?" (connection path tracer),
+   plus the alert-first pager card for incident and fault labs. Read-only: nothing here changes the cluster. */
+(function () {
+  'use strict';
+  var KL = window.KL, Labs = KL.Labs, store = KL.store, U = KL.Sim.util, matchSel = U.matchSel, parseCpu = U.parseCpu, parseMem = U.parseMem;
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function R() { return KL.runner && KL.runner.cur(); }
+  function inExam(r) { var a = KL.exam && KL.exam.active; return !!(a && r && a.ids.indexOf(r.lab.id) >= 0); }
+  function learn(r) { return !!r && r.mode === 'learn' && !inExam(r); }
+  function userPods(sim) { return sim.list('Pod').filter(function (p) { return !/^kube-/.test(p.metadata.namespace); }); }
+  function insertCmd(c) { var i = $('lrIn'); if (!i) return; i.value = c; i.focus(); }
+  function fmtC(m) { return m % 1000 === 0 ? (m / 1000) + '' : Math.round(m) + 'm'; }
+
+  // ───────── scheduler explainer ─────────
+  function tolerates(taint, tols) { return (tols || []).some(function (tl) { return (!tl.effect || tl.effect === taint.effect) && (tl.operator === 'Exists' ? (!tl.key || tl.key === taint.key) : (tl.key === taint.key && (tl.value || '') === (taint.value || ''))); }); }
+  function affinityOk(nd, na) {
+    if (!na) return true; var L = nd.metadata.labels || {};
+    return (na.nodeSelectorTerms || []).some(function (t) { return (t.matchExpressions || []).every(function (e) { var v = L[e.key]; return e.operator === 'In' ? (e.values || []).indexOf(v) >= 0 : e.operator === 'NotIn' ? (e.values || []).indexOf(v) < 0 : e.operator === 'Exists' ? v !== undefined : e.operator === 'DoesNotExist' ? v === undefined : true; }); });
+  }
+  var FILTERS = [['name', 'NodeName'], ['sched', 'Schedulable'], ['sel', 'Selector / affinity'], ['taint', 'Taints'], ['cpu', 'CPU'], ['mem', 'Memory'], ['anti', 'Anti-affinity']];
+  function explainSched(sim, pod) {
+    var s = pod.spec, nodes = sim.list('Node'), req = { cpu: 0, mem: 0 }, rows = [];
+    s.containers.forEach(function (c) { var r = c.resources && c.resources.requests; if (r) { req.cpu += parseCpu(r.cpu); req.mem += parseMem(r.memory); } });
+    var na = s.affinity && s.affinity.nodeAffinity && s.affinity.nodeAffinity.requiredDuringSchedulingIgnoredDuringExecution;
+    var paa = s.affinity && s.affinity.podAntiAffinity && s.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution;
+    nodes.forEach(function (nd) {
+      var nm = nd.metadata.name, L = nd.metadata.labels || {}, used = sim.nodeUsed(nm), al = nd.status.allocatable || {}, self = s.nodeName === nm, c = {};
+      if (self) { used.cpu -= req.cpu; used.mem -= req.mem; }
+      c.name = (s.nodeName && s.nodeName !== nm) ? { ok: false, msg: 'pod is pinned to ' + s.nodeName, fix: 'Remove spec.nodeName (use a nodeSelector instead).' } : { ok: true };
+      c.sched = nd.spec.unschedulable ? { ok: false, msg: 'node is cordoned', fix: 'kubectl uncordon ' + nm, cmd: 'kubectl uncordon ' + nm } : { ok: true };
+      var miss = null; if (s.nodeSelector) for (var k in s.nodeSelector) if (L[k] !== s.nodeSelector[k]) { miss = k + '=' + s.nodeSelector[k]; break; }
+      if (miss) c.sel = { ok: false, msg: 'node lacks label ' + miss, fix: 'kubectl label node ' + nm + ' ' + miss, cmd: 'kubectl label node ' + nm + ' ' + miss };
+      else if (!affinityOk(nd, na)) c.sel = { ok: false, msg: 'nodeAffinity not satisfied', fix: 'Label the node to match, or relax the affinity terms.' };
+      else c.sel = { ok: true };
+      var bad = (nd.spec.taints || []).filter(function (t) { return (t.effect === 'NoSchedule' || t.effect === 'NoExecute') && !tolerates(t, s.tolerations); })[0];
+      c.taint = bad ? { ok: false, msg: 'untolerated taint ' + bad.key + (bad.value ? '=' + bad.value : '') + ':' + bad.effect, fix: 'Add a toleration to the pod, or remove the taint: kubectl taint nodes ' + nm + ' ' + bad.key + '-', cmd: 'kubectl taint nodes ' + nm + ' ' + bad.key + '-' } : { ok: true };
+      var freeC = parseCpu(al.cpu) - used.cpu, freeM = parseMem(al.memory) - used.mem;
+      c.cpu = req.cpu > freeC ? { ok: false, msg: 'needs ' + fmtC(req.cpu) + ', only ' + fmtC(Math.max(0, freeC)) + ' of ' + fmtC(parseCpu(al.cpu)) + ' free', fix: 'Lower the CPU request, scale something down, or add capacity.' } : { ok: true, msg: fmtC(Math.max(0, freeC)) + ' free' };
+      c.mem = req.mem > freeM ? { ok: false, msg: 'needs ' + Math.round(req.mem) + 'Mi, only ' + Math.round(Math.max(0, freeM)) + 'Mi free', fix: 'Lower the memory request or free memory on the node.' } : { ok: true, msg: Math.round(Math.max(0, freeM)) + 'Mi free' };
+      var clash = paa && paa.some(function (term) { return sim.list('Pod', pod.metadata.namespace).some(function (o) { return o !== pod && o.spec.nodeName === nm && matchSel(term.labelSelector, o.metadata.labels); }); });
+      c.anti = clash ? { ok: false, msg: 'another matching pod is already here', fix: 'Add nodes, or relax podAntiAffinity to “preferred”.' } : { ok: true };
+      var firstFail = FILTERS.filter(function (f) { return !c[f[0]].ok; })[0];
+      rows.push({ name: nm, c: c, pass: !firstFail, first: firstFail ? c[firstFail[0]] : null, firstKey: firstFail ? firstFail[0] : '', free: (freeC) + (freeM) });
+    });
+    var pass = rows.filter(function (r) { return r.pass; }).sort(function (a, b) { return b.free - a.free || (a.name < b.name ? -1 : 1); });
+    var reasons = {}; rows.forEach(function (r) { if (!r.pass) { var t = r.first.msg.replace(/^needs.*$/, r.firstKey === 'cpu' ? 'Insufficient cpu' : 'Insufficient memory').replace(/^untolerated taint (.*)$/, 'had untolerated taint {$1}').replace(/^node is cordoned$/, 'were unschedulable').replace(/^node lacks label.*$|^nodeAffinity not satisfied$/, "didn't match Pod's node affinity/selector").replace(/^another matching pod.*$/, "didn't match pod anti-affinity rules").replace(/^pod is pinned.*$/, "didn't match the requested node name"); reasons[t] = (reasons[t] || 0) + 1; } });
+    var msg = pass.length ? '' : '0/' + rows.length + ' nodes are available: ' + Object.keys(reasons).map(function (k) { return reasons[k] + ' node(s) ' + (/^(Insufficient)/.test(k) ? k : k); }).join(', ') + '.';
+    return { rows: rows, winner: pass[0] && pass[0].name, pass: pass, msg: msg, req: req };
+  }
+  function renderSched(host, r, pod) {
+    var sim = r.sim, ex = explainSched(sim, pod), st = sim.podStatus(pod), n = ex.rows.length, d = 0;
+    var left = n, funnel = [['All nodes', n]];
+    FILTERS.forEach(function (f) { left = ex.rows.filter(function (x) { var ok = true; for (var i = 0; i < FILTERS.length; i++) { if (!x.c[FILTERS[i][0]].ok) { ok = false; } if (FILTERS[i][0] === f[0]) break; } return ok; }).length; funnel.push([f[1], left]); });
+    var h = '<div class="pro-sched"><div class="pro-sh"><b>' + esc(pod.metadata.namespace + '/' + pod.metadata.name) + '</b><span class="pro-pill ' + (/Pending/.test(st) ? 'y' : /Running/.test(st) ? 'g' : 'r') + '">' + esc(st) + '</span>' + (pod.spec.nodeName ? '<span class="pro-dim">on ' + esc(pod.spec.nodeName) + '</span>' : '') + '<span class="pro-dim">requests ' + fmtC(ex.req.cpu) + ' CPU · ' + Math.round(ex.req.mem) + 'Mi</span></div>';
+    h += '<div class="pro-funnel" aria-label="Filter funnel">' + funnel.map(function (f, i) { return '<div style="--d:' + i * 90 + 'ms"><b>' + f[1] + '</b><span>' + esc(f[0]) + '</span></div>'; }).join('<i>›</i>') + '</div>';
+    h += '<div class="pro-tw"><table class="pro-tab"><thead><tr><th>Node</th>' + FILTERS.map(function (f) { return '<th>' + f[1] + '</th>'; }).join('') + '<th>Result</th></tr></thead><tbody>' + ex.rows.map(function (x) {
+      var cell = function (k) { var c = x.c[k]; return '<td class="' + (c.ok ? 'ok' : 'no') + '" title="' + esc(c.msg || (c.ok ? 'passes' : '')) + '">' + (c.ok ? '✓' : '✗') + '</td>'; };
+      return '<tr class="' + (x.name === ex.winner ? 'win' : x.pass ? 'pass' : 'out') + '" style="--d:' + (d++ * 120) + 'ms"><th>' + esc(x.name) + '</th>' + FILTERS.map(function (f) { return cell(f[0]); }).join('') + '<td>' + (x.name === ex.winner ? '🏆 chosen' : x.pass ? 'eligible' : '✗ ' + esc(x.first.msg)) + '</td></tr>';
+    }).join('') + '</tbody></table></div>';
+    if (ex.winner) h += '<p class="pro-v ok">Scoring picks <b>' + esc(ex.winner) + '</b>: the least-loaded eligible node (' + ex.pass.length + ' of ' + n + ' passed every filter).</p>';
+    else h += '<p class="pro-v bad">No node passes every filter, so the pod stays <b>Pending</b>. The scheduler reports:<code>' + esc(ex.msg) + '</code></p>';
+    var seen = {}, fixes = []; ex.rows.forEach(function (x) { if (!x.pass && !seen[x.first.fix]) { seen[x.first.fix] = 1; fixes.push(x.first); } });
+    if (fixes.length) h += '<div class="pro-fixes"><b>Ways to fix it</b>' + fixes.map(function (f) { return '<div><span>' + esc(f.fix) + '</span>' + (f.cmd ? '<button type="button" class="btn-secondary" data-cmd="' + esc(f.cmd) + '">Put in terminal</button>' : '') + '</div>'; }).join('') + '<p class="pro-dim">Pick the fix that matches your intent. A taint or label is often there on purpose.</p></div>';
+    host.innerHTML = h + '</div>';
+    host.querySelectorAll('[data-cmd]').forEach(function (b) { b.onclick = function () { insertCmd(b.dataset.cmd); }; });
+  }
+
+  // ───────── network path tracer ─────────
+  function polAllows(sim, np, dir, from, to, port) {
+    var rules = dir === 'ingress' ? (np.spec.ingress || []) : (np.spec.egress || []), peerPod = dir === 'ingress' ? from : to;
+    return rules.some(function (rule) {
+      var portOk = !rule.ports || !rule.ports.length || rule.ports.some(function (p) { return p.port === undefined || p.port === port || String(p.port) === String(port); });
+      if (!portOk) return false; var peers = dir === 'ingress' ? rule.from : rule.to; if (!peers || !peers.length) return true;
+      return peers.some(function (f) {
+        if (f.ipBlock) return false; var nsOk, podOk = true;
+        if (f.namespaceSelector !== undefined) { var nso = sim.get('Namespace', '', peerPod.metadata.namespace); nsOk = matchSel(f.namespaceSelector, (nso && nso.metadata.labels) || {}); } else nsOk = from.metadata.namespace === to.metadata.namespace;
+        if (f.podSelector !== undefined) podOk = matchSel(f.podSelector, peerPod.metadata.labels); return nsOk && podOk;
+      });
+    });
+  }
+  function policyStep(sim, dir, from, to, port) {
+    var pod = dir === 'ingress' ? to : from, label = dir === 'ingress' ? 'Ingress policy on ' + to.metadata.name : 'Egress policy on ' + from.metadata.name;
+    var pols = sim.list('NetworkPolicy', pod.metadata.namespace).filter(function (np) { var t = np.spec.policyTypes || ['Ingress']; return t.map(function (x) { return x.toLowerCase(); }).indexOf(dir) >= 0 && matchSel(np.spec.podSelector, pod.metadata.labels); });
+    if (!pols.length) return { ok: true, t: label, d: 'No NetworkPolicy selects this pod for ' + dir + ', so traffic is allowed (default allow).' };
+    var ok = pols.filter(function (np) { return polAllows(sim, np, dir, from, to, port); });
+    if (ok.length) return { ok: true, t: label, d: 'Allowed by policy ' + ok.map(function (x) { return '“' + x.metadata.name + '”'; }).join(', ') + '.' };
+    return { ok: false, t: label, d: 'Dropped. ' + pols.map(function (x) { return '“' + x.metadata.name + '”'; }).join(', ') + ' select' + (pols.length === 1 ? 's' : '') + ' this pod but no ' + dir + ' rule matches ' + (dir === 'ingress' ? 'the source' : 'the destination') + ' on port ' + port + '.', fix: 'kubectl describe netpol -n ' + pod.metadata.namespace, cmd: 'kubectl describe netpol -n ' + pod.metadata.namespace };
+  }
+  function trace(sim, from, host, port) {
+    var steps = [], res = sim.resolveTarget(from, host, port || 80), end = false;
+    function add(s) { steps.push(s); if (!s.ok) end = true; }
+    if (res.dns === false) { add({ ok: false, t: 'DNS lookup', d: '“' + host + '” does not resolve: no Service with that name in ' + from.metadata.namespace + ' (or the namespace you named).', fix: 'Use <service>.<namespace> from another namespace; check the name with kubectl get svc -A', cmd: 'kubectl get svc -A' }); return steps; }
+    try { if (sim.dnsUp && !sim.dnsUp()) { add({ ok: false, t: 'DNS lookup', d: 'CoreDNS has no ready endpoints, so every name lookup fails.', fix: 'kubectl get pods -n kube-system -l k8s-app=kube-dns', cmd: 'kubectl get pods -n kube-system' }); return steps; } } catch (e) { /* ignore */ }
+    var svc = res.svc;
+    add({ ok: true, t: 'DNS lookup', d: svc ? '“' + host + '” → Service ' + svc.metadata.namespace + '/' + svc.metadata.name + ' ClusterIP ' + (svc.spec.clusterIP || '—') + '.' : '“' + host + '” is a pod IP: no DNS or Service hop.' });
+    if (svc) {
+      if (res.refused && !res.noep) { add({ ok: false, t: 'Service port', d: 'The Service does not expose port ' + (port || 80) + '. It exposes ' + (svc.spec.ports || []).map(function (p) { return p.port; }).join(', ') + '.', fix: 'Use one of the Service ports, or add the port to the Service.', cmd: 'kubectl get svc ' + svc.metadata.name + ' -n ' + svc.metadata.namespace }); return steps; }
+      add({ ok: true, t: 'Service port', d: 'Port ' + (res.svcPort || port || 80) + ' is exposed by the Service.' });
+      if (res.noep) {
+        var sel = svc.spec.selector || {}, cand = sim.list('Pod', svc.metadata.namespace), match = cand.filter(function (p) { return matchSel({ matchLabels: sel }, p.metadata.labels); });
+        var why = !Object.keys(sel).length ? 'The Service has no selector, so it has no endpoints.' : match.length ? 'Selector ' + JSON.stringify(sel) + ' matches ' + match.length + ' pod(s), but none is Ready (' + match.slice(0, 3).map(function (p) { return p.metadata.name + ': ' + sim.podStatus(p); }).join('; ') + ').' : 'Selector ' + JSON.stringify(sel) + ' matches no pod. Pods here carry labels like ' + (cand[0] ? JSON.stringify(cand[0].metadata.labels || {}) : '(there are no pods)') + '.';
+        add({ ok: false, t: 'Endpoints', d: why, fix: 'kubectl get endpoints ' + svc.metadata.name + ' -n ' + svc.metadata.namespace + ' --show-labels', cmd: 'kubectl get endpoints ' + svc.metadata.name + ' -n ' + svc.metadata.namespace }); return steps;
+      }
+      add({ ok: true, t: 'Endpoints', d: res.pods.length + ' ready endpoint(s); traffic goes to targetPort ' + res.port + ' on ' + res.pods.slice(0, 3).map(function (p) { return p.metadata.name; }).join(', ') + (res.pods.length > 3 ? '…' : '') + '.' });
+    }
+    var dest = res.pods && res.pods[0]; if (!dest) { add({ ok: false, t: 'Destination', d: 'No pod owns that address.' }); return steps; }
+    var eg = policyStep(sim, 'egress', from, dest, res.port); add(eg); if (end) return steps;
+    var ig = policyStep(sim, 'ingress', from, dest, res.port); add(ig); if (end) return steps;
+    add({ ok: true, t: 'Delivered', d: 'The request reaches ' + dest.metadata.name + ':' + res.port + ' and gets a response.' });
+    return steps;
+  }
+  function renderNet(host, r) {
+    var sim = r.sim, pods = userPods(sim).filter(function (p) { return !/Completed|Succeeded/.test(sim.podStatus(p)); }), svcs = sim.list('Service').filter(function (x) { return !/^kube-/.test(x.metadata.namespace) && !(x.metadata.namespace === 'default' && x.metadata.name === 'kubernetes'); });
+    if (!pods.length) { host.innerHTML = '<p class="pro-note">There are no running pods to trace from yet.</p>'; return; }
+    var targets = svcs.map(function (x) { return { v: x.metadata.name + '.' + x.metadata.namespace + ':' + ((x.spec.ports || [{ port: 80 }])[0].port), l: 'svc ' + x.metadata.namespace + '/' + x.metadata.name }; }).concat(pods.filter(function (p) { return p.status.podIP; }).slice(0, 12).map(function (p) { return { v: p.status.podIP + ':80', l: 'pod ' + p.metadata.name + ' (' + p.status.podIP + ')' }; }));
+    var st = r.netSel || {}, fromSel = st.from || (pods.filter(function (p) { return /tester|client|test|frontend|curl/.test(p.metadata.name); })[0] || pods[0]).metadata.namespace + '/' + (pods.filter(function (p) { return /tester|client|test|frontend|curl/.test(p.metadata.name); })[0] || pods[0]).metadata.name;
+    var toSel = st.to || (targets[0] && targets[0].v) || '';
+    host.innerHTML = '<div class="pro-netf"><label>From pod<select id="proNetFrom">' + pods.map(function (p) { var k = p.metadata.namespace + '/' + p.metadata.name; return '<option value="' + esc(k) + '"' + (k === fromSel ? ' selected' : '') + '>' + esc(k) + '</option>'; }).join('') + '</select></label><label>To<input id="proNetTo" list="proNetList" value="' + esc(toSel) + '" aria-label="Target host:port" spellcheck="false" autocomplete="off"><datalist id="proNetList">' + targets.map(function (t) { return '<option value="' + esc(t.v) + '">' + esc(t.l) + '</option>'; }).join('') + '</datalist></label><button type="button" class="btn-primary" id="proNetGo">▶ Trace</button></div><div id="proNetOut"></div>';
+    function go() {
+      var fp = $('proNetFrom').value.split('/'), from = sim.get('Pod', fp[0], fp[1]), to = $('proNetTo').value.trim(), m = to.match(/^(.*?)(?::(\d+))?$/), hostn = m[1], port = m[2] ? +m[2] : 80; r.netSel = { from: $('proNetFrom').value, to: to };
+      if (!from || !hostn) { $('proNetOut').innerHTML = '<p class="pro-note">Pick a source pod and a target such as <code>db:80</code>.</p>'; return; }
+      var steps = trace(sim, from, hostn, port), last = steps[steps.length - 1], ok = last.ok;
+      var conn = null; try { conn = sim.connect(from, hostn, port); } catch (e) { /* ignore */ }
+      $('proNetOut').innerHTML = '<div class="pro-track" aria-hidden="true"><span class="pk-n">' + esc(from.metadata.name) + '</span>' + steps.map(function (s, i) { return '<i style="--d:' + (i * 380 + 150) + 'ms" class="' + (s.ok ? 'ok' : 'no') + '">' + (s.ok ? '●' : '✕') + '</i><u style="--d:' + (i * 380) + 'ms"></u>'; }).join('') + '<span class="pk-n">' + esc(hostn) + '</span><b class="pk-dot' + (ok ? '' : ' stop') + '" style="--n:' + steps.length + '"></b></div>' +
+        '<ol class="pro-hops">' + steps.map(function (s, i) { return '<li class="' + (s.ok ? 'ok' : 'no') + '" style="--d:' + (i * 380 + 150) + 'ms"><span>' + (s.ok ? '✓' : '✗') + '</span><div><b>' + esc(s.t) + '</b><p>' + esc(s.d) + '</p>' + (s.fix ? '<small>Next: ' + esc(s.fix) + '</small>' + (s.cmd ? ' <button type="button" class="btn-secondary" data-cmd="' + esc(s.cmd) + '">Put in terminal</button>' : '') : '') + '</div></li>'; }).join('') + '</ol>' +
+        '<p class="pro-v ' + (ok ? 'ok' : 'bad') + '">' + (ok ? 'Connection works.' : 'Blocked at: <b>' + esc(last.t) + '</b>.') + (conn ? ' <code>' + esc(conn.curl.split('\n')[0]).slice(0, 80) + '</code>' : '') + '</p>';
+      $('proNetOut').querySelectorAll('[data-cmd]').forEach(function (b) { b.onclick = function () { insertCmd(b.dataset.cmd); }; });
+    }
+    $('proNetGo').onclick = go; $('proNetTo').onkeydown = function (e) { if (e.key === 'Enter') go(); }; go();
+  }
+  KL.proExplain = { sched: explainSched, trace: trace };
+
+  // ───────── explain drawer ─────────
+  var tab = 'sched';
+  function pending(r) { try { return userPods(r.sim).filter(function (p) { return /^Pending$/.test(r.sim.podStatus(p)) && !p.spec.nodeName; }); } catch (e) { return []; } }
+  function paintDrawer(d) {
+    var r = R(); if (!r) return; var pods = userPods(r.sim), pend = pending(r);
+    var h = '<div class="pro-dh"><b>🧭 Explain</b><button type="button" id="proExX" aria-label="Close">✕</button></div><div class="pro-tabs" role="tablist"><button role="tab" data-tab="sched" class="' + (tab === 'sched' ? 'on' : '') + '">Why is it Pending?</button><button role="tab" data-tab="net" class="' + (tab === 'net' ? 'on' : '') + '">Can A reach B?</button></div><div id="proExBody"></div>';
+    d.innerHTML = h; $('proExX').onclick = function () { d.remove(); };
+    d.querySelectorAll('.pro-tabs button').forEach(function (b) { b.onclick = function () { tab = b.dataset.tab; paintDrawer(d); }; });
+    var body = $('proExBody');
+    if (tab === 'net') { renderNet(body, r); return; }
+    if (!pods.length) { body.innerHTML = '<p class="pro-note">There are no pods yet. Create one, then come back to see how the scheduler picks a node.</p>'; return; }
+    var sel = r.schedSel && pods.some(function (p) { return p.metadata.namespace + '/' + p.metadata.name === r.schedSel; }) ? r.schedSel : (pend[0] || pods[0]).metadata.namespace + '/' + (pend[0] || pods[0]).metadata.name;
+    body.innerHTML = '<div class="pro-netf"><label>Pod<select id="proSchedPod">' + pods.map(function (p) { var k = p.metadata.namespace + '/' + p.metadata.name, pp = pend.indexOf(p) >= 0; return '<option value="' + esc(k) + '"' + (k === sel ? ' selected' : '') + '>' + (pp ? '⏳ ' : '') + esc(k) + '</option>'; }).join('') + '</select></label></div><div id="proSchedOut"></div>';
+    function go() { r.schedSel = $('proSchedPod').value; var p = r.schedSel.split('/'), pod = r.sim.get('Pod', p[0], p[1]); if (pod) renderSched($('proSchedOut'), r, pod); }
+    $('proSchedPod').onchange = go; go();
+  }
+  function openExplain(which) { var ex = $('proEx'); if (ex && !which) { ex.remove(); return; } if (which) tab = which; var d = ex || document.createElement('aside'); if (!ex) { d.id = 'proEx'; d.className = 'pro-drawer wide'; d.setAttribute('aria-label', 'Explain'); $('labRunner').appendChild(d); d.onkeydown = function (e) { if (e.key === 'Escape') d.remove(); }; } paintDrawer(d); }
+  KL.openExplain = openExplain;
+  function badge() { var r = R(), b = $('proExBtn'); if (!r || !b) return; var n = pending(r).length; b.classList.toggle('pulse', n > 0); var c = b.querySelector('.pro-badge'); if (c) { c.textContent = String(n); c.hidden = !n; } }
+
+  // ───────── alert-first pager ─────────
+  function sparkPath(vals, w, h) { var n = vals.length; if (n < 2) return ''; return vals.map(function (v, i) { return (i ? 'L' : 'M') + (i / (n - 1) * w).toFixed(1) + ' ' + (h - v / 100 * h).toFixed(1); }).join(' '); }
+  function seeded(str) { var h = 2166136261 >>> 0, i; for (i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return function () { h = (Math.imul(h, 1664525) + 1013904223) >>> 0; return h / 4294967296; }; }
+  function symptoms(sim) {
+    var out = [], pods = userPods(sim), total = 0, ready = 0, bad = {};
+    pods.forEach(function (p) { var st = sim.podStatus(p); if (/Completed|Succeeded/.test(st)) return; total++; if (sim.podReady(p) && p.status.phase === 'Running' && !p.metadata.deletionTimestamp) ready++; else if (!/Terminating/.test(st)) (bad[st] = bad[st] || []).push(p); });
+    Object.keys(bad).forEach(function (st) {
+      var name = /CrashLoop|Error|OOM|RunContainerError|CreateContainer/.test(st) ? 'KubePodCrashLooping' : /ImagePull|ErrImage|InvalidImage/.test(st) ? 'KubeContainerImagePullFailing' : /Pending/.test(st) ? 'KubePodNotScheduled' : /ContainerCreating|PodInit/.test(st) ? 'KubePodStuckCreating' : 'KubePodNotReady';
+      out.push({ name: name, sev: /Crash|ImagePull/.test(name) ? 'critical' : 'warning', lab: bad[st][0].metadata.namespace + '/' + bad[st][0].metadata.name + (bad[st].length > 1 ? ' +' + (bad[st].length - 1) : ''), st: st, pod: bad[st][0] });
+    });
+    sim.list('Service').filter(function (x) { return !/^kube-/.test(x.metadata.namespace) && x.spec.selector && Object.keys(x.spec.selector).length; }).forEach(function (x) {
+      var eps = 0; try { eps = sim.endpointsFor(x).length; } catch (e) { /* ignore */ }
+      if (!eps) out.push({ name: 'ServiceNoEndpoints', sev: 'critical', lab: x.metadata.namespace + '/' + x.metadata.name, st: '0 ready endpoints' });
+    });
+    return { alerts: out, total: total, ready: ready };
+  }
+  function lastLogs(sim, sy) {
+    var lines = [];
+    try {
+      var p = sy.alerts.filter(function (a) { return a.pod; })[0];
+      if (p) { var x = sim.exec('kubectl logs ' + p.pod.metadata.name + ' -n ' + p.pod.metadata.namespace + ' --tail=4 2>&1'); (x.stdout + x.stderr).split('\n').filter(Boolean).slice(-4).forEach(function (l) { lines.push({ s: p.pod.metadata.name, l: l, w: /error|fail|fatal|panic|denied|refused/i.test(l) }); }); }
+      sim.events.filter(function (e) { return e.type === 'Warning' && !/^kube-/.test(e.ns || ''); }).slice(-3).forEach(function (e) { lines.push({ s: 'event', l: e.reason + ': ' + e.msg, w: true }); });
+    } catch (e) { /* ignore */ }
+    return lines.slice(-7);
+  }
+  var pager = null;
+  function mmss(s) { s = Math.max(0, Math.floor(s)); return ('0' + Math.floor(s / 60)).slice(-2) + ':' + ('0' + s % 60).slice(-2); }
+  function buildPager() {
+    var r = R(); if (!r) return; var lab = r.lab, left = document.querySelector('.lr-left'); if (!left) return; var have = left.querySelector('.pager'); if (have) { if (!pager || pager.el !== have) pager = { el: have, id: lab.id, t0: r.pgT0 || (r.pgT0 = Date.now()), series: r.pgSeries || (r.pgSeries = []), rnd: seeded(lab.id + 'pg'), ack: r.pgAck || 0, res: r.pgRes || 0 }; return; }
+    var fault = lab.incident || (KL.predictable && KL.predictable(lab)); if (!fault || !learn(r)) return;
+    var el = document.createElement('section'); el.className = 'pager'; el.setAttribute('aria-label', 'Alert');
+    var story = left.querySelector('.lr-story');
+    if (lab.incident && story) { var det = document.createElement('details'); det.className = 'pager-story'; det.innerHTML = '<summary>Background story (read after you have looked at the alert)</summary>'; story.parentNode.insertBefore(det, story); det.appendChild(story); det.parentNode.insertBefore(el, det); }
+    else if (story) story.parentNode.insertBefore(el, story.nextSibling); else left.insertBefore(el, left.firstChild);
+    pager = { el: el, id: lab.id, t0: r.pgT0 || (r.pgT0 = Date.now()), series: r.pgSeries || (r.pgSeries = []), rnd: seeded(lab.id + 'pg'), ack: r.pgAck || 0, res: r.pgRes || 0 };
+    paintPager();
+  }
+  function paintPager() {
+    var r = R(); if (!r || !pager || pager.id !== r.lab.id || !pager.el.isConnected) return; var sim = r.sim, sy = symptoms(sim), allOk = r.lab.tasks.every(function (t) { return r.tasksOk[t.id]; });
+    var firing = sy.alerts.length > 0 && !allOk, frac = sy.total ? 1 - sy.ready / sy.total : 0, last = pager.series.length ? pager.series[pager.series.length - 1] : 3;
+    var target = firing ? Math.max(18, Math.min(96, frac * 100 + (sy.alerts.some(function (a) { return a.name === 'ServiceNoEndpoints'; }) ? 45 : 8))) : 1.2; var v = last + (target - last) * 0.35 + (pager.rnd() - 0.5) * (firing ? 7 : 0.6); v = Math.max(0, Math.min(100, v)); pager.series.push(v); if (pager.series.length > 60) pager.series.shift();
+    if (!firing && sy.alerts.length === 0 && !pager.res && pager.series.length > 3) pager.res = r.pgRes = Date.now() - 0;
+    if (firing) pager.res = r.pgRes = 0;
+    var el = (pager.res || Date.now()) - pager.t0, avail = sy.total ? Math.round(sy.ready / sy.total * 100) : 100;
+    var logs = lastLogs(sim, sy), sev = firing ? (sy.alerts.some(function (a) { return a.sev === 'critical'; }) ? 'critical' : 'warning') : 'ok';
+    var h = '<div class="pg-h ' + sev + '"><span class="pg-st">' + (firing ? '🔥 FIRING' : '✅ RESOLVED') + '</span><b>' + (firing ? sy.alerts.length + ' alert' + (sy.alerts.length > 1 ? 's' : '') : 'All alerts cleared') + '</b><span class="pg-clk" title="' + (pager.res ? 'Time to resolve' : 'Firing for') + '">' + mmss(el / 1000) + '</span></div>';
+    h += '<div class="pg-grid"><div class="pg-chart"><div class="pg-ct">HTTP 5xx rate <em>' + Math.round(v) + '%</em></div><svg viewBox="0 0 240 64" preserveAspectRatio="none" role="img" aria-label="5xx error rate over time"><path class="pg-fill" d="' + (pager.series.length > 1 ? sparkPath(pager.series, 240, 64) + ' L240 64 L0 64 Z' : 'M0 64') + '"/><path class="pg-line ' + (firing ? 'bad' : 'ok') + '" d="' + (sparkPath(pager.series, 240, 64) || 'M0 64') + '"/></svg></div>' +
+      '<div class="pg-tiles"><div><b class="' + (avail < 100 ? 'bad' : 'ok') + '">' + avail + '%</b><span>availability</span></div><div><b>' + sy.ready + '/' + sy.total + '</b><span>pods ready</span></div></div></div>';
+    h += '<ul class="pg-al">' + (sy.alerts.length ? sy.alerts.slice(0, 4).map(function (a) { return '<li class="' + a.sev + '"><b>' + a.name + '</b><code>' + esc(a.lab) + '</code><em>' + esc(a.st) + '</em></li>'; }).join('') : '<li class="ok"><b>No active alerts</b><code>' + esc(r.lab.ns) + '</code></li>') + '</ul>';
+    h += '<div class="pg-logs" aria-label="Recent logs and events">' + (logs.length ? logs.map(function (l) { return '<div class="' + (l.w ? 'w' : '') + '"><i>' + esc(String(l.s).slice(0, 18)) + '</i>' + esc(l.l.slice(0, 120)) + '</div>'; }).join('') : '<div><i>—</i>quiet</div>') + '</div>';
+    h += '<div class="pg-act">' + (pager.ack ? '<span class="pg-ack">Acknowledged · time to acknowledge ' + mmss((pager.ack - pager.t0) / 1000) + '</span>' : (firing ? '<button type="button" class="btn-secondary" id="pgAck">Acknowledge page</button>' : '')) + '<span class="pg-note">Look at the alert, the graph and the logs first. Then form a hypothesis.</span></div>';
+    pager.el.innerHTML = h; pager.el.className = 'pager ' + sev;
+    var a = $('pgAck'); if (a) a.onclick = function () { pager.ack = r.pgAck = Date.now(); paintPager(); };
+  }
+  setInterval(function () { try { paintPager(); badge(); } catch (e) { /* ignore */ } }, 2000);
+
+  function install() {
+    var r = R(); if (!r) return; var bar = document.querySelector('.lr-bar'); if (!bar) return;
+    if (!learn(r)) { var ee = $('proExBtn'); if (ee) ee.remove(); return; }
+    if (!bar.querySelector('#proExBtn')) { var b = document.createElement('button'); b.type = 'button'; b.id = 'proExBtn'; b.className = 'btn-secondary'; b.title = 'Why is a pod Pending? Can A reach B?'; b.innerHTML = '🧭 Explain <span class="pro-badge" hidden>0</span>'; var t = bar.querySelector('.pro-tools'); if (t) t.appendChild(b); else bar.insertBefore(b, $('lrDocsBtn') || null); b.onclick = function () { openExplain(); }; }
+    buildPager(); badge();
+  }
+  window.addEventListener('kl:runner', function () { setTimeout(install, 30); });
+  window.addEventListener('kl:cmd', function () { setTimeout(function () { paintPager(); badge(); var ex = $('proEx'); if (ex && tab === 'sched') { /* keep the open view fresh */ var s = $('proSchedPod'); if (s && s.onchange) s.onchange(); } }, 20); });
 })();
 
 </script>
