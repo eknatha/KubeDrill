@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: StatefulSet needs a headless Service (s43-headless-service)
+# KubeDrill lab pack: StatefulSet needs a headless Service (s43-headless-service)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: StatefulSet needs a headless Service"
 kubectl create namespace ss --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -25,7 +25,7 @@ spec:
       - name: store
         image: nginx:1.25
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=ss >/dev/null

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Inject config: envFrom and a read-only Secret volume (s106-config-injection)
+# KubeDrill lab pack: Inject config: envFrom and a read-only Secret volume (s106-config-injection)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Inject config: envFrom and a read-only Secret volume"
 kubectl create namespace cfg --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Namespace
 metadata:
   name: cfg
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -21,8 +21,8 @@ data:
   MODE: prod
   REGION: eu
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Secret
 metadata:
@@ -31,8 +31,8 @@ metadata:
 stringData:
   token: change-me
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -52,7 +52,7 @@ spec:
       - name: web
         image: nginx:1.25
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=cfg >/dev/null

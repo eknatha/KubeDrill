@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Required node affinity with no matching node (s36-node-affinity)
+# KubeDrill lab pack: Required node affinity with no matching node (s36-node-affinity)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Required node affinity with no matching node"
 kubectl create namespace zone --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -32,7 +32,7 @@ spec:
       - name: cache
         image: nginx:1.25
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=zone >/dev/null

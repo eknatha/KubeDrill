@@ -1,19 +1,19 @@
-# KubeLab lab packs (real cluster)
+# KubeDrill lab packs (real cluster)
 
 Every interactive lab in the browser is also exported here as plain bash + kubectl, generated from the same lab specs, so you can run it on a **real** cluster (kind, minikube, k3d, a homelab).
 
 ```bash
 cd lab-packs
-./kubelab.sh cluster          # optional: needs Docker + kind
-./kubelab.sh setup s02-imagepull
+./kubedrill.sh cluster          # optional: needs Docker + kind
+./kubedrill.sh setup s02-imagepull
 # ...fix it with kubectl...
-./kubelab.sh check s02-imagepull
-./kubelab.sh reset s02-imagepull
+./kubedrill.sh check s02-imagepull
+./kubedrill.sh reset s02-imagepull
 ```
 
 Notes
 - Scripts use your **current kubectl context** — never run them against a production cluster. They create and delete the lab namespaces.
-- Labs that mention `worker1`/`worker2` (drain/cordon/label) need those node names: on kind they are `kubelab-worker`/`kubelab-worker2` — substitute them.
+- Labs that mention `worker1`/`worker2` (drain/cordon/label) need those node names: on kind they are `kubedrill-worker`/`kubedrill-worker2` — substitute them.
 - Check scripts assert the same end state as the in-browser Check button. Real clusters converge slower: re-run `check.sh` after a few seconds.
 - These packs are generated, and have been syntax-checked (`bash -n`) but **not every lab has been run end-to-end against a real cluster** — please open an issue if one misbehaves.
 

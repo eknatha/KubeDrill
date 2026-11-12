@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: CreateContainerConfigError: missing Secret (s18-secret-env)
+# KubeDrill lab pack: CreateContainerConfigError: missing Secret (s18-secret-env)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: CreateContainerConfigError: missing Secret"
 kubectl create namespace vault --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,7 +30,7 @@ spec:
               name: db-creds
               key: password
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=vault >/dev/null

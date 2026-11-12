@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: StatefulSet: scale with stable storage (s14-statefulset-pvc)
+# KubeDrill lab pack: StatefulSet: scale with stable storage (s14-statefulset-pvc)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: StatefulSet: scale with stable storage"
 kubectl create namespace db --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: v1
 kind: Service
 metadata:
@@ -17,8 +17,8 @@ spec:
   ports:
   - port: 80
 
-KUBELAB_EOF
-kubectl apply -f - <<'KUBELAB_EOF'
+KUBEDRILL_EOF
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -49,7 +49,7 @@ spec:
         requests:
           storage: 1Gi
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=db >/dev/null

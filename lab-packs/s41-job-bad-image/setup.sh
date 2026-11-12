@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# KubeLab lab pack: Job stuck: ImagePullBackOff (s41-job-bad-image)
+# KubeDrill lab pack: Job stuck: ImagePullBackOff (s41-job-bad-image)
 # Generated from the same spec that powers the in-browser lab. Requires: kubectl + a local cluster (e.g. kind create cluster).
 set -uo pipefail
 echo "▶ Setting up lab: Job stuck: ImagePullBackOff"
 kubectl create namespace jobs --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -f - <<'KUBELAB_EOF'
+kubectl apply -f - <<'KUBEDRILL_EOF'
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -19,7 +19,7 @@ spec:
         image: busybox:doesnotexist
         command: ["sh", "-c", "echo migrated"]
 
-KUBELAB_EOF
+KUBEDRILL_EOF
 
 
 kubectl config set-context --current --namespace=jobs >/dev/null
